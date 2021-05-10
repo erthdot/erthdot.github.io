@@ -43,7 +43,31 @@
     <meta property="og:url" content="index.html">
   </head>
   <body data-home-page="home.html" data-home-page-title="home" class="u-body u-overlap u-overlap-contrast u-overlap-transparent"><header class="u-clearfix u-header u-sticky u-header" id="sec-ba4b"><div class="u-clearfix u-sheet u-sheet-1">
-        <a href="home.html" data-page-id="65242079" class="u-image u-logo u-image-1" data-image-width="89" data-image-height="89" title="home" data-animation-name="fadeIn" data-animation-duration="1000" data-animation-delay="2750" data-animation-direction="">
+        <!-- Messenger Chat Plugin Code -->
+    <div id="fb-root"></div>
+      <script>
+        window.fbAsyncInit = function() {
+          FB.init({
+            xfbml            : true,
+            version          : 'v10.0'
+          });
+        };
+
+        (function(d, s, id) {
+          var js, fjs = d.getElementsByTagName(s)[0];
+          if (d.getElementById(id)) return;
+          js = d.createElement(s); js.id = id;
+          js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+          fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+      </script>
+
+      <!-- Your Chat Plugin code -->
+      <div class="fb-customerchat"
+        attribution="page_inbox"
+        page_id="100726631952344">
+      </div>
+	  <a href="home.html" data-page-id="65242079" class="u-image u-logo u-image-1" data-image-width="89" data-image-height="89" title="home" data-animation-name="fadeIn" data-animation-duration="1000" data-animation-delay="2750" data-animation-direction="">
           <img src="images/Artboard70.75x.png" class="u-logo-image u-logo-image-1" data-image-width="89">
         </a>
         <nav class="u-menu u-menu-dropdown u-offcanvas u-menu-1">
