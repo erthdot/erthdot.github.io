@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Erthdot Tools — Designer Toolkit for Clients</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --green:#1a7a4a;--green-light:#22a060;--green-dark:#0e4a2e;
+  --gold:#c8a84b;--black:#090909;--off-black:#0f0f0f;
+  --dark-card:#161616;--border:#252525;--text:#e4e4e4;
+  --text-muted:#777;--white:#fff;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--text);overflow-x:hidden;}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:var(--black);}
+::-webkit-scrollbar-thumb{background:var(--green);border-radius:2px;}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 44px;
+  background:rgba(9,9,9,0.94);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  transition:all .4s ease;
+}
+.nav-logo{display:flex;align-items:center;gap:10px;text-decoration:none;}
+.nav-brand{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:3px;color:var(--white);}
+.nav-back{
+  background:transparent;color:var(--text-muted);padding:9px 16px;
+  border-radius:4px;font-size:12px;cursor:pointer;
+  border:1px solid var(--border);letter-spacing:.5px;transition:all .25s;
+  font-family:'DM Sans',sans-serif;text-decoration:none;display:inline-flex;align-items:center;gap:6px;
+}
+.nav-back:hover{border-color:var(--green);color:var(--green-light);}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;}
+.hamburger span{width:22px;height:1.5px;background:var(--text);border-radius:2px;display:block;}
+
+/* HERO BANNER */
+.tools-hero{
+  padding:120px 44px 60px;
+  background:var(--off-black);
+  border-bottom:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.tools-hero::before{
+  content:'';position:absolute;top:-120px;right:-80px;
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(26,122,74,.12) 0%,transparent 70%);
+  pointer-events:none;
+}
+.tools-hero-inner{max-width:1100px;margin:0 auto;}
+.tools-eyebrow{
+  font-family:'Space Mono',monospace;font-size:11px;color:var(--green-light);
+  letter-spacing:5px;text-transform:uppercase;margin-bottom:18px;
+  display:flex;align-items:center;gap:14px;
+}
+.tools-eyebrow::before{content:'';width:36px;height:1px;background:var(--green-light);}
+.tools-hero h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(42px,7vw,96px);
+  line-height:.9;letter-spacing:2px;color:var(--white);
+  margin-bottom:20px;
+}
+.tools-hero h1 .accent{color:var(--green-light);}
+.tools-hero p{font-size:16px;color:var(--text-muted);max-width:520px;line-height:1.75;margin-bottom:40px;font-weight:300;}
+
+/* TOOL CARDS ROW */
+.tool-nav-cards{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:2px;background:var(--border);border-radius:8px;overflow:hidden;
+  max-width:1100px;margin:0 auto;
+}
+.tool-nav-card{
+  background:var(--dark-card);padding:28px 24px;cursor:pointer;
+  transition:background .2s;position:relative;overflow:hidden;
+  border:none;text-align:left;font-family:'DM Sans',sans-serif;color:var(--text);
+}
+.tool-nav-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--green-dark),var(--green-light));
+  transform:scaleX(0);transform-origin:left;transition:transform .35s;
+}
+.tool-nav-card:hover{background:#1b1b1b;}
+.tool-nav-card:hover::before,.tool-nav-card.active-tool::before{transform:scaleX(1);}
+.tool-nav-card.active-tool{background:#141f18;}
+.tnc-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--green);letter-spacing:3px;margin-bottom:10px;}
+.tnc-name{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:var(--white);margin-bottom:6px;}
+.tnc-desc{font-size:12px;color:var(--text-muted);line-height:1.5;}
+
+/* MAIN CONTENT */
+.tools-main{max-width:1100px;margin:0 auto;padding:60px 44px 100px;}
+.tool-panel{display:none;}
+.tool-panel.active{display:block;animation:panelIn .4s ease both;}
+@keyframes panelIn{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+/* STEP FORM */
+.tool-header{margin-bottom:40px;}
+.tool-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(30px,4vw,52px);color:var(--white);letter-spacing:1px;margin-bottom:8px;}
+.tool-sub{font-size:14px;color:var(--text-muted);line-height:1.65;}
+
+/* STEP INDICATOR */
+.steps-indicator{
+  display:flex;align-items:center;gap:0;margin-bottom:36px;
+  overflow-x:auto;padding-bottom:4px;
+}
+.step-node{
+  display:flex;align-items:center;gap:0;flex-shrink:0;
+}
+.step-dot{
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:600;transition:all .3s;
+  border:1px solid var(--border);background:var(--dark-card);color:var(--text-muted);
+  font-family:'Space Mono',monospace;flex-shrink:0;
+}
+.step-dot.done{background:var(--green);border-color:var(--green);color:var(--white);}
+.step-dot.current{background:rgba(26,122,74,.15);border-color:var(--green);color:var(--green-light);}
+.step-label{font-size:11px;color:var(--text-muted);letter-spacing:.5px;margin-left:8px;white-space:nowrap;}
+.step-label.current{color:var(--green-light);}
+.step-connector{width:28px;height:1px;background:var(--border);margin:0 6px;flex-shrink:0;}
+.step-connector.done{background:var(--green);}
+
+/* FORM ELEMENTS */
+.step-pane{display:none;}
+.step-pane.active{display:block;animation:panelIn .3s ease both;}
+.form-row{margin-bottom:22px;}
+.form-label{font-size:11px;color:var(--text-muted);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:9px;display:block;}
+.form-input,.form-select,.form-textarea{
+  width:100%;padding:13px 16px;background:rgba(255,255,255,.04);
+  border:1px solid var(--border);border-radius:5px;color:var(--text);
+  font-family:'DM Sans',sans-serif;font-size:14px;transition:border-color .2s,background .2s;
+}
+.form-input:focus,.form-select:focus,.form-textarea:focus{
+  outline:none;border-color:var(--green);background:rgba(26,122,74,.04);
+}
+.form-select option{background:var(--off-black);}
+.form-textarea{min-height:100px;resize:vertical;}
+.form-hint{font-size:11px;color:var(--text-muted);margin-top:6px;line-height:1.5;}
+
+/* VISUAL STYLE PICKER */
+.style-picker{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));
+  gap:10px;margin-top:4px;
+}
+.style-option{
+  padding:14px 12px;background:var(--dark-card);border:1px solid var(--border);
+  border-radius:6px;cursor:pointer;text-align:center;transition:all .2s;
+  font-size:12px;color:var(--text-muted);font-family:'DM Sans',sans-serif;
+}
+.style-option:hover,.style-option.selected{
+  border-color:var(--green);color:var(--green-light);background:rgba(26,122,74,.08);
+}
+.style-option .style-icon{font-size:22px;margin-bottom:7px;display:block;}
+
+/* VALUES CHIPS */
+.chips-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+.chip{
+  padding:7px 15px;border-radius:20px;border:1px solid var(--border);
+  background:var(--dark-card);font-size:12px;color:var(--text-muted);
+  cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;
+}
+.chip:hover,.chip.selected{
+  border-color:var(--green);color:var(--green-light);background:rgba(26,122,74,.1);
+}
+
+/* FORM NAV BUTTONS */
+.form-nav{display:flex;gap:10px;margin-top:32px;flex-wrap:wrap;}
+.btn-next{
+  background:var(--green);color:var(--white);padding:12px 30px;
+  border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;
+  border:none;letter-spacing:.5px;transition:all .25s;font-family:'DM Sans',sans-serif;
+}
+.btn-next:hover{background:var(--green-light);transform:translateY(-1px);}
+.btn-back-step{
+  background:transparent;color:var(--text-muted);padding:12px 22px;
+  border-radius:4px;font-size:13px;cursor:pointer;
+  border:1px solid var(--border);letter-spacing:.5px;transition:all .25s;
+  font-family:'DM Sans',sans-serif;
+}
+.btn-back-step:hover{border-color:var(--text-muted);color:var(--text);}
+
+/* SUMMARY BOX */
+.summary-box{
+  background:var(--dark-card);border:1px solid var(--border);
+  border-radius:8px;overflow:hidden;
+}
+.summary-header{
+  background:var(--green-dark);padding:20px 26px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.summary-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:2px;color:var(--white);}
+.summary-badge{font-family:'Space Mono',monospace;font-size:10px;color:var(--green-light);letter-spacing:2px;}
+.summary-body{padding:28px;}
+.summary-row{
+  display:flex;gap:16px;padding:13px 0;
+  border-bottom:1px solid rgba(255,255,255,.04);
+}
+.summary-row:last-child{border-bottom:none;}
+.summary-key{font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;width:160px;flex-shrink:0;padding-top:2px;}
+.summary-val{font-size:14px;color:var(--text);line-height:1.55;}
+.summary-actions{
+  padding:20px 28px;background:rgba(0,0,0,.3);
+  display:flex;gap:12px;flex-wrap:wrap;border-top:1px solid var(--border);
+}
+.btn-whatsapp{
+  background:#25d366;color:var(--white);padding:13px 28px;
+  border-radius:4px;font-size:13px;font-weight:600;cursor:pointer;
+  border:none;letter-spacing:.3px;transition:all .25s;font-family:'DM Sans',sans-serif;
+  display:flex;align-items:center;gap:9px;
+}
+.btn-whatsapp:hover{background:#1aab51;transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,211,102,.25);}
+.btn-whatsapp svg{width:18px;height:18px;fill:currentColor;}
+.btn-restart{
+  background:transparent;color:var(--text-muted);padding:13px 22px;
+  border-radius:4px;font-size:13px;cursor:pointer;
+  border:1px solid var(--border);transition:all .25s;font-family:'DM Sans',sans-serif;
+}
+.btn-restart:hover{border-color:var(--text-muted);color:var(--text);}
+
+/* ─── COLOUR PALETTE TOOL ─── */
+.color-controls{max-width:640px;margin-bottom:32px;}
+.palette-result-area{
+  background:var(--dark-card);border:1px solid var(--border);
+  border-radius:10px;padding:28px;margin-bottom:20px;
+}
+.palette-result-label{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:var(--white);margin-bottom:4px;}
+.palette-result-sub{font-size:13px;color:var(--text-muted);line-height:1.55;margin-bottom:16px;}
+.palette-tabs{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap;}
+.palette-tab{
+  padding:6px 14px;background:var(--dark-card);border:1px solid var(--border);
+  border-radius:20px;font-size:11px;color:var(--text-muted);cursor:pointer;
+  transition:all .2s;font-family:'DM Sans',sans-serif;white-space:nowrap;
+}
+.palette-tab.active-pal{border-color:var(--green);color:var(--green-light);background:rgba(26,122,74,.1);}
+/* Big interactive swatch bar */
+.big-swatch-row{
+  display:flex;border-radius:8px;overflow:hidden;height:92px;
+  margin-bottom:10px;
+}
+.big-swatch{
+  flex:1;position:relative;display:flex;align-items:flex-end;
+  justify-content:center;padding-bottom:9px;cursor:pointer;
+  transition:flex .35s cubic-bezier(.4,0,.2,1);
+}
+.big-swatch.active-swatch{flex:2;}
+.big-swatch .swatch-hex{
+  font-family:'Space Mono',monospace;font-size:9px;
+  background:rgba(0,0,0,.55);color:#fff;padding:3px 8px;
+  border-radius:3px;opacity:0;transition:opacity .2s;
+  letter-spacing:.5px;pointer-events:none;
+}
+.big-swatch:hover .swatch-hex,.big-swatch.active-swatch .swatch-hex{opacity:1;}
+.big-swatch::after{
+  content:'';position:absolute;inset:0;
+  border:2px solid transparent;transition:border-color .2s;
+}
+.big-swatch.active-swatch::after{border-color:rgba(255,255,255,.45);}
+/* Alternatives panel */
+.color-alts-panel{
+  background:rgba(255,255,255,.03);border:1px solid var(--border);
+  border-radius:6px;padding:14px 16px;margin-bottom:14px;
+  animation:panelIn .25s ease both;
+}
+.color-alts-title{font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:10px;}
+.color-alts-scroll{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;}
+.color-alts-scroll::-webkit-scrollbar{height:3px;}
+.color-alts-scroll::-webkit-scrollbar-thumb{background:var(--green);border-radius:2px;}
+.alt-color-btn{
+  width:40px;height:40px;border-radius:6px;cursor:pointer;flex-shrink:0;
+  border:2px solid transparent;transition:transform .2s,border-color .2s;
+}
+.alt-color-btn:hover{transform:scale(1.14);border-color:rgba(255,255,255,.35);}
+.alt-color-btn.active-alt{border-color:var(--green-light);}
+/* Hex chips */
+.hex-chips-row{display:flex;flex-wrap:wrap;gap:8px;}
+.hex-chip{
+  cursor:pointer;display:flex;align-items:center;gap:6px;
+  padding:5px 10px;background:rgba(255,255,255,.04);
+  border:1px solid var(--border);border-radius:4px;transition:border-color .2s;
+}
+.hex-chip:hover{border-color:var(--green);}
+.hex-chip-dot{width:14px;height:14px;border-radius:3px;border:1px solid rgba(255,255,255,.15);flex-shrink:0;}
+.hex-chip-code{font-family:'Space Mono',monospace;font-size:10px;color:var(--text-muted);}
+/* Color action bar */
+.color-action-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:10px;}
+/* ─── RANDOMISE BUTTON ─── */
+.btn-randomise{
+  background:rgba(200,168,75,.12);color:var(--gold);padding:10px 18px;
+  border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;
+  border:1px solid rgba(200,168,75,.3);letter-spacing:.5px;transition:all .25s;
+  font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:7px;
+}
+.btn-randomise:hover{background:rgba(200,168,75,.22);}
+/* ─── EXPORT BUTTONS ─── */
+.btn-export-png{
+  background:rgba(37,99,235,.15);color:#93c5fd;padding:10px 18px;
+  border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;
+  border:1px solid rgba(37,99,235,.3);letter-spacing:.5px;transition:all .25s;
+  font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:7px;
+}
+.btn-export-png:hover{background:rgba(37,99,235,.28);}
+/* ─── BOOKMARK BANNER ─── */
+.bookmark-banner{
+  background:var(--dark-card);border:1px solid var(--border);border-radius:8px;
+  padding:14px 22px;margin-top:28px;display:flex;align-items:center;
+  justify-content:space-between;gap:12px;flex-wrap:wrap;
+}
+.bookmark-text{font-size:12px;color:var(--text-muted);line-height:1.55;}
+.bookmark-text strong{color:var(--text);}
+.btn-bookmark{
+  background:transparent;color:var(--gold);padding:9px 18px;
+  border-radius:4px;font-size:12px;cursor:pointer;
+  border:1px solid rgba(200,168,75,.3);letter-spacing:.5px;transition:all .25s;
+  font-family:'DM Sans',sans-serif;display:flex;align-items:center;gap:7px;white-space:nowrap;
+}
+.btn-bookmark:hover{background:rgba(200,168,75,.1);}
+
+/* TOAST */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(100px);
+  background:var(--green-dark);border:1px solid var(--green);
+  padding:12px 22px;border-radius:6px;font-size:13px;color:var(--green-light);
+  transition:transform .35s cubic-bezier(.16,1,.3,1);z-index:9999;
+  font-family:'Space Mono',monospace;letter-spacing:.5px;white-space:nowrap;
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  nav{padding:14px 18px;}
+  .tools-hero{padding:100px 18px 44px;}
+  .tool-nav-cards{grid-template-columns:1fr;}
+  .tools-main{padding:40px 18px 80px;}
+  .big-swatch-row{height:72px;}
+  .summary-key{width:120px;}
+  .hamburger{display:flex;}
+}
+@media(max-width:480px){
+  .style-picker{grid-template-columns:repeat(2,1fr);}
+  .summary-row{flex-direction:column;gap:4px;}
+  .summary-key{width:auto;}
+}
+
+/* ─── SAVED PALETTES BAR ─── */
+.saved-palettes-bar{
+  background:var(--dark-card);border:1px solid var(--border);
+  border-radius:10px;padding:22px 24px;margin-bottom:24px;
+}
+.saved-palettes-title{
+  font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;
+  color:var(--white);margin-bottom:4px;
+}
+.saved-palettes-title span{
+  font-family:'Space Mono',monospace;font-size:10px;color:var(--green-light);
+  letter-spacing:3px;margin-left:10px;vertical-align:middle;
+}
+.saved-slots{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px;
+}
+.saved-slot{
+  background:rgba(255,255,255,.03);border:1px solid var(--border);
+  border-radius:6px;padding:14px;cursor:pointer;transition:border-color .2s;
+  min-height:80px;position:relative;
+}
+.saved-slot:hover{border-color:var(--green-dark);}
+.saved-slot.filled{border-color:rgba(26,122,74,.3);}
+.saved-slot.filled:hover{border-color:var(--green);}
+.saved-slot-label{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-muted);letter-spacing:2px;margin-bottom:8px;}
+.saved-slot-empty{font-size:11px;color:var(--text-muted);line-height:1.5;}
+.saved-slot-swatches{display:flex;height:32px;border-radius:4px;overflow:hidden;margin-bottom:8px;}
+.saved-slot-name{font-size:12px;font-weight:500;color:var(--white);}
+.del-btn{
+  position:absolute;top:8px;right:8px;background:none;border:none;
+  color:var(--text-muted);cursor:pointer;font-size:13px;padding:2px 5px;
+  transition:color .2s;border-radius:3px;
+}
+.del-btn:hover{color:#f87171;background:rgba(248,113,113,.1);}
+
+/* ─── COLOR TOOL GRID ─── */
+.color-tool-grid{
+  display:grid;grid-template-columns:280px 1fr;gap:24px;
+  margin-bottom:28px;
+}
+.color-control-panel{
+  background:var(--dark-card);border:1px solid var(--border);
+  border-radius:10px;padding:24px;height:fit-content;
+  position:sticky;top:80px;
+}
+.palette-result{
+  background:var(--dark-card);border:1px solid var(--border);
+  border-radius:10px;padding:28px;min-height:300px;
+}
+
+/* ─── CUSTOM PALETTE ─── */
+.custom-palette-section{
+  background:var(--dark-card);border:1px solid var(--border);
+  border-radius:10px;margin-top:24px;overflow:hidden;
+}
+.custom-palette-header{
+  padding:18px 24px;cursor:pointer;display:flex;
+  align-items:center;justify-content:space-between;
+  transition:background .2s;
+}
+.custom-palette-header:hover{background:rgba(255,255,255,.03);}
+.custom-palette-title{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:var(--white);}
+.custom-palette-badge{
+  font-family:'Space Mono',monospace;font-size:9px;color:var(--gold);
+  letter-spacing:2px;padding:3px 8px;border:1px solid rgba(200,168,75,.3);
+  border-radius:3px;background:rgba(200,168,75,.08);
+}
+.custom-palette-body{
+  display:none;padding:0 24px 24px;
+  border-top:1px solid var(--border);
+}
+.custom-palette-body.open{display:block;}
+.custom-warning{
+  font-size:12px;color:var(--gold);line-height:1.6;
+  padding:12px 14px;background:rgba(200,168,75,.08);
+  border:1px solid rgba(200,168,75,.2);border-radius:5px;
+  margin:16px 0 20px;
+}
+.custom-colors-row{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;
+}
+.custom-color-slot{display:flex;flex-direction:column;gap:7px;}
+.custom-color-slot label{font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;}
+.custom-color-slot input[type=color]{
+  width:100%;height:48px;border-radius:5px;cursor:pointer;
+  border:1px solid var(--border);background:none;padding:2px;
+}
+.custom-color-slot input[type=text]{
+  width:100%;padding:7px 10px;background:rgba(255,255,255,.04);
+  border:1px solid var(--border);border-radius:4px;color:var(--text);
+  font-family:'Space Mono',monospace;font-size:11px;text-transform:uppercase;
+}
+.custom-preview{
+  display:flex;border-radius:6px;overflow:hidden;height:54px;
+  margin-bottom:18px;
+}
+.custom-preview-swatch{flex:1;}
+.btn-save-palette{
+  background:rgba(26,122,74,.12);color:var(--green-light);padding:10px 18px;
+  border-radius:4px;font-size:12px;font-weight:600;cursor:pointer;
+  border:1px solid rgba(26,122,74,.3);letter-spacing:.5px;transition:all .25s;
+  font-family:'DM Sans',sans-serif;
+}
+.btn-save-palette:hover{background:rgba(26,122,74,.22);}
+
+/* ─── COLOR THEORY SECTION ─── */
+.color-theory-section{
+  margin-top:40px;padding-top:40px;border-top:1px solid var(--border);
+}
+.color-theory-title{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1px;color:var(--white);margin-bottom:8px;}
+.color-theory-sub{font-size:14px;color:var(--text-muted);margin-bottom:28px;max-width:520px;line-height:1.65;}
+.ct-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px;}
+.ct-card{background:var(--dark-card);border:1px solid var(--border);border-radius:8px;padding:22px;transition:border-color .2s;}
+.ct-card:hover{border-color:rgba(26,122,74,.3);}
+.ct-swatch{width:40px;height:40px;border-radius:6px;margin-bottom:14px;}
+.ct-name{font-family:'Bebas Neue',sans-serif;font-size:20px;letter-spacing:1px;color:var(--white);margin-bottom:4px;}
+.ct-keyword{font-family:'Space Mono',monospace;font-size:9px;color:var(--green-light);letter-spacing:2px;margin-bottom:10px;}
+.ct-desc{font-size:12px;color:var(--text-muted);line-height:1.65;margin-bottom:8px;}
+.ct-brands{font-size:11px;color:var(--text-muted);line-height:1.5;}
+.ct-brands strong{color:var(--text);}
+
+@media(max-width:768px){
+  .color-tool-grid{grid-template-columns:1fr;}
+  .color-control-panel{position:static;}
+  .saved-slots{grid-template-columns:1fr;}
+  .custom-colors-row{grid-template-columns:repeat(2,1fr);}
+}
+
+
+.color-action-panel{display:flex;flex-direction:column;gap:10px;}
+/* Bookmark banner visibility */
+#bookmark-banner{ display:flex; }
+#color-action.visible{ display:flex !important; }
+
+</style>
+</head>
+<body>
+
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="erthdot-website.html">
+    <span class="nav-brand">ERTHDOT</span>
+  </a>
+  <div style="display:flex;align-items:center;gap:10px;">
+    <a class="nav-back" href="erthdot-website.html">
+      <svg viewBox="0 0 24 24" width="13" height="13" stroke="currentColor" fill="none" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Back to Site
+    </a>
+  </div>
+</nav>
+
+<!-- TOOLS HERO -->
+<div class="tools-hero">
+  <div class="tools-hero-inner">
+    <div class="tools-eyebrow">Erthdot Design Studio — Client Toolkit</div>
+    <h1>DESIGN<br><span class="accent">TOOLS</span></h1>
+    <p>Fill in a form below and send your brief directly to the designer via WhatsApp. No meetings, no confusion — just clear creative direction.</p>
+    <!-- BOOKMARK BANNER — only visible on landing, hidden when a tool is active -->
+    <div class="bookmark-banner" id="bookmark-banner">
+      <div class="bookmark-text"><strong>Come back anytime.</strong> Bookmark this page for quick access to all Erthdot client tools.</div>
+      <button class="btn-bookmark" onclick="bookmarkPage()">Add to Bookmarks</button>
+    </div>
+  </div>
+  <!-- TOOL NAV CARDS -->
+  <div class="tool-nav-cards">
+    <button class="tool-nav-card active-tool" onclick="switchTool('logo')">
+      <div class="tnc-num">01</div>
+      <div class="tnc-name">Logo Brief</div>
+      <div class="tnc-desc">Brand name, style, target audience & visual direction for your new logo.</div>
+    </button>
+    <button class="tool-nav-card" onclick="switchTool('profile')">
+      <div class="tnc-num">02</div>
+      <div class="tnc-name">Company Profile</div>
+      <div class="tnc-desc">Mission, vision, services & contact info for your company profile document.</div>
+    </button>
+    <button class="tool-nav-card" onclick="switchTool('color')">
+      <div class="tnc-num">03</div>
+      <div class="tnc-name">Colour Generator</div>
+      <div class="tnc-desc">Pick your industry & mood — get curated hex palettes plus colour psychology.</div>
+    </button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="tools-main">
+
+  <!-- ══════════════════════════════ TOOL 1: LOGO BRIEF ══════════════════════════════ -->
+  <div class="tool-panel active" id="panel-logo">
+    <div class="tool-header">
+      <div class="tool-title">Logo Discovery Questionnaire</div>
+      <div class="tool-sub">Takes about 3 minutes. Answer each step and we'll send a formatted brief directly to your designer.</div>
+    </div>
+
+    <!-- STEP INDICATOR -->
+    <div class="steps-indicator" id="logo-steps-indicator"></div>
+
+    <!-- STEP 1 -->
+    <div class="step-pane active" id="logo-step-1">
+      <div class="form-row">
+        <label class="form-label">Brand / Business Name *</label>
+        <input class="form-input" id="l-brand" placeholder="e.g. Copper Ridge Investments" />
+      </div>
+      <div class="form-row">
+        <label class="form-label">Industry / Sector *</label>
+        <select class="form-select" id="l-industry">
+          <option value="">— Select your industry —</option>
+          <option>Agriculture & Farming</option>
+          <option>Construction & Real Estate</option>
+          <option>Education & Training</option>
+          <option>Finance & Investment</option>
+          <option>Food & Beverage</option>
+          <option>Healthcare & Medical</option>
+          <option>Hospitality & Tourism</option>
+          <option>Legal & Professional Services</option>
+          <option>Logistics & Transport</option>
+          <option>Mining & Resources</option>
+          <option>NGO / Non-Profit</option>
+          <option>Retail & Fashion</option>
+          <option>Technology & IT</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Target Audience *</label>
+        <input class="form-input" id="l-audience" placeholder="e.g. Young professionals in Lusaka aged 25–40" />
+        <div class="form-hint">Who are your typical customers or clients?</div>
+      </div>
+      <div class="form-nav">
+        <button class="btn-next" onclick="logoStep(2)">Next Step →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-pane" id="logo-step-2">
+      <div class="form-row">
+        <label class="form-label">Visual Style — choose one *</label>
+        <div class="style-picker" id="l-style-picker">
+          <div class="style-option" onclick="selectStyle(this,'l-style','Minimalist')">Minimalist</div>
+          <div class="style-option" onclick="selectStyle(this,'l-style','Bold & Geometric')">Bold & Geometric</div>
+          <div class="style-option" onclick="selectStyle(this,'l-style','Illustrative')">Illustrative</div>
+          <div class="style-option" onclick="selectStyle(this,'l-style','Classic / Vintage')">Classic / Vintage</div>
+          <div class="style-option" onclick="selectStyle(this,'l-style','Modern Lettermark')">Lettermark</div>
+          <div class="style-option" onclick="selectStyle(this,'l-style','Emblem / Badge')">Emblem / Badge</div>
+        </div>
+        <input type="hidden" id="l-style" />
+      </div>
+      <div class="form-row">
+        <label class="form-label">Colour Preferences</label>
+        <input class="form-input" id="l-colors" placeholder="e.g. Deep green, gold — avoid red" />
+        <div class="form-hint">Any specific colours or colours to avoid?</div>
+      </div>
+      <div class="form-nav">
+        <button class="btn-back-step" onclick="logoStep(1)">← Back</button>
+        <button class="btn-next" onclick="logoStep(3)">Next Step →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step-pane" id="logo-step-3">
+      <div class="form-row">
+        <label class="form-label">Core Brand Values — pick up to 4 *</label>
+        <div class="chips-row" id="l-values-chips">
+          <div class="chip" onclick="toggleChip(this,'l-values')">Trust</div>
+          <div class="chip" onclick="toggleChip(this,'l-values')">Innovation</div>
+          <div class="chip" onclick="toggleChip(this,'l-values')">Sustainability</div>
+          <div class="chip" onclick="toggleChip(this,'l-values')">Community</div>
+          <div class="chip" onclick="toggleChip(this,'l-values')">Excellence</div>
+          <div class="chip" onclick="toggleChip(this,'l-values')">Boldness</div>
+          <div class="chip" onclick="toggleChip(this,'l-values')">Heritage</div>
+          <div class="chip" onclick="toggleChip(this,'l-values')">Affordability</div>
+          <div class="chip" onclick="toggleChip(this,'l-values')">Luxury</div>
+          <div class="chip" onclick="toggleChip(this,'l-values')">Speed</div>
+          <div class="chip" onclick="toggleChip(this,'l-values')">Clarity</div>
+          <div class="chip" onclick="toggleChip(this,'l-values')">Fun</div>
+        </div>
+        <input type="hidden" id="l-values" />
+      </div>
+      <div class="form-row">
+        <label class="form-label">Brands / Logos You Admire</label>
+        <input class="form-input" id="l-references" placeholder="e.g. MTN, FNB, Apple — simple and clean" />
+        <div class="form-hint">Local or international brands whose logo style you like.</div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Additional Notes</label>
+        <textarea class="form-textarea" id="l-notes" placeholder="Any extra info — tagline, symbolism you'd like included, things to avoid..."></textarea>
+      </div>
+      <div class="form-nav">
+        <button class="btn-back-step" onclick="logoStep(2)">← Back</button>
+        <button class="btn-next" onclick="logoSummary()">View Summary →</button>
+      </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="step-pane" id="logo-summary">
+      <div class="summary-box">
+        <div class="summary-header">
+          <div class="summary-title">Logo Brief Summary</div>
+          <div class="summary-badge">READY TO SEND</div>
+        </div>
+        <div class="summary-body" id="logo-summary-body"></div>
+        <div class="summary-actions">
+          <button class="btn-whatsapp" onclick="sendLogoWA()">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.858L0 24l6.335-1.51A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818c-1.924 0-3.72-.529-5.254-1.446l-.376-.223-3.762.897.938-3.658-.247-.384A9.817 9.817 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+            Send to Designer via WhatsApp
+          </button>
+          <button class="btn-restart" onclick="logoRestart()">Start Over</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ TOOL 2: COMPANY PROFILE ══════════════════════════════ -->
+  <div class="tool-panel" id="panel-profile">
+    <div class="tool-header">
+      <div class="tool-title">Company Profile Builder</div>
+      <div class="tool-sub">Provide the key information your designer needs to build a professional company profile document.</div>
+    </div>
+
+    <div class="steps-indicator" id="profile-steps-indicator"></div>
+
+    <!-- STEP 1 -->
+    <div class="step-pane active" id="profile-step-1">
+      <div class="form-row">
+        <label class="form-label">Company / Organisation Name *</label>
+        <input class="form-input" id="p-name" placeholder="e.g. Greenfields Construction Ltd" />
+      </div>
+      <div class="form-row">
+        <label class="form-label">Year Established</label>
+        <input class="form-input" id="p-year" placeholder="e.g. 2018" type="number" min="1900" max="2026" />
+      </div>
+      <div class="form-row">
+        <label class="form-label">Industry / Sector *</label>
+        <select class="form-select" id="p-industry">
+          <option value="">— Select —</option>
+          <option>Agriculture & Farming</option>
+          <option>Construction & Real Estate</option>
+          <option>Education & Training</option>
+          <option>Finance & Investment</option>
+          <option>Food & Beverage</option>
+          <option>Healthcare & Medical</option>
+          <option>Hospitality & Tourism</option>
+          <option>Legal & Professional Services</option>
+          <option>Logistics & Transport</option>
+          <option>Mining & Resources</option>
+          <option>NGO / Non-Profit</option>
+          <option>Retail & Fashion</option>
+          <option>Technology & IT</option>
+          <option>Other</option>
+        </select>
+      </div>
+      <div class="form-nav">
+        <button class="btn-next" onclick="profileStep(2)">Next Step →</button>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step-pane" id="profile-step-2">
+      <div class="form-row">
+        <label class="form-label">Mission Statement *</label>
+        <textarea class="form-textarea" id="p-mission" placeholder="e.g. To deliver world-class construction services that transform Zambian communities..."></textarea>
+        <div class="form-hint">What your company does and the value it provides.</div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Vision Statement *</label>
+        <textarea class="form-textarea" id="p-vision" placeholder="e.g. To be the most trusted construction firm in Southern Africa by 2030..."></textarea>
+        <div class="form-hint">Where you see your company in the future.</div>
+      </div>
+      <div class="form-nav">
+        <button class="btn-back-step" onclick="profileStep(1)">← Back</button>
+        <button class="btn-next" onclick="profileStep(3)">Next Step →</button>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step-pane" id="profile-step-3">
+      <div class="form-row">
+        <label class="form-label">Key Services / Products *</label>
+        <textarea class="form-textarea" id="p-services" placeholder="e.g. 1. Residential construction&#10;2. Commercial fitouts&#10;3. Project management&#10;4. Property renovation"></textarea>
+        <div class="form-hint">List your main offerings — one per line is fine.</div>
+      </div>
+      <div class="form-row">
+        <label class="form-label">Why Choose You? (Unique Selling Point)</label>
+        <textarea class="form-textarea" id="p-usp" placeholder="e.g. 20+ years combined experience, ZEMA certified, 100% local workforce..." style="min-height:80px;"></textarea>
+      </div>
+      <div class="form-nav">
+        <button class="btn-back-step" onclick="profileStep(2)">← Back</button>
+        <button class="btn-next" onclick="profileStep(4)">Next Step →</button>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step-pane" id="profile-step-4">
+      <div class="form-row">
+        <label class="form-label">Physical Address</label>
+        <input class="form-input" id="p-address" placeholder="e.g. Plot 45, Kabulonga Road, Lusaka" />
+      </div>
+      <div class="form-row">
+        <label class="form-label">Phone Number *</label>
+        <input class="form-input" id="p-phone" placeholder="e.g. +260 97 123 4567" type="tel" />
+      </div>
+      <div class="form-row">
+        <label class="form-label">Email Address *</label>
+        <input class="form-input" id="p-email" placeholder="e.g. info@company.co.zm" type="email" />
+      </div>
+      <div class="form-row">
+        <label class="form-label">Website / Social Media</label>
+        <input class="form-input" id="p-social" placeholder="e.g. www.company.co.zm | @company on Instagram" />
+      </div>
+      <div class="form-row">
+        <label class="form-label">Number of Pages Needed</label>
+        <select class="form-select" id="p-pages">
+          <option value="">— Select —</option>
+          <option>2 pages (essential)</option>
+          <option>4 pages (standard)</option>
+          <option>6 pages (detailed)</option>
+          <option>8+ pages (comprehensive)</option>
+          <option>Not sure — advise me</option>
+        </select>
+      </div>
+      <div class="form-nav">
+        <button class="btn-back-step" onclick="profileStep(3)">← Back</button>
+        <button class="btn-next" onclick="profileSummary()">View Summary →</button>
+      </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="step-pane" id="profile-summary">
+      <div class="summary-box">
+        <div class="summary-header">
+          <div class="summary-title">Company Profile Brief</div>
+          <div class="summary-badge">READY TO SEND</div>
+        </div>
+        <div class="summary-body" id="profile-summary-body"></div>
+        <div class="summary-actions">
+          <button class="btn-whatsapp" onclick="sendProfileWA()">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.858L0 24l6.335-1.51A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818c-1.924 0-3.72-.529-5.254-1.446l-.376-.223-3.762.897.938-3.658-.247-.384A9.817 9.817 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+            Send to Designer via WhatsApp
+          </button>
+          <button class="btn-restart" onclick="profileRestart()">Start Over</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════ TOOL 3: COLOUR PALETTE ══════════════════════════════ -->
+  <div class="tool-panel" id="panel-color">
+    <div class="tool-header">
+      <div class="tool-title">Colour Palette Generator</div>
+      <div class="tool-sub">Pick your industry and mood below — we'll suggest the right colours for your brand. Tap any colour in the palette to explore alternatives.</div>
+    </div>
+
+
+
+    <!-- SAVED PALETTES BAR -->
+    <div class="saved-palettes-bar">
+      <div class="saved-palettes-title">Saved Palettes <span>UP TO 3</span></div>
+      <div class="saved-slots" id="saved-slots-container">
+        <div class="saved-slot" id="saved-slot-0" onclick="loadSavedPalette(0)"><div class="saved-slot-label">PALETTE 1</div><div class="saved-slot-empty">Empty — save a palette below</div></div>
+        <div class="saved-slot" id="saved-slot-1" onclick="loadSavedPalette(1)"><div class="saved-slot-label">PALETTE 2</div><div class="saved-slot-empty">Empty — save a palette below</div></div>
+        <div class="saved-slot" id="saved-slot-2" onclick="loadSavedPalette(2)"><div class="saved-slot-label">PALETTE 3</div><div class="saved-slot-empty">Empty — save a palette below</div></div>
+      </div>
+    </div>
+
+    <div class="color-tool-grid">
+      <!-- CONTROLS -->
+      <div class="color-control-panel">
+        <div class="form-row">
+          <label class="form-label">Your Industry *</label>
+          <select class="form-select" id="c-industry" onchange="generatePalettes()">
+            <option value="">— Select industry —</option>
+            <option value="healthcare">Healthcare & Medical</option>
+            <option value="tech">Technology & IT</option>
+            <option value="organic">Organic / Agriculture</option>
+            <option value="finance">Finance & Investment</option>
+            <option value="education">Education & Training</option>
+            <option value="hospitality">Hospitality & Tourism</option>
+            <option value="construction">Construction & Real Estate</option>
+            <option value="legal">Legal & Professional Services</option>
+            <option value="food">Food & Beverage</option>
+            <option value="retail">Retail & Fashion</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <label class="form-label">Desired Mood *</label>
+          <div class="style-picker">
+            <div class="style-option" onclick="selectMood(this,'Professional')">Professional</div>
+            <div class="style-option" onclick="selectMood(this,'Energetic')">Energetic</div>
+            <div class="style-option" onclick="selectMood(this,'Calm')">Calm</div>
+            <div class="style-option" onclick="selectMood(this,'Luxury')">Luxury</div>
+            <div class="style-option" onclick="selectMood(this,'Friendly')">Friendly</div>
+            <div class="style-option" onclick="selectMood(this,'Bold')">Bold</div>
+          </div>
+          <input type="hidden" id="c-mood" />
+        </div>
+
+        <div class="form-row">
+          <label class="form-label">Keywords (optional)</label>
+          <input class="form-input" id="c-keywords" placeholder="e.g. earth, growth, trust" oninput="generatePalettes()" />
+          <div class="form-hint">Describe how you want your brand to feel.</div>
+        </div>
+
+        <div id="color-action" style="display:none;flex-direction:column;gap:10px;">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn-save-palette" onclick="saveCurrentPalette()">💾 Save Palette</button>
+            <button class="btn-randomise" onclick="randomisePalette()">🎲 Randomise</button>
+            <button class="btn-export-png" onclick="exportPalettePNG()">⬇ Export PNG</button>
+          </div>
+          <button class="btn-whatsapp" onclick="sendColorWA()" style="width:100%;justify-content:center;">
+            <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.858L0 24l6.335-1.51A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818c-1.924 0-3.72-.529-5.254-1.446l-.376-.223-3.762.897.938-3.658-.247-.384A9.817 9.817 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+            Send Selected Palette to Designer
+          </button>
+        </div>
+      </div>
+
+      <!-- PALETTE RESULT -->
+      <div class="palette-result" id="palette-result">
+        <div style="text-align:center;color:var(--text-muted);font-size:13px;padding:40px 0;">
+          <div style="font-size:32px;margin-bottom:12px;">🎨</div>
+          Select your industry and mood to generate colour palettes.
+        </div>
+      </div>
+    </div>
+
+    <!-- CUSTOM PALETTE BUILDER -->
+    <div class="custom-palette-section" id="custom-palette-section">
+      <div class="custom-palette-header" onclick="toggleCustomPalette()">
+        <div class="custom-palette-title">Build Your Own Palette</div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <div class="custom-palette-badge">FULLY CUSTOM</div>
+          <span id="custom-toggle-icon" style="color:var(--text-muted);font-size:18px;">＋</span>
+        </div>
+      </div>
+      <div class="custom-palette-body" id="custom-palette-body">
+        <div class="custom-warning">
+          <strong>Note:</strong> This section lets you pick any colours freely. Custom palettes may not follow industry colour psychology or contrast standards. Your designer may suggest adjustments to ensure accessibility and brand effectiveness.
+        </div>
+        <div class="form-label" style="margin-bottom:12px;">Choose up to 4 colours</div>
+        <div class="custom-colors-row">
+          <div class="custom-color-slot">
+            <label>Colour 1</label>
+            <input type="color" id="custom-c1" value="#1a7a4a" oninput="updateCustomPreview();updateCustomHex(this,'custom-h1')">
+            <input type="text" id="custom-h1" value="#1a7a4a" oninput="syncCustomColor(this,'custom-c1')" maxlength="7">
+          </div>
+          <div class="custom-color-slot">
+            <label>Colour 2</label>
+            <input type="color" id="custom-c2" value="#c8a84b" oninput="updateCustomPreview();updateCustomHex(this,'custom-h2')">
+            <input type="text" id="custom-h2" value="#c8a84b" oninput="syncCustomColor(this,'custom-c2')" maxlength="7">
+          </div>
+          <div class="custom-color-slot">
+            <label>Colour 3</label>
+            <input type="color" id="custom-c3" value="#ffffff" oninput="updateCustomPreview();updateCustomHex(this,'custom-h3')">
+            <input type="text" id="custom-h3" value="#ffffff" oninput="syncCustomColor(this,'custom-c3')" maxlength="7">
+          </div>
+          <div class="custom-color-slot">
+            <label>Colour 4</label>
+            <input type="color" id="custom-c4" value="#090909" oninput="updateCustomPreview();updateCustomHex(this,'custom-h4')">
+            <input type="text" id="custom-h4" value="#090909" oninput="syncCustomColor(this,'custom-c4')" maxlength="7">
+          </div>
+        </div>
+        <div class="custom-preview" id="custom-preview">
+          <div class="custom-preview-swatch" id="cp1" style="background:#1a7a4a;"></div>
+          <div class="custom-preview-swatch" id="cp2" style="background:#c8a84b;"></div>
+          <div class="custom-preview-swatch" id="cp3" style="background:#ffffff;"></div>
+          <div class="custom-preview-swatch" id="cp4" style="background:#090909;"></div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <button class="btn-save-palette" onclick="saveCustomPalette()">💾 Save Custom Palette</button>
+          <button class="btn-export-png" onclick="exportCustomPalettePNG()">⬇ Export PNG</button>
+          <button class="btn-whatsapp" style="font-size:12px;padding:10px 16px;" onclick="sendCustomPaletteWA()">
+            <svg viewBox="0 0 24 24" width="14" height="14"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.127.558 4.126 1.533 5.858L0 24l6.335-1.51A11.954 11.954 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818c-1.924 0-3.72-.529-5.254-1.446l-.376-.223-3.762.897.938-3.658-.247-.384A9.817 9.817 0 012.182 12C2.182 6.57 6.57 2.182 12 2.182S21.818 6.57 21.818 12 17.43 21.818 12 21.818z"/></svg>
+            Send Custom Palette to Designer
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLOUR THEORY -->
+    <div class="color-theory-section">
+      <div class="color-theory-title">Colour Psychology</div>
+      <div class="color-theory-sub">Understanding what each colour communicates helps you make better brand decisions.</div>
+      <div class="ct-grid">
+        <div class="ct-card">
+          <div class="ct-swatch" style="background:#2563eb;"></div>
+          <div class="ct-name">Blue</div>
+          <div class="ct-keyword">TRUST · CALM · AUTHORITY</div>
+          <div class="ct-desc">Blue signals reliability and professionalism. It reduces anxiety and builds confidence — a staple for finance, healthcare, and technology brands.</div>
+          <div class="ct-brands"><strong>Used by:</strong> FNB, Zanaco, Stanbic, Standard Chartered</div>
+        </div>
+        <div class="ct-card">
+          <div class="ct-swatch" style="background:#16a34a;"></div>
+          <div class="ct-name">Green</div>
+          <div class="ct-keyword">GROWTH · NATURE · HEALTH</div>
+          <div class="ct-desc">Green connects to life, sustainability, and prosperity. Darker greens feel premium and trusted; brighter greens feel fresh and organic.</div>
+          <div class="ct-brands"><strong>Used by:</strong> MTN Money, Airtel Money, WhatsApp</div>
+        </div>
+        <div class="ct-card">
+          <div class="ct-swatch" style="background:#dc2626;"></div>
+          <div class="ct-name">Red</div>
+          <div class="ct-keyword">ENERGY · URGENCY · PASSION</div>
+          <div class="ct-desc">Red commands attention and creates a sense of urgency. It's powerful for food, retail, and entertainment — but use carefully in professional services.</div>
+          <div class="ct-brands"><strong>Used by:</strong> Airtel, Coca-Cola, YouTube, Netflix</div>
+        </div>
+        <div class="ct-card">
+          <div class="ct-swatch" style="background:#d97706;"></div>
+          <div class="ct-name">Orange & Gold</div>
+          <div class="ct-keyword">WARMTH · CONFIDENCE · SUCCESS</div>
+          <div class="ct-desc">Orange radiates friendliness and enthusiasm. Gold signals prestige and achievement. Both are great for brands wanting to feel accessible yet aspirational.</div>
+          <div class="ct-brands"><strong>Used by:</strong> MTN, Zambia National Commercial Bank</div>
+        </div>
+        <div class="ct-card">
+          <div class="ct-swatch" style="background:#7c3aed;"></div>
+          <div class="ct-name">Purple</div>
+          <div class="ct-keyword">LUXURY · WISDOM · CREATIVITY</div>
+          <div class="ct-desc">Purple has historically been associated with royalty and sophistication. It works beautifully for creative agencies, premium services, and spiritual organisations.</div>
+          <div class="ct-brands"><strong>Used by:</strong> Hallmark, Cadbury, FedEx</div>
+        </div>
+        <div class="ct-card">
+          <div class="ct-swatch" style="background:#171717;"></div>
+          <div class="ct-name">Black</div>
+          <div class="ct-keyword">ELEGANCE · POWER · AUTHORITY</div>
+          <div class="ct-desc">Black is timeless and powerful. It conveys sophistication, exclusivity, and seriousness. Ideal for luxury goods, legal services, and high-end fashion.</div>
+          <div class="ct-brands"><strong>Used by:</strong> Chanel, Apple (dark mode), Rolls-Royce</div>
+        </div>
+        <div class="ct-card">
+          <div class="ct-swatch" style="background:#f59e0b;"></div>
+          <div class="ct-name">Yellow</div>
+          <div class="ct-keyword">OPTIMISM · CLARITY · ATTENTION</div>
+          <div class="ct-desc">Yellow is the first colour the eye sees. It sparks optimism and mental clarity — perfect for children's education, retail promotions, and brands that want to feel approachable.</div>
+          <div class="ct-brands"><strong>Used by:</strong> MTN, Zambia Sugar, DHL</div>
+        </div>
+        <div class="ct-card">
+          <div class="ct-swatch" style="background:#0e7490;"></div>
+          <div class="ct-name">Teal & Cyan</div>
+          <div class="ct-keyword">BALANCE · CLARITY · INNOVATION</div>
+          <div class="ct-desc">Teal blends the trust of blue with the growth of green. It feels modern and balanced — popular with healthcare brands, tech startups, and wellness companies.</div>
+          <div class="ct-brands"><strong>Used by:</strong> Health clinics, fintech apps, NGOs</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end tools-main -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span id="toastMsg"></span></div>
+
+<script>
+// ─── DESIGNER WHATSAPP NUMBER ───────────────────────────────────────────
+// Replace this with your actual WhatsApp number (international format, no spaces or +)
+const DESIGNER_WA = '260971009632'; // Erthdot WhatsApp
+
+// ─── TOOL SWITCHING ─────────────────────────────────────────────────────
+function switchTool(id) {
+  document.querySelectorAll('.tool-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tool-nav-card').forEach(c => c.classList.remove('active-tool'));
+  document.getElementById('panel-' + id).classList.add('active');
+  const cards = document.querySelectorAll('.tool-nav-card');
+  const map = {logo:0, profile:1, color:2};
+  cards[map[id]].classList.add('active-tool');
+  // Hide bookmark banner when inside a tool
+  const bb = document.getElementById('bookmark-banner');
+  if(bb) bb.style.display = 'none';
+  window.scrollTo({top: document.querySelector('.tools-hero').offsetHeight - 10, behavior:'smooth'});
+}
+
+// ─── CHIP TOGGLE ────────────────────────────────────────────────────────
+function toggleChip(el, inputId) {
+  const max = inputId === 'l-values' ? 4 : 99;
+  const input = document.getElementById(inputId);
+  const selected = document.querySelectorAll('#' + inputId.replace('-','') + '-chips .chip.selected, [data-group="'+inputId+'"].selected');
+  if(el.classList.contains('selected')) {
+    el.classList.remove('selected');
+  } else {
+    // count selected siblings
+    const siblings = el.parentElement.querySelectorAll('.chip.selected');
+    if(siblings.length >= max) { showToast('Maximum ' + max + ' values selected.'); return; }
+    el.classList.add('selected');
+  }
+  const vals = Array.from(el.parentElement.querySelectorAll('.chip.selected')).map(c=>c.textContent);
+  input.value = vals.join(', ');
+}
+
+// ─── STYLE PICKER ───────────────────────────────────────────────────────
+function selectStyle(el, inputId, value) {
+  el.closest('.style-picker').querySelectorAll('.style-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById(inputId).value = value;
+}
+
+// ─── MOOD SELECTOR ──────────────────────────────────────────────────────
+function selectMood(el, value) {
+  el.closest('.style-picker').querySelectorAll('.style-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  document.getElementById('c-mood').value = value;
+  generatePalettes();
+}
+
+// ─── TOAST ──────────────────────────────────────────────────────────────
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._t);
+  t._t = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  TOOL 1 — LOGO BRIEF
+// ════════════════════════════════════════════════════════════════════════
+const LOGO_STEPS = ['Brand & Industry', 'Visual Style', 'Values & Notes'];
+let logoCurrentStep = 1;
+
+function renderLogoSteps(active) {
+  const el = document.getElementById('logo-steps-indicator');
+  el.innerHTML = LOGO_STEPS.map((s,i) => {
+    const n = i+1;
+    const cls = n < active ? 'done' : n === active ? 'current' : '';
+    const lc = n === active ? 'current' : '';
+    const conn = i < LOGO_STEPS.length-1 ? `<div class="step-connector ${n < active ? 'done':''}"></div>` : '';
+    const icon = n < active ? '✓' : n;
+    return `<div class="step-node"><div class="step-dot ${cls}">${icon}</div><span class="step-label ${lc}">${s}</span>${conn}</div>`;
+  }).join('');
+}
+
+function logoStep(n) {
+  if(n === 2) {
+    if(!document.getElementById('l-brand').value.trim()) { showToast('Please enter your brand name.'); return; }
+    if(!document.getElementById('l-industry').value) { showToast('Please select your industry.'); return; }
+    if(!document.getElementById('l-audience').value.trim()) { showToast('Please describe your target audience.'); return; }
+  }
+  if(n === 3) {
+    if(!document.getElementById('l-style').value) { showToast('Please select a visual style.'); return; }
+  }
+  logoCurrentStep = n;
+  document.querySelectorAll('#panel-logo .step-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('logo-step-' + n).classList.add('active');
+  renderLogoSteps(n);
+}
+
+function logoSummary() {
+  if(!document.getElementById('l-values').value) { showToast('Please select at least one brand value.'); return; }
+  const data = {
+    'Brand Name': document.getElementById('l-brand').value,
+    'Industry': document.getElementById('l-industry').value,
+    'Target Audience': document.getElementById('l-audience').value,
+    'Visual Style': document.getElementById('l-style').value,
+    'Colour Preferences': document.getElementById('l-colors').value || 'Not specified',
+    'Core Values': document.getElementById('l-values').value,
+    'Brands They Admire': document.getElementById('l-references').value || 'Not specified',
+    'Additional Notes': document.getElementById('l-notes').value || 'None',
+  };
+  renderSummary('logo-summary-body', data);
+  document.querySelectorAll('#panel-logo .step-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('logo-summary').classList.add('active');
+  renderLogoSteps(4);
+}
+
+function sendLogoWA() {
+  const msg = `*ERTHDOT — Logo Brief* 📋\n\n` +
+    `*Brand Name:* ${document.getElementById('l-brand').value}\n` +
+    `*Industry:* ${document.getElementById('l-industry').value}\n` +
+    `*Target Audience:* ${document.getElementById('l-audience').value}\n` +
+    `*Visual Style:* ${document.getElementById('l-style').value}\n` +
+    `*Colour Preferences:* ${document.getElementById('l-colors').value || 'Not specified'}\n` +
+    `*Core Values:* ${document.getElementById('l-values').value}\n` +
+    `*Brands They Admire:* ${document.getElementById('l-references').value || 'Not specified'}\n` +
+    `*Additional Notes:* ${document.getElementById('l-notes').value || 'None'}\n\n` +
+    `_Sent via Erthdot Tools_`;
+  openWA(msg);
+}
+
+function logoRestart() {
+  ['l-brand','l-industry','l-audience','l-style','l-colors','l-values','l-references','l-notes'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = '';
+  });
+  document.querySelectorAll('#panel-logo .chip').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('#panel-logo .style-option').forEach(s => s.classList.remove('selected'));
+  logoStep(1);
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  TOOL 2 — COMPANY PROFILE
+// ════════════════════════════════════════════════════════════════════════
+const PROFILE_STEPS = ['Company Info', 'Mission & Vision', 'Services & USP', 'Contact Details'];
+let profileCurrentStep = 1;
+
+function renderProfileSteps(active) {
+  const el = document.getElementById('profile-steps-indicator');
+  el.innerHTML = PROFILE_STEPS.map((s,i) => {
+    const n = i+1;
+    const cls = n < active ? 'done' : n === active ? 'current' : '';
+    const lc = n === active ? 'current' : '';
+    const conn = i < PROFILE_STEPS.length-1 ? `<div class="step-connector ${n < active ? 'done':''}"></div>` : '';
+    const icon = n < active ? '✓' : n;
+    return `<div class="step-node"><div class="step-dot ${cls}">${icon}</div><span class="step-label ${lc}">${s}</span>${conn}</div>`;
+  }).join('');
+}
+
+function profileStep(n) {
+  if(n === 2) {
+    if(!document.getElementById('p-name').value.trim()) { showToast('Please enter your company name.'); return; }
+    if(!document.getElementById('p-industry').value) { showToast('Please select your industry.'); return; }
+  }
+  if(n === 3) {
+    if(!document.getElementById('p-mission').value.trim()) { showToast('Please enter your mission statement.'); return; }
+    if(!document.getElementById('p-vision').value.trim()) { showToast('Please enter your vision statement.'); return; }
+  }
+  if(n === 4) {
+    if(!document.getElementById('p-services').value.trim()) { showToast('Please list your key services.'); return; }
+  }
+  profileCurrentStep = n;
+  document.querySelectorAll('#panel-profile .step-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('profile-step-' + n).classList.add('active');
+  renderProfileSteps(n);
+}
+
+function profileSummary() {
+  if(!document.getElementById('p-phone').value.trim()) { showToast('Please enter a phone number.'); return; }
+  if(!document.getElementById('p-email').value.trim()) { showToast('Please enter an email address.'); return; }
+  const data = {
+    'Company Name': document.getElementById('p-name').value,
+    'Year Established': document.getElementById('p-year').value || 'Not specified',
+    'Industry': document.getElementById('p-industry').value,
+    'Mission Statement': document.getElementById('p-mission').value,
+    'Vision Statement': document.getElementById('p-vision').value,
+    'Key Services': document.getElementById('p-services').value,
+    'Unique Selling Point': document.getElementById('p-usp').value || 'Not specified',
+    'Physical Address': document.getElementById('p-address').value || 'Not specified',
+    'Phone': document.getElementById('p-phone').value,
+    'Email': document.getElementById('p-email').value,
+    'Website / Social': document.getElementById('p-social').value || 'Not specified',
+    'Pages Needed': document.getElementById('p-pages').value || 'Not specified',
+  };
+  renderSummary('profile-summary-body', data);
+  document.querySelectorAll('#panel-profile .step-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById('profile-summary').classList.add('active');
+  renderProfileSteps(5);
+}
+
+function sendProfileWA() {
+  const msg = `*ERTHDOT — Company Profile Brief* 📄\n\n` +
+    `*Company Name:* ${document.getElementById('p-name').value}\n` +
+    `*Year Established:* ${document.getElementById('p-year').value || 'N/A'}\n` +
+    `*Industry:* ${document.getElementById('p-industry').value}\n\n` +
+    `*Mission:* ${document.getElementById('p-mission').value}\n\n` +
+    `*Vision:* ${document.getElementById('p-vision').value}\n\n` +
+    `*Key Services:*\n${document.getElementById('p-services').value}\n\n` +
+    `*USP:* ${document.getElementById('p-usp').value || 'N/A'}\n\n` +
+    `*Address:* ${document.getElementById('p-address').value || 'N/A'}\n` +
+    `*Phone:* ${document.getElementById('p-phone').value}\n` +
+    `*Email:* ${document.getElementById('p-email').value}\n` +
+    `*Website/Social:* ${document.getElementById('p-social').value || 'N/A'}\n` +
+    `*Pages Needed:* ${document.getElementById('p-pages').value || 'N/A'}\n\n` +
+    `_Sent via Erthdot Tools_`;
+  openWA(msg);
+}
+
+function profileRestart() {
+  ['p-name','p-year','p-industry','p-mission','p-vision','p-services','p-usp','p-address','p-phone','p-email','p-social','p-pages'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.value = '';
+  });
+  profileStep(1);
+}
+
+// ════════════════════════════════════════════════════════════════════════
+//  TOOL 3 — COLOUR PALETTE GENERATOR
+// ════════════════════════════════════════════════════════════════════════
+const PALETTES = {
+  healthcare: {
+    Professional: [
+      { name: 'Clinical Trust', desc: 'Clean and authoritative — builds immediate patient confidence.', swatches: ['#1a56a4','#e8f0fb','#f5f5f5','#1a1a2e'] },
+      { name: 'Healing White', desc: 'Sterile clarity meets warmth — ideal for private clinics.', swatches: ['#0891b2','#ffffff','#f0f9ff','#064e3b'] },
+      { name: 'Medical Green', desc: 'Nature-forward trust — great for wellness and holistic care.', swatches: ['#059669','#d1fae5','#f9fafb','#111827'] },
+    ],
+    Calm: [
+      { name: 'Soft Recovery', desc: 'Gentle pastels that reduce patient anxiety and build trust.', swatches: ['#7dd3fc','#bae6fd','#e0f2fe','#0c4a6e'] },
+      { name: 'Lavender Care', desc: 'Spiritual and calming — works for mental health and therapy.', swatches: ['#a78bfa','#ede9fe','#f5f3ff','#4c1d95'] },
+    ],
+    Energetic: [
+      { name: 'Active Health', desc: 'Vibrant and motivating — suits sports medicine and gym brands.', swatches: ['#10b981','#f59e0b','#ffffff','#111827'] },
+    ],
+    Luxury: [
+      { name: 'Premium Clinic', desc: 'Gold-accented deep tones signal exclusivity and quality care.', swatches: ['#1e293b','#c8a84b','#f8fafc','#0f172a'] },
+    ],
+    Friendly: [
+      { name: 'Happy Health', desc: 'Warm and inviting — ideal for paediatrics and family clinics.', swatches: ['#f97316','#fef3c7','#ffffff','#1c1917'] },
+    ],
+    Bold: [
+      { name: 'Strong Pulse', desc: 'High contrast and confident — pharmaceutical or diagnostics.', swatches: ['#dc2626','#1e40af','#ffffff','#0f172a'] },
+    ],
+  },
+  tech: {
+    Professional: [
+      { name: 'Corporate Tech', desc: 'Deep navy and slate signal serious, reliable technology.', swatches: ['#1e3a5f','#64748b','#f1f5f9','#0f172a'] },
+      { name: 'Data Clarity', desc: 'Cool blues and whites — clean, scalable, trusted.', swatches: ['#2563eb','#dbeafe','#ffffff','#1e293b'] },
+    ],
+    Energetic: [
+      { name: 'Electric Launch', desc: 'High-energy for startups disrupting their market.', swatches: ['#7c3aed','#06b6d4','#fbbf24','#0f172a'] },
+      { name: 'Green Code', desc: 'Terminal-inspired — bold for developer tools and SaaS.', swatches: ['#16a34a','#1e293b','#f1f5f9','#052e16'] },
+    ],
+    Calm: [
+      { name: 'Quiet System', desc: 'Muted and thoughtful — ideal for B2B software.', swatches: ['#475569','#cbd5e1','#f8fafc','#0f172a'] },
+    ],
+    Luxury: [
+      { name: 'Black Interface', desc: 'Premium dark theme — exclusive software and AI products.', swatches: ['#09090b','#c8a84b','#18181b','#fafafa'] },
+    ],
+    Friendly: [
+      { name: 'Human Tech', desc: 'Warm tones make technology feel accessible and approachable.', swatches: ['#f97316','#3b82f6','#fef3c7','#1c1917'] },
+    ],
+    Bold: [
+      { name: 'Neon Future', desc: 'Futuristic contrast for gaming, crypto, or Web3 brands.', swatches: ['#6d28d9','#10b981','#000000','#f3e8ff'] },
+    ],
+  },
+  organic: {
+    Professional: [
+      { name: 'Farm Certified', desc: 'Earthy greens and tans that communicate authenticity.', swatches: ['#4d7c0f','#854d0e','#fef9c3','#1a2e05'] },
+      { name: 'Harvest Trust', desc: 'Rich ochres and forest tones — premium organic branding.', swatches: ['#78350f','#4d7c0f','#fefce8','#1c1917'] },
+    ],
+    Calm: [
+      { name: 'Garden Zen', desc: 'Muted botanicals for wellness, herbal, and spa brands.', swatches: ['#86efac','#d9f99d','#fefce8','#14532d'] },
+    ],
+    Energetic: [
+      { name: 'Fresh Harvest', desc: 'Vivid citrus and greens for fresh produce and healthy foods.', swatches: ['#84cc16','#f59e0b','#ffffff','#1a2e05'] },
+    ],
+    Luxury: [
+      { name: 'Premium Earth', desc: 'Deep forest and antique gold signal premium organic goods.', swatches: ['#14532d','#c8a84b','#f5f5f5','#052e16'] },
+    ],
+    Friendly: [
+      { name: 'Farmers Market', desc: 'Warm and community-driven — local brands and cooperatives.', swatches: ['#f97316','#84cc16','#fef9c3','#78350f'] },
+    ],
+    Bold: [
+      { name: 'Jungle Bold', desc: 'Deep tropical colours for bold organic and eco brands.', swatches: ['#166534','#15803d','#f7fee7','#052e16'] },
+    ],
+  },
+  finance: {
+    Professional: [
+      { name: 'Banking Trust', desc: 'Classic navy and white — universal language of finance.', swatches: ['#1e3a5f','#ffffff','#e2e8f0','#0f172a'] },
+      { name: 'Gold Standard', desc: 'Deep green and gold — wealth, growth, and prestige.', swatches: ['#14532d','#c8a84b','#f5f5f5','#052e16'] },
+    ],
+    Luxury: [
+      { name: 'Private Bank', desc: 'Matte black and burnished gold — ultra-exclusive wealth management.', swatches: ['#09090b','#c8a84b','#1c1917','#fafafa'] },
+    ],
+    Calm: [
+      { name: 'Steady Growth', desc: 'Cool blues and greens signal stability and steady returns.', swatches: ['#0284c7','#0d9488','#f0f9ff','#0c4a6e'] },
+    ],
+    Energetic: [
+      { name: 'Fintech Bold', desc: 'Purple and green for disruptive fintech and mobile money apps.', swatches: ['#7c3aed','#10b981','#fbbf24','#09090b'] },
+    ],
+    Friendly: [
+      { name: 'Community Bank', desc: 'Warm and accessible for SACCOs, cooperatives and microfinance.', swatches: ['#2563eb','#f59e0b','#dbeafe','#1e3a5f'] },
+    ],
+    Bold: [
+      { name: 'Market Leader', desc: 'High-contrast red and black — powerful, assertive, dominant.', swatches: ['#dc2626','#09090b','#ffffff','#450a0a'] },
+    ],
+  },
+  education: {
+    Professional: [
+      { name: 'Academic Blue', desc: 'Traditional and trusted — universities and professional training.', swatches: ['#1e3a5f','#ffffff','#dbeafe','#0f172a'] },
+    ],
+    Energetic: [
+      { name: 'Knowledge Fire', desc: 'Bright and stimulating — e-learning and youth education.', swatches: ['#f59e0b','#3b82f6','#10b981','#1c1917'] },
+    ],
+    Calm: [
+      { name: 'Study Space', desc: 'Quiet focus tones — tutoring, libraries, and research.', swatches: ['#6366f1','#e0e7ff','#f8fafc','#1e1b4b'] },
+    ],
+    Luxury: [
+      { name: 'Prestige School', desc: 'Gold and burgundy for private schools and executive education.', swatches: ['#7f1d1d','#c8a84b','#f5f5f5','#450a0a'] },
+    ],
+    Friendly: [
+      { name: 'Happy Learning', desc: 'Playful rainbow palette for primary schools and EdTech.', swatches: ['#f97316','#3b82f6','#10b981','#fef9c3'] },
+    ],
+    Bold: [
+      { name: 'Pioneer School', desc: 'Strong contrast for institutions that lead and inspire.', swatches: ['#1d4ed8','#dc2626','#ffffff','#0f172a'] },
+    ],
+  },
+  hospitality: {
+    Professional: [
+      { name: 'Business Hotel', desc: 'Clean and efficient — corporate hotels and conference venues.', swatches: ['#1e3a5f','#64748b','#f1f5f9','#0f172a'] },
+    ],
+    Luxury: [
+      { name: 'Grand Suite', desc: 'Ivory and gold with deep navy — 5-star hotel and lodge branding.', swatches: ['#0f172a','#c8a84b','#f5f0e8','#1e1c16'] },
+      { name: 'Safari Sunset', desc: 'Warm earth tones inspired by the Zambian bush at dusk.', swatches: ['#92400e','#c8a84b','#fef9c3','#1c0d00'] },
+    ],
+    Calm: [
+      { name: 'River Lodge', desc: 'Blues and natural tones for eco-lodges near water.', swatches: ['#0284c7','#4d7c0f','#f0f9ff','#0c4a6e'] },
+    ],
+    Energetic: [
+      { name: 'Vibrant Venue', desc: 'Bold and festive for event spaces and nightlife brands.', swatches: ['#dc2626','#f59e0b','#1e293b','#ffffff'] },
+    ],
+    Friendly: [
+      { name: 'Warm Welcome', desc: 'Inviting and homely for guesthouses and B&Bs.', swatches: ['#f97316','#fef9c3','#ffffff','#78350f'] },
+    ],
+    Bold: [
+      { name: 'Urban Chic', desc: 'Edgy and modern for boutique hotels and rooftop bars.', swatches: ['#09090b','#6d28d9','#f3e8ff','#1e1b4b'] },
+    ],
+  },
+  construction: {
+    Professional: [
+      { name: 'Blueprint', desc: 'Industrial blue and white — engineering and architectural firms.', swatches: ['#1e3a5f','#ffffff','#dbeafe','#0f172a'] },
+    ],
+    Bold: [
+      { name: 'Steel & Fire', desc: 'Heavy-duty black, orange, and steel grey — construction and mining.', swatches: ['#0f172a','#f97316','#64748b','#ffffff'] },
+      { name: 'Hard Hat', desc: 'Yellow safety palette — high-visibility and construction safety.', swatches: ['#f59e0b','#1e3a5f','#ffffff','#1c1917'] },
+    ],
+    Luxury: [
+      { name: 'Property Premier', desc: 'Dark tones with gold accents for premium real estate brands.', swatches: ['#1e293b','#c8a84b','#f5f5f5','#0f172a'] },
+    ],
+    Friendly: [
+      { name: 'Build Together', desc: 'Community-driven greens for social housing and co-ops.', swatches: ['#16a34a','#f59e0b','#ffffff','#052e16'] },
+    ],
+    Calm: [
+      { name: 'Stone & Sand', desc: 'Neutral earth tones for landscaping and interior design.', swatches: ['#92400e','#d6d3d1','#fafaf9','#1c1917'] },
+    ],
+    Energetic: [
+      { name: 'Fast Build', desc: 'Bright and urgent for time-sensitive contract and trade businesses.', swatches: ['#dc2626','#f59e0b','#ffffff','#0f172a'] },
+    ],
+  },
+  legal: {
+    Professional: [
+      { name: 'Court Formal', desc: 'Deep navy and white — timeless, authoritative legal presence.', swatches: ['#1e3a5f','#ffffff','#e2e8f0','#0f172a'] },
+      { name: 'Dark Law', desc: 'Charcoal and silver — sober, serious, experienced.', swatches: ['#18181b','#71717a','#f4f4f5','#09090b'] },
+    ],
+    Luxury: [
+      { name: 'Senior Partner', desc: 'Burgundy and gold — prestige, heritage, and trust.', swatches: ['#7f1d1d','#c8a84b','#f5f5f5','#450a0a'] },
+    ],
+    Calm: [
+      { name: 'Legal Aid', desc: 'Approachable blues for community legal services and NGOs.', swatches: ['#2563eb','#dbeafe','#f8fafc','#1e3a5f'] },
+    ],
+    Energetic: [
+      { name: 'Advocacy Bold', desc: 'Strong and activist — human rights and advocacy organisations.', swatches: ['#dc2626','#1e3a5f','#ffffff','#450a0a'] },
+    ],
+    Friendly: [
+      { name: 'Open Counsel', desc: 'Warm tones for family law and accessible community law firms.', swatches: ['#2563eb','#f59e0b','#ffffff','#1e3a5f'] },
+    ],
+    Bold: [
+      { name: 'Justice First', desc: 'High-contrast power palette for bold, results-driven firms.', swatches: ['#09090b','#dc2626','#ffffff','#450a0a'] },
+    ],
+  },
+  food: {
+    Energetic: [
+      { name: 'Appetite', desc: 'Red and yellow trigger hunger — the science-backed combo for food brands.', swatches: ['#dc2626','#f59e0b','#ffffff','#1c1917'] },
+      { name: 'Street Eats', desc: 'Bold and urban for street food, food trucks, and quick service.', swatches: ['#f97316','#1e293b','#fef9c3','#78350f'] },
+    ],
+    Luxury: [
+      { name: 'Fine Dining', desc: 'Matte black and gold for high-end restaurants and catering.', swatches: ['#09090b','#c8a84b','#1c1917','#fef9c3'] },
+    ],
+    Friendly: [
+      { name: 'Family Table', desc: 'Warm and welcoming — family restaurants, bakeries, and cafés.', swatches: ['#f97316','#fef9c3','#ffffff','#78350f'] },
+    ],
+    Calm: [
+      { name: 'Organic Café', desc: 'Muted greens and creams for healthy, plant-based food brands.', swatches: ['#4d7c0f','#d9f99d','#fefce8','#14532d'] },
+    ],
+    Professional: [
+      { name: 'Corporate Catering', desc: 'Clean and professional for B2B food services and catering companies.', swatches: ['#1e3a5f','#f5f5f5','#dbeafe','#0f172a'] },
+    ],
+    Bold: [
+      { name: 'Hot Spice', desc: 'Intense and fiery — chilli brands, hot sauce, and bold flavours.', swatches: ['#dc2626','#92400e','#fef9c3','#450a0a'] },
+    ],
+  },
+  retail: {
+    Luxury: [
+      { name: 'High Fashion', desc: 'Minimal black and white with a gold touch — premium retail.', swatches: ['#09090b','#c8a84b','#f5f5f5','#1c1917'] },
+    ],
+    Energetic: [
+      { name: 'Sale Season', desc: 'High-energy brights for fast fashion, promotions, and youth brands.', swatches: ['#dc2626','#f59e0b','#3b82f6','#ffffff'] },
+    ],
+    Friendly: [
+      { name: 'Corner Shop', desc: 'Warm community tones for local retail and neighbourhood stores.', swatches: ['#f97316','#16a34a','#fef9c3','#78350f'] },
+    ],
+    Calm: [
+      { name: 'Boutique Cool', desc: 'Muted and editorial — independent boutiques and concept stores.', swatches: ['#475569','#cbd5e1','#f8fafc','#0f172a'] },
+    ],
+    Professional: [
+      { name: 'Department Store', desc: 'Trust-building blues for large format retail and supermarkets.', swatches: ['#1e3a5f','#dc2626','#ffffff','#0f172a'] },
+    ],
+    Bold: [
+      { name: 'Street Brand', desc: 'Urban streetwear energy — sharp, direct, and unapologetic.', swatches: ['#09090b','#6d28d9','#f3e8ff','#1e1b4b'] },
+    ],
+  },
+};
+
+let selectedPaletteIndex = 0;
+let currentPalettes = [];
+let savedPalettes = [null, null, null]; // up to 3 saved palettes
+let randomisedSwatches = null; // holds randomised variant
+
+// ─── COLOUR DARKNESS HELPER ──────────────────────────────────────────────
+function hexLuminance(hex) {
+  const r = parseInt(hex.slice(1,3),16)/255;
+  const g = parseInt(hex.slice(3,5),16)/255;
+  const b = parseInt(hex.slice(5,7),16)/255;
+  const toL = c => c <= 0.03928 ? c/12.92 : Math.pow((c+0.055)/1.055,2.4);
+  return 0.2126*toL(r)+0.7152*toL(g)+0.0722*toL(b);
+}
+function isDark(hex) { return hexLuminance(hex) < 0.18; }
+function isLight(hex) { return hexLuminance(hex) > 0.5; }
+
+// Pool of dark alternatives (deep, rich tones)
+const DARK_ALTS = ['#0f172a','#1e293b','#0c4a6e','#064e3b','#1a1a2e','#1e3a5f','#052e16','#300a0a','#2d1b69','#0f0f0f','#1c1917','#0f2027','#1a0a2e','#18181b','#0e2a1a'];
+// Pool of light alternatives (bright, clean tones)
+const LIGHT_ALTS = ['#f0f9ff','#fef9c3','#f0fdf4','#fff7ed','#fdf4ff','#f8fafc','#ede9fe','#fce7f3','#ecfdf5','#f9fafb','#fefce8','#e0f2fe','#d1fae5','#ffffff','#f3f4f6'];
+// Pool of mid-tone alternatives
+const MID_ALTS = ['#2563eb','#16a34a','#dc2626','#d97706','#7c3aed','#0891b2','#059669','#c8a84b','#f97316','#10b981','#6d28d9','#1d4ed8','#15803d','#b45309','#4f46e5'];
+
+function getAlternatives(hex) {
+  if(isDark(hex)) return DARK_ALTS.filter(h=>h!==hex);
+  if(isLight(hex)) return LIGHT_ALTS.filter(h=>h!==hex);
+  return MID_ALTS.filter(h=>h!==hex);
+}
+
+// helper: keep randomised synced
+function saveCurrentPaletteToRandomised(sw){ randomisedSwatches = sw; }
+// ─── RANDOMISE whole palette ─────────────────────────────────────────────
+function randomisePalette() {
+  if(!currentPalettes.length) { showToast('Generate a palette first.'); return; }
+  const base = currentPalettes[selectedPaletteIndex].swatches;
+  const newSwatches = base.map(hex => {
+    const alts = getAlternatives(hex);
+    return alts[Math.floor(Math.random()*alts.length)] || hex;
+  });
+  randomisedSwatches = newSwatches;
+  selectedSwatchIdx = null;
+  renderPaletteResult(currentPalettes, selectedPaletteIndex, newSwatches);
+  saveCurrentPaletteToRandomised(newSwatches);
+  showToast('🎲 New palette variation applied!');
+}
+
+// ─── GENERATE ────────────────────────────────────────────────────────────
+function generatePalettes() {
+  const industry = document.getElementById('c-industry').value;
+  const mood = document.getElementById('c-mood').value;
+  const resultEl = document.getElementById('palette-result');
+  const actionEl = document.getElementById('color-action');
+
+  if(!industry || !mood) {
+    resultEl.innerHTML = `<div style="text-align:center;color:var(--text-muted);font-size:13px;padding:40px 0;"><div style="font-size:32px;margin-bottom:12px;">🎨</div>Select both an industry and a mood to generate palettes.</div>`;
+    actionEl.classList.remove('visible');
+    return;
+  }
+
+  const industryData = PALETTES[industry];
+  if(!industryData) return;
+  const palettes = industryData[mood] || industryData['Professional'] || Object.values(industryData)[0];
+  currentPalettes = palettes;
+  selectedPaletteIndex = 0;
+  randomisedSwatches = null;
+  selectedSwatchIdx = null;
+  renderPaletteResult(palettes, 0);
+  actionEl.classList.add('visible'); actionEl.style.flexDirection = 'column'; actionEl.style.gap = '10px';
+}
+
+// ─── SELECTED SWATCH FOR ALTERNATIVES ───────────────────────────────────
+let selectedSwatchIdx = null;
+
+// ─── RENDER ──────────────────────────────────────────────────────────────
+function renderPaletteResult(palettes, active, overrideSwatches) {
+  const el = document.getElementById('palette-result');
+  const p = palettes[active];
+  const swatchList = overrideSwatches || p.swatches;
+  const industryLabel = document.getElementById('c-industry').options[document.getElementById('c-industry').selectedIndex].text;
+  const moodLabel = document.getElementById('c-mood').value;
+
+  const tabs = palettes.length > 1
+    ? '<div class="palette-tabs">' + palettes.map((pal,i) =>
+        `<button class="palette-tab ${i===active?'active-pal':''}" onclick="selectPalette(${i})">${pal.name}</button>`
+      ).join('') + '</div>'
+    : '';
+
+  const swatchBars = swatchList.map((hex,idx) =>
+    `<div class="big-swatch ${selectedSwatchIdx===idx?'active-swatch':''}" style="background:${hex};" onclick="selectSwatchForAlts(${idx})" title="Tap to explore alternatives">
+      <span class="swatch-hex">${hex.toUpperCase()}</span>
+    </div>`
+  ).join('');
+
+  const hexChips = swatchList.map(hex =>
+    `<div class="hex-chip" onclick="copyHex('${hex}')">
+      <div class="hex-chip-dot" style="background:${hex};"></div>
+      <span class="hex-chip-code">${hex}</span>
+    </div>`
+  ).join('');
+
+  // Alternatives panel for the selected swatch only
+  let altsPanel = '';
+  if (selectedSwatchIdx !== null && selectedSwatchIdx < swatchList.length) {
+    const hex = swatchList[selectedSwatchIdx];
+    const alts = getAlternatives(hex).slice(0, 14);
+    const altBtns = alts.map(a =>
+      `<div class="alt-color-btn ${a===hex?'active-alt':''}" style="background:${a};" title="${a}" onclick="swapColor(${selectedSwatchIdx},'${a}')"></div>`
+    ).join('');
+    altsPanel = `<div class="color-alts-panel">
+      <div class="color-alts-title">Alternative options for Colour ${selectedSwatchIdx+1}</div>
+      <div class="color-alts-scroll">${altBtns}</div>
+    </div>`;
+  }
+
+  const randomLabel = overrideSwatches ? '<span style="font-size:10px;font-family:Space Mono,monospace;color:var(--gold);letter-spacing:1px;margin-left:8px;">🎲 RANDOMISED</span>' : '';
+
+  el.innerHTML = `
+    <div class="palette-result-area">
+      <div class="palette-result-label">${p.name}${randomLabel}</div>
+      <div class="palette-result-sub">${industryLabel} &middot; ${moodLabel} &mdash; ${p.desc}</div>
+      ${tabs}
+      <div class="big-swatch-row">${swatchBars}</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-bottom:14px;">Tap any colour above to explore alternatives and swap it out.</div>
+      ${altsPanel}
+      <div class="hex-chips-row">${hexChips}</div>
+      <div style="font-size:11px;color:var(--text-muted);margin-top:8px;">Tap a hex code to copy to clipboard.</div>
+    </div>
+  `;
+}
+
+function selectSwatchForAlts(idx) {
+  selectedSwatchIdx = (selectedSwatchIdx === idx) ? null : idx;
+  renderPaletteResult(currentPalettes, selectedPaletteIndex, randomisedSwatches || null);
+}
+
+function swapColor(idx, newHex) {
+  const base = randomisedSwatches || currentPalettes[selectedPaletteIndex].swatches;
+  const updated = [...base];
+  updated[idx] = newHex;
+  randomisedSwatches = updated;
+  // keep the same swatch selected so alternatives panel stays open
+  selectedSwatchIdx = idx;
+  renderPaletteResult(currentPalettes, selectedPaletteIndex, updated);
+  showToast('Colour updated to ' + newHex);
+}
+
+function selectPalette(i) {
+  selectedPaletteIndex = i;
+  randomisedSwatches = null;
+  selectedSwatchIdx = null;
+  renderPaletteResult(currentPalettes, i);
+}
+
+function copyHex(hex) {
+  navigator.clipboard.writeText(hex).then(() => showToast(hex + ' copied!'));
+}
+
+// ─── SAVE PALETTES ───────────────────────────────────────────────────────
+function saveCurrentPalette() {
+  if(!currentPalettes.length) { showToast('Generate a palette first.'); return; }
+  const slotIdx = savedPalettes.findIndex(s => s === null);
+  if(slotIdx === -1) { showToast('All 3 slots full — delete one first.'); return; }
+  const p = currentPalettes[selectedPaletteIndex];
+  const swatches = randomisedSwatches || p.swatches;
+  savedPalettes[slotIdx] = { name: p.name, swatches, industry: document.getElementById('c-industry').options[document.getElementById('c-industry').selectedIndex].text, mood: document.getElementById('c-mood').value };
+  renderSavedSlots();
+  showToast('✅ Saved to Palette ' + (slotIdx+1));
+}
+
+function loadSavedPalette(idx) {
+  if(!savedPalettes[idx]) return;
+  const pal = savedPalettes[idx];
+  // Load swatches into current display
+  randomisedSwatches = [...pal.swatches];
+  selectedSwatchIdx = null;
+  if(currentPalettes.length) {
+    renderPaletteResult(currentPalettes, selectedPaletteIndex, randomisedSwatches);
+  } else {
+    // No current palette — just show the saved one as standalone
+    const tempPal = [{ name: pal.name, desc: pal.industry + ' · ' + pal.mood, swatches: pal.swatches }];
+    currentPalettes = tempPal;
+    selectedPaletteIndex = 0;
+    renderPaletteResult(tempPal, 0, pal.swatches);
+    document.getElementById('color-action').style.display = 'flex';
+  }
+  showToast('Loaded: ' + pal.name);
+}
+
+function deleteSavedPalette(idx, e) {
+  e.stopPropagation();
+  savedPalettes[idx] = null;
+  renderSavedSlots();
+  showToast('Palette removed.');
+}
+
+function renderSavedSlots() {
+  savedPalettes.forEach((pal, i) => {
+    const slot = document.getElementById('saved-slot-' + i);
+    if(!pal) {
+      slot.className = 'saved-slot';
+      slot.innerHTML = `<div class="saved-slot-label">PALETTE ${i+1}</div><div class="saved-slot-empty">Empty — save a palette below</div>`;
+    } else {
+      const swatchBars = pal.swatches.map(h => `<div style="flex:1;background:${h};"></div>`).join('');
+      slot.className = 'saved-slot filled';
+      slot.innerHTML = `
+        <button class="del-btn" onclick="deleteSavedPalette(${i},event)" title="Remove">✕</button>
+        <div class="saved-slot-label">PALETTE ${i+1}</div>
+        <div class="saved-slot-swatches">${swatchBars}</div>
+        <div class="saved-slot-name">${pal.name}</div>
+        <div style="font-size:10px;color:var(--text-muted);margin-top:3px;">${pal.industry} · ${pal.mood}</div>`;
+    }
+  });
+}
+
+// ─── EXPORT AS PNG ───────────────────────────────────────────────────────
+function exportPalettePNG() {
+  if(!currentPalettes.length) { showToast('Generate a palette first.'); return; }
+  const p = currentPalettes[selectedPaletteIndex];
+  const swatches = randomisedSwatches || p.swatches;
+  drawPalettePNG(swatches, p.name, document.getElementById('c-industry').options[document.getElementById('c-industry').selectedIndex].text + ' · ' + document.getElementById('c-mood').value);
+}
+
+function exportCustomPalettePNG() {
+  const swatches = ['custom-c1','custom-c2','custom-c3','custom-c4'].map(id => document.getElementById(id).value);
+  drawPalettePNG(swatches, 'Custom Palette', 'Fully Custom — Erthdot Tools');
+}
+
+function drawPalettePNG(swatches, name, subtitle) {
+  const canvas = document.createElement('canvas');
+  const W = 900, H = 360;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  // Background
+  ctx.fillStyle = '#111111';
+  ctx.fillRect(0,0,W,H);
+  // Top strip
+  ctx.fillStyle = '#1a7a4a';
+  ctx.fillRect(0,0,W,4);
+  // Swatches
+  const count = swatches.length;
+  const sw = W / count;
+  const SWATCH_TOP = 48, SWATCH_H = 220;
+  swatches.forEach((hex,i) => {
+    // Swatch rectangle
+    ctx.fillStyle = hex;
+    ctx.fillRect(i*sw, SWATCH_TOP, sw - 2, SWATCH_H);
+    // Hex label below swatch
+    const lum = hexLuminance(hex);
+    ctx.fillStyle = '#e4e4e4';
+    ctx.font = '600 13px monospace';
+    ctx.textAlign = 'center';
+    ctx.fillText(hex.toUpperCase(), i*sw + sw/2, SWATCH_TOP + SWATCH_H + 24);
+    // Role label inside swatch
+    ctx.fillStyle = lum < 0.3 ? 'rgba(255,255,255,0.4)' : 'rgba(0,0,0,0.35)';
+    ctx.font = '10px monospace';
+    ctx.fillText('Colour ' + (i+1), i*sw + sw/2, SWATCH_TOP + SWATCH_H - 10);
+  });
+  // Palette name
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 20px sans-serif';
+  ctx.textAlign = 'left';
+  ctx.fillText(name, 20, 30);
+  // Subtitle
+  ctx.fillStyle = '#555555';
+  ctx.font = '12px sans-serif';
+  ctx.fillText(subtitle, 20, H - 14);
+  // Branding
+  ctx.fillStyle = '#1a7a4a';
+  ctx.font = 'bold 11px monospace';
+  ctx.textAlign = 'right';
+  ctx.fillText('ERTHDOT.DESIGN', W - 20, H - 14);
+  // Trigger download — use setTimeout to ensure paint completes
+  setTimeout(() => {
+    try {
+      const dataURL = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      const safeName = (name || 'palette').replace(/[^a-z0-9]/gi, '-').toLowerCase();
+      link.download = safeName + '-erthdot.png';
+      link.href = dataURL;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => document.body.removeChild(link), 200);
+      showToast('PNG downloaded!');
+    } catch(e) {
+      showToast('Export failed: ' + e.message);
+    }
+  }, 50);
+}
+
+// ─── CUSTOM PALETTE ──────────────────────────────────────────────────────
+function toggleCustomPalette() {
+  const body = document.getElementById('custom-palette-body');
+  const icon = document.getElementById('custom-toggle-icon');
+  const isOpen = body.classList.toggle('open');
+  icon.textContent = isOpen ? '−' : '＋';
+}
+
+function updateCustomPreview() {
+  ['1','2','3','4'].forEach(n => {
+    const hex = document.getElementById('custom-c'+n).value;
+    document.getElementById('cp'+n).style.background = hex;
+    document.getElementById('custom-h'+n).value = hex;
+  });
+}
+
+function updateCustomHex(input, hexId) {
+  document.getElementById(hexId).value = input.value;
+}
+
+function syncCustomColor(input, colorId) {
+  const val = input.value;
+  if(/^#[0-9a-fA-F]{6}$/.test(val)) {
+    document.getElementById(colorId).value = val;
+    updateCustomPreview();
+  }
+}
+
+function saveCustomPalette() {
+  const slotIdx = savedPalettes.findIndex(s => s === null);
+  if(slotIdx === -1) { showToast('All 3 slots full — delete one first.'); return; }
+  const swatches = ['custom-c1','custom-c2','custom-c3','custom-c4'].map(id => document.getElementById(id).value);
+  savedPalettes[slotIdx] = { name: 'Custom Palette', swatches, industry: 'Custom', mood: 'Custom' };
+  renderSavedSlots();
+  showToast('✅ Custom palette saved to slot ' + (slotIdx+1));
+}
+
+function sendCustomPaletteWA() {
+  const swatches = ['custom-c1','custom-c2','custom-c3','custom-c4'].map(id => document.getElementById(id).value);
+  const msg = `*ERTHDOT — Custom Colour Palette* 🎨\n\n` +
+    `*Type:* Fully Custom (client-defined)\n` +
+    `*Note:* This palette was built manually and may not follow industry standards.\n\n` +
+    `*Hex Codes:*\n${swatches.join('\n')}\n\n` +
+    `_Sent via Erthdot Tools_`;
+  openWA(msg);
+}
+
+// ─── BOOKMARK ────────────────────────────────────────────────────────────
+function bookmarkPage() {
+  const ua = navigator.userAgent;
+  if(ua.indexOf('Chrome') > -1 || ua.indexOf('Firefox') > -1) {
+    showToast('Press ' + (navigator.platform.includes('Mac') ? '⌘' : 'Ctrl') + '+D to bookmark this page!');
+  } else {
+    showToast('Use your browser\'s bookmark button (⭐) to save this page.');
+  }
+}
+
+// ─── SEND WHATSAPP ───────────────────────────────────────────────────────
+function sendColorWA() {
+  const industry = document.getElementById('c-industry').options[document.getElementById('c-industry').selectedIndex].text;
+  const mood = document.getElementById('c-mood').value;
+  if(!currentPalettes.length) { showToast('Please generate a palette first.'); return; }
+  const p = currentPalettes[selectedPaletteIndex];
+  const swatches = randomisedSwatches || p.swatches;
+  const msg = `*ERTHDOT — Colour Palette Selection* 🎨\n\n` +
+    `*Industry:* ${industry}\n` +
+    `*Mood:* ${mood}\n\n` +
+    `*Selected Palette:* ${p.name}${randomisedSwatches?' (Custom Variation)':''}\n` +
+    `*Description:* ${p.desc}\n\n` +
+    `*Hex Codes:*\n${swatches.join('\n')}\n\n` +
+    `_Sent via Erthdot Tools_`;
+  openWA(msg);
+}
+
+// ─── SHARED HELPERS ─────────────────────────────────────────────────────
+function renderSummary(containerId, data) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = Object.entries(data).map(([k,v]) =>
+    `<div class="summary-row"><div class="summary-key">${k}</div><div class="summary-val">${(v||'').toString().replace(/\n/g,'<br>')}</div></div>`
+  ).join('');
+}
+
+function openWA(message) {
+  const url = `https://wa.me/${DESIGNER_WA}?text=${encodeURIComponent(message)}`;
+  window.open(url, '_blank');
+}
+
+// ─── INIT STEP INDICATORS ───────────────────────────────────────────────
+renderLogoSteps(1);
+renderProfileSteps(1);
+</script>
+</body>
+</html>

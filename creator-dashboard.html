@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/jpeg" href="data:image/jpeg;base64,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">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Erthdot — Creator Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1a7a4a;
+    --green-light: #22a060;
+    --green-dark: #0e4a2e;
+    --gold: #c8a84b;
+    --black: #0a0a0a;
+    --off-black: #0e0e0e;
+    --sidebar-bg: #0c0c0c;
+    --dark-card: #161616;
+    --card2: #1a1a1a;
+    --border: #242424;
+    --border-light: #2e2e2e;
+    --text: #e2e2e2;
+    --text-muted: #777;
+    --text-dim: #444;
+    --white: #ffffff;
+    --red: #c44;
+    --blue: #4a7acc;
+    --sidebar-width: 260px;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--off-black); color: var(--text); overflow-x: hidden; display: flex; min-height: 100vh; }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--green-dark); border-radius: 2px; }
+
+  /* ── AUTH GATE ── */
+  #authGate {
+    position: fixed; inset: 0; background: var(--black); z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 16px;
+  }
+  #authGate.hidden { display: none; }
+  .auth-spinner { width: 32px; height: 32px; border: 2px solid var(--border); border-top-color: var(--green); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-width); flex-shrink: 0;
+    background: var(--sidebar-bg);
+    border-right: 1px solid var(--border);
+    display: flex; flex-direction: column;
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 100;
+    overflow-y: auto;
+  }
+  .sidebar-logo {
+    display: flex; align-items: center; gap: 10px;
+    padding: 22px 20px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-logo-circle { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--green); display: flex; align-items: center; justify-content: center; font-family: 'Space Mono', monospace; font-size: 9px; color: var(--green); flex-shrink: 0; }
+  .sidebar-brand { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 3px; color: var(--white); }
+  .sidebar-role { font-size: 9px; color: var(--green-light); letter-spacing: 2px; text-transform: uppercase; margin-top: 2px; }
+
+  .sidebar-section-label { font-size: 9px; color: var(--text-dim); letter-spacing: 3px; text-transform: uppercase; padding: 20px 20px 8px; }
+  .sidebar-nav { list-style: none; padding: 0 10px; }
+  .sidebar-nav li a {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 6px; color: var(--text-muted);
+    text-decoration: none; font-size: 13px; transition: 0.15s; cursor: pointer;
+  }
+  .sidebar-nav li a:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+  .sidebar-nav li a.active { background: rgba(26,122,74,0.12); color: var(--green-light); }
+  .sidebar-nav li a .nav-icon { font-size: 15px; width: 20px; text-align: center; }
+  .sidebar-nav li a .nav-badge { margin-left: auto; background: var(--green-dark); color: var(--green-light); font-size: 10px; padding: 2px 7px; border-radius: 10px; }
+
+  .sidebar-divider { height: 1px; background: var(--border); margin: 8px 20px; }
+
+  .sidebar-user {
+    margin-top: auto; padding: 16px 20px;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .user-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--green-dark); display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--green-light); font-weight: 700; flex-shrink: 0; }
+  .user-name { font-size: 13px; font-weight: 500; }
+  .user-role-tag { font-size: 11px; color: var(--text-muted); }
+  .logout-btn { margin-left: auto; background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 18px; transition: color 0.2s; padding: 4px; }
+  .logout-btn:hover { color: var(--red); }
+
+  /* ── MAIN ── */
+  .main { margin-left: var(--sidebar-width); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+
+  /* TOP BAR */
+  .topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 32px; background: var(--sidebar-bg);
+    border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50;
+  }
+  .topbar-title { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 1px; }
+  .topbar-right { display: flex; align-items: center; gap: 12px; }
+  .topbar-notif { background: none; border: 1px solid var(--border); color: var(--text-muted); padding: 8px 12px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-size: 16px; position: relative; }
+  .topbar-notif:hover { border-color: var(--green); color: var(--green-light); }
+  .notif-dot { position: absolute; top: 6px; right: 6px; width: 7px; height: 7px; border-radius: 50%; background: var(--green-light); }
+  .btn-sm { padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; font-family: 'DM Sans', sans-serif; transition: 0.2s; }
+  .btn-green { background: var(--green); color: var(--white); }
+  .btn-green:hover { background: var(--green-light); }
+  .btn-outline { background: none; border: 1px solid var(--border); color: var(--text-muted); }
+  .btn-outline:hover { border-color: var(--green); color: var(--green-light); }
+
+  /* CONTENT */
+  .content { padding: 28px 32px; flex: 1; }
+
+  /* PAGES */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* STAT CARDS */
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+  .stat-card { background: var(--dark-card); border: 1px solid var(--border); border-radius: 8px; padding: 20px 24px; }
+  .stat-card-label { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; }
+  .stat-card-val { font-family: 'Bebas Neue', sans-serif; font-size: 42px; color: var(--white); letter-spacing: 1px; line-height: 1; }
+  .stat-card-val.green { color: var(--green-light); }
+  .stat-card-val.gold { color: var(--gold); }
+  .stat-card-sub { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+
+  /* PANELS */
+  .panel { background: var(--dark-card); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .panel-header { padding: 18px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .panel-title { font-family: 'Bebas Neue', sans-serif; font-size: 18px; letter-spacing: 1px; display: flex; align-items: center; gap: 8px; }
+  .panel-body { padding: 24px; }
+
+  /* PROJECT TABLE */
+  .proj-table { width: 100%; border-collapse: collapse; }
+  .proj-table th { text-align: left; font-size: 10px; color: var(--text-dim); letter-spacing: 2px; text-transform: uppercase; padding: 0 12px 12px; font-weight: 600; }
+  .proj-table td { padding: 12px; border-top: 1px solid var(--border); vertical-align: middle; }
+  .proj-table tr:hover td { background: rgba(255,255,255,0.015); }
+  .proj-name { font-size: 14px; font-weight: 500; }
+  .proj-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .proj-code { font-family: 'Space Mono', monospace; font-size: 11px; color: var(--text-dim); }
+  .status-pill { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 500; }
+  .status-active { background: rgba(26,122,74,0.15); color: var(--green-light); border: 1px solid rgba(26,122,74,0.3); }
+  .status-review { background: rgba(200,168,75,0.12); color: var(--gold); border: 1px solid rgba(200,168,75,0.25); }
+  .status-complete { background: rgba(74,122,204,0.12); color: var(--blue); border: 1px solid rgba(74,122,204,0.25); }
+  .status-pending { background: rgba(255,255,255,0.04); color: var(--text-muted); border: 1px solid var(--border); }
+  .mini-bar { height: 4px; background: var(--border); border-radius: 2px; width: 100px; overflow: hidden; }
+  .mini-fill { height: 100%; background: var(--green-light); border-radius: 2px; }
+  .action-btns { display: flex; gap: 6px; }
+  .action-btn { padding: 5px 10px; border-radius: 4px; font-size: 11px; cursor: pointer; border: 1px solid var(--border); background: none; color: var(--text-muted); transition: 0.2s; font-family: 'DM Sans', sans-serif; white-space: nowrap; }
+  .action-btn:hover { border-color: var(--green); color: var(--green-light); }
+  .action-btn.danger:hover { border-color: var(--red); color: var(--red); }
+
+  /* PROJECT EDITOR */
+  .editor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .form-group { margin-bottom: 18px; }
+  .form-label { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; display: block; }
+  .form-input, .form-select, .form-textarea { width: 100%; padding: 11px 14px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; transition: border-color 0.2s; }
+  .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--green); }
+  .form-select option { background: var(--off-black); }
+  .form-textarea { min-height: 80px; resize: vertical; }
+
+  /* STAGE EDITOR */
+  .stages-editor { display: flex; flex-direction: column; gap: 8px; }
+  .stage-row { display: grid; grid-template-columns: 1fr 72px 130px 36px; gap: 8px; align-items: center; }
+  .stage-row .form-input { padding: 9px 12px; }
+  .stage-status-sel { padding: 9px 10px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-size: 13px; }
+  .remove-stage-btn { background: none; border: 1px solid var(--border); color: var(--text-dim); width: 36px; height: 36px; border-radius: 6px; cursor: pointer; font-size: 16px; transition: 0.2s; display: flex; align-items: center; justify-content: center; }
+  .remove-stage-btn:hover { border-color: var(--red); color: var(--red); }
+  .add-stage-btn { width: 100%; padding: 9px; background: none; border: 1px dashed var(--border); color: var(--text-muted); border-radius: 6px; cursor: pointer; font-size: 13px; transition: 0.2s; font-family: 'DM Sans', sans-serif; margin-top: 4px; }
+  .add-stage-btn:hover { border-color: var(--green); color: var(--green-light); }
+
+  /* PROGRESS SLIDER */
+  .progress-row { display: flex; align-items: center; gap: 14px; }
+  input[type=range] { flex: 1; accent-color: var(--green); height: 4px; }
+  .progress-val { font-family: 'Bebas Neue', sans-serif; font-size: 28px; color: var(--green-light); min-width: 52px; text-align: right; }
+
+  /* NOTIF PREVIEW */
+  .notif-preview { padding: 14px 16px; background: rgba(26,122,74,0.07); border: 1px solid rgba(26,122,74,0.25); border-radius: 6px; font-size: 13px; color: var(--text-muted); margin-top: 14px; line-height: 1.6; }
+  .notif-preview strong { color: var(--green-light); }
+
+  /* LINK BOX */
+  .link-box { display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 6px; }
+  .link-url { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--text-muted); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .copy-btn { background: var(--green); color: var(--white); border: none; padding: 7px 14px; border-radius: 4px; font-size: 12px; cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif; }
+  .link-actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+  .link-action-btn { padding: 8px 14px; background: rgba(26,122,74,0.1); border: 1px solid rgba(26,122,74,0.3); border-radius: 4px; color: var(--green-light); font-size: 12px; cursor: pointer; transition: 0.2s; font-family: 'DM Sans', sans-serif; }
+  .link-action-btn:hover { background: rgba(26,122,74,0.2); }
+  .link-action-btn.danger { border-color: rgba(196,68,68,0.35); color: var(--red); background: rgba(196,68,68,0.07); }
+  .link-action-btn.danger:hover { background: rgba(196,68,68,0.15); }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.82); z-index: 2000; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(4px); }
+  .modal-overlay.open { display: flex; }
+  .modal { background: var(--dark-card); border: 1px solid var(--border); border-radius: 10px; padding: 36px; max-width: 560px; width: 100%; max-height: 90vh; overflow-y: auto; position: relative; }
+  .modal-close { position: absolute; top: 14px; right: 14px; background: none; border: none; color: var(--text-muted); font-size: 22px; cursor: pointer; }
+  .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 28px; letter-spacing: 1px; margin-bottom: 6px; }
+  .modal-sub { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
+
+  /* BOOKING TABLE */
+  .booking-row { padding: 14px 0; border-bottom: 1px solid var(--border); display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+  .booking-row:last-child { border-bottom: none; }
+  .booking-info-name { font-size: 14px; font-weight: 500; }
+  .booking-info-meta { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+  .booking-date { font-family: 'Space Mono', monospace; font-size: 12px; color: var(--green-light); text-align: right; white-space: nowrap; }
+
+  /* TOAST */
+  .toast { position: fixed; bottom: 24px; right: 24px; z-index: 9999; background: var(--green-dark); border: 1px solid var(--green); border-radius: 8px; padding: 14px 20px; font-size: 14px; color: var(--white); transform: translateX(200px); opacity: 0; transition: all 0.3s; max-width: 300px; pointer-events: none; }
+  .toast.show { transform: translateX(0); opacity: 1; }
+
+  /* GRID HELPERS */
+  .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+
+  /* COMPLETE CONFIRM */
+  .complete-banner { background: rgba(26,122,74,0.08); border: 1px solid rgba(26,122,74,0.3); border-radius: 8px; padding: 20px 24px; margin-top: 16px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+  .complete-banner-text { font-size: 14px; color: var(--text); }
+  .complete-banner-text strong { color: var(--green-light); display: block; margin-bottom: 4px; }
+
+  @media (max-width: 1100px) { .stats-row { grid-template-columns: 1fr 1fr; } }
+  @media (max-width: 860px) {
+    .sidebar { transform: translateX(-100%); transition: 0.3s; }
+    .sidebar.open { transform: translateX(0); }
+    .main { margin-left: 0; }
+    .editor-grid, .two-col { grid-template-columns: 1fr; }
+    .topbar { padding: 14px 20px; }
+    .content { padding: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- AUTH GATE -->
+<div id="authGate">
+  <div class="auth-spinner"></div>
+  <div style="font-size:13px; color:#444; font-family:'Space Mono',monospace; letter-spacing:2px;">VERIFYING SESSION</div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <img src="data:image/jpeg;base64,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" alt="Erthdot" style="width:32px;height:32px;border-radius:50%;border:2px solid var(--green);">
+    <div>
+      <div class="sidebar-brand">ERTHDOT</div>
+      <div class="sidebar-role">Creator Portal</div>
+    </div>
+  </div>
+
+  <div class="sidebar-section-label">Main</div>
+  <ul class="sidebar-nav">
+    <li><a onclick="showPage('overview')" class="active" id="nav-overview"><span class="nav-icon">◈</span> Overview <span class="nav-badge" id="badge-active">3</span></a></li>
+    <li><a onclick="showPage('projects')" id="nav-projects"><span class="nav-icon">⬡</span> Projects</a></li>
+    <li><a onclick="showPage('bookings')" id="nav-bookings"><span class="nav-icon">📅</span> Bookings <span class="nav-badge" id="badge-bookings">2</span></a></li>
+  </ul>
+
+  <div class="sidebar-section-label">Tools</div>
+  <ul class="sidebar-nav">
+    <li><a onclick="showPage('editor')" id="nav-editor"><span class="nav-icon">✎</span> Project Editor</a></li>
+    <li><a onclick="showPage('notifications')" id="nav-notifications"><span class="nav-icon">🔔</span> Notifications</a></li>
+    <li><a onclick="showPage('links')" id="nav-links"><span class="nav-icon">🔗</span> Tracker Links</a></li>
+  </ul>
+
+  <div class="sidebar-divider"></div>
+  <ul class="sidebar-nav">
+    <li><a href="erthdot-website.html" target="_blank"><span class="nav-icon">↗</span> View Public Site</a></li>
+  </ul>
+
+  <div class="sidebar-user">
+    <div class="user-avatar" id="sidebarAvatar">A</div>
+    <div>
+      <div class="user-name" id="sidebarName">Admin</div>
+      <div class="user-role-tag" id="sidebarRole">Administrator</div>
+    </div>
+    <button class="logout-btn" onclick="logout()" title="Sign out">⏻</button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main" id="mainContent">
+
+  <!-- TOPBAR -->
+  <div class="topbar">
+    <div style="display:flex; align-items:center; gap:14px;">
+      <button style="display:none; background:none; border:1px solid var(--border); color:var(--text-muted); padding:8px 10px; border-radius:6px; cursor:pointer;" id="menuToggle" onclick="toggleSidebar()">☰</button>
+      <div class="topbar-title" id="pageTitle">Overview</div>
+    </div>
+    <div class="topbar-right">
+      <button class="topbar-notif" onclick="showPage('notifications')">🔔<div class="notif-dot"></div></button>
+      <button class="btn-sm btn-green" onclick="openNewProjectModal()">+ New Project</button>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- ═══ OVERVIEW PAGE ═══ -->
+    <div class="page active" id="page-overview">
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-card-label">Active Projects</div>
+          <div class="stat-card-val green">3</div>
+          <div class="stat-card-sub">2 awaiting feedback</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Completed This Month</div>
+          <div class="stat-card-val">7</div>
+          <div class="stat-card-sub">+2 from last month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Pending Bookings</div>
+          <div class="stat-card-val gold">2</div>
+          <div class="stat-card-sub">Awaiting deposit confirmation</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Revenue This Month</div>
+          <div class="stat-card-val green">K28k</div>
+          <div class="stat-card-sub">Balance due: K9,500</div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">⬡ Active Projects</div>
+            <button class="btn-sm btn-outline" onclick="showPage('projects')">View All</button>
+          </div>
+          <div class="panel-body" style="padding:0;">
+            <table class="proj-table">
+              <thead><tr><th>Client</th><th>Package</th><th>Progress</th><th>Status</th><th></th></tr></thead>
+              <tbody id="overviewProjectsBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <div class="panel-title">📅 Upcoming Bookings</div>
+            <button class="btn-sm btn-outline" onclick="showPage('bookings')">View All</button>
+          </div>
+          <div class="panel-body" style="padding: 0 20px;">
+            <div class="booking-row">
+              <div>
+                <div class="booking-info-name">Mwiza Phiri</div>
+                <div class="booking-info-meta">Startup Foundation · Deposit pending</div>
+              </div>
+              <div class="booking-date">Apr 25</div>
+            </div>
+            <div class="booking-row">
+              <div>
+                <div class="booking-info-name">TechSpark Ltd</div>
+                <div class="booking-info-meta">Corporate Growth Suite · Confirmed</div>
+              </div>
+              <div class="booking-date">Apr 28</div>
+            </div>
+            <div class="booking-row">
+              <div>
+                <div class="booking-info-name">Bwalya Designs</div>
+                <div class="booking-info-meta">Social: Market Authority</div>
+              </div>
+              <div class="booking-date">May 2</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ PROJECTS PAGE ═══ -->
+    <div class="page" id="page-projects">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">⬡ All Projects</div>
+          <div style="display:flex; gap:8px;">
+            <select class="form-select" style="width:140px; padding:8px 12px; font-size:13px;" onchange="filterProjects(this.value)">
+              <option value="">All Status</option>
+              <option value="active">Active</option>
+              <option value="review">In Review</option>
+              <option value="complete">Complete</option>
+            </select>
+            <button class="btn-sm btn-green" onclick="openNewProjectModal()">+ New</button>
+          </div>
+        </div>
+        <div class="panel-body" style="padding:0;">
+          <table class="proj-table">
+            <thead><tr><th>Client</th><th>Code</th><th>Package</th><th>Progress</th><th>Status</th><th>Started</th><th>Actions</th></tr></thead>
+            <tbody id="allProjectsBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ BOOKINGS PAGE ═══ -->
+    <div class="page" id="page-bookings">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">📅 All Bookings</div>
+        </div>
+        <div class="panel-body" style="padding: 0 24px;">
+          <div class="booking-row" style="border-top:none;">
+            <div>
+              <div class="booking-info-name">Mwiza Phiri</div>
+              <div class="booking-info-meta">Startup Foundation · +260971234567 · "Need logo for new restaurant"</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="booking-date">Apr 25, 2026</div>
+              <span class="status-pill status-review" style="font-size:10px; margin-top:4px;">Deposit Pending</span>
+            </div>
+            <div><button class="btn-sm btn-green" onclick="convertBookingToProject('Mwiza Phiri','Startup Foundation')">→ Start Project</button></div>
+          </div>
+          <div class="booking-row">
+            <div>
+              <div class="booking-info-name">TechSpark Ltd</div>
+              <div class="booking-info-meta">Corporate Growth Suite · +260977654321 · "Tech consulting firm rebrand"</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="booking-date">Apr 28, 2026</div>
+              <span class="status-pill status-active" style="font-size:10px; margin-top:4px;">Confirmed</span>
+            </div>
+            <div><button class="btn-sm btn-green" onclick="convertBookingToProject('TechSpark Ltd','Corporate Growth Suite')">→ Start Project</button></div>
+          </div>
+          <div class="booking-row">
+            <div>
+              <div class="booking-info-name">Bwalya Designs</div>
+              <div class="booking-info-meta">Social: Market Authority · +260966112233 · "4-month social package"</div>
+            </div>
+            <div style="text-align:right;">
+              <div class="booking-date">May 2, 2026</div>
+              <span class="status-pill status-pending" style="font-size:10px; margin-top:4px;">Pending</span>
+            </div>
+            <div><button class="btn-sm btn-outline">View Details</button></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ PROJECT EDITOR PAGE ═══ -->
+    <div class="page" id="page-editor">
+      <div class="two-col" style="align-items:start;">
+
+        <!-- LEFT: Select + details -->
+        <div style="display:flex; flex-direction:column; gap:20px;">
+          <div class="panel">
+            <div class="panel-header"><div class="panel-title">Select Project</div></div>
+            <div class="panel-body">
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">Active Projects</label>
+                <select class="form-select" id="editorProjectSelect" onchange="loadProjectIntoEditor()">
+                  <option value="">— Choose a project —</option>
+                  <option value="0">Chanda Mwale — ERT-2604-007</option>
+                  <option value="1">Lufuno Brands — ERT-2604-008</option>
+                  <option value="2">Zima Ventures — ERT-2604-009</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel" id="editorDetailsPanel" style="display:none;">
+            <div class="panel-header"><div class="panel-title">Project Details</div></div>
+            <div class="panel-body">
+              <div class="three-col" style="margin-bottom:20px;">
+                <div style="text-align:center; padding:14px; background:rgba(255,255,255,0.03); border-radius:6px;">
+                  <div style="font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--green-light);" id="editorPctDisplay">65%</div>
+                  <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-top:2px;">Progress</div>
+                </div>
+                <div style="text-align:center; padding:14px; background:rgba(255,255,255,0.03); border-radius:6px;">
+                  <div style="font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--gold);" id="editorStagesDone">3/5</div>
+                  <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-top:2px;">Stages</div>
+                </div>
+                <div style="text-align:center; padding:14px; background:rgba(255,255,255,0.03); border-radius:6px;">
+                  <div style="font-family:'Bebas Neue',sans-serif; font-size:28px; color:var(--white);" id="editorDaysActive">4</div>
+                  <div style="font-size:10px; color:var(--text-muted); text-transform:uppercase; letter-spacing:1px; margin-top:2px;">Days</div>
+                </div>
+              </div>
+              <div class="form-group" style="margin-bottom:0;">
+                <label class="form-label">Overall Progress — <span id="editorSliderVal">65</span>%</label>
+                <div class="progress-row">
+                  <input type="range" min="0" max="100" value="65" id="editorSlider" oninput="onSliderChange(this.value)">
+                  <div class="progress-val" id="editorProgressVal">65%</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- TRACKER LINK PANEL -->
+          <div class="panel" id="editorLinkPanel" style="display:none;">
+            <div class="panel-header"><div class="panel-title">🔗 Client Tracker Link</div></div>
+            <div class="panel-body">
+              <div class="link-box">
+                <div class="link-url" id="editorTrackerLink">erthdot.design/track/ERT-2604-007</div>
+                <button class="copy-btn" onclick="copyEditorLink()">Copy</button>
+              </div>
+              <div class="link-actions">
+                <button class="link-action-btn" onclick="sendLinkWhatsApp()">💬 Send via WhatsApp</button>
+                <button class="link-action-btn" onclick="generateQR()">📷 QR Code</button>
+                <button class="link-action-btn danger" onclick="deactivateLink()">🗑 Deactivate Link</button>
+              </div>
+              <div style="font-size:11px; color:var(--text-dim); margin-top:10px; font-family:'Space Mono',monospace;">Link expires on project sign-off · auto-archived after 30 days</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: Stage editor + notify -->
+        <div style="display:flex; flex-direction:column; gap:20px;">
+          <div class="panel" id="editorStagesPanel" style="display:none;">
+            <div class="panel-header"><div class="panel-title">◈ Stage Manager</div></div>
+            <div class="panel-body">
+              <div class="stages-editor" id="stagesEditorList"></div>
+              <button class="add-stage-btn" onclick="addEditorStage()">+ Add Stage</button>
+              <div style="display:flex; gap:10px; margin-top:18px; flex-wrap:wrap;">
+                <button class="btn-sm btn-green" onclick="pushProjectUpdate()">📲 Push Update → Notify Client</button>
+                <button class="btn-sm" style="background:var(--green-dark); border:1px solid var(--green); color:var(--white);" onclick="markProjectComplete()">✓ Mark Complete</button>
+              </div>
+              <div class="notif-preview" id="editorNotifPreview">
+                <strong>📲 Notification Preview:</strong> Select a project to preview the notification.
+              </div>
+            </div>
+          </div>
+
+          <!-- COMPLETE CONFIRM -->
+          <div class="panel" id="completePanel" style="display:none;">
+            <div class="panel-header"><div class="panel-title">✓ Project Sign-Off</div></div>
+            <div class="panel-body">
+              <p style="font-size:14px; color:var(--text-muted); margin-bottom:16px;">Both parties must confirm project completion. Once confirmed, the tracker link will be deactivated and the client's shortcut app will self-destruct.</p>
+              <div class="complete-banner">
+                <div class="complete-banner-text">
+                  <strong>Creator signed off ✓</strong>
+                  Waiting for client confirmation via tracker link.
+                </div>
+                <button class="btn-sm" style="background:var(--blue); color:white; border:none;" onclick="showToast('✓', 'Sign-off recorded. Awaiting client.')">Simulate Client ✓</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ NOTIFICATIONS PAGE ═══ -->
+    <div class="page" id="page-notifications">
+      <div class="panel">
+        <div class="panel-header">
+          <div class="panel-title">🔔 Notification Centre</div>
+          <button class="btn-sm btn-outline" onclick="markAllRead()">Mark All Read</button>
+        </div>
+        <div class="panel-body" id="notifList" style="padding: 0 24px;">
+          <div class="booking-row" style="border-top:none;">
+            <div style="display:flex; align-items:flex-start; gap:12px;">
+              <div style="width:8px; height:8px; border-radius:50%; background:var(--green-light); margin-top:5px; flex-shrink:0;"></div>
+              <div>
+                <div class="booking-info-name">Chanda Mwale viewed project tracker</div>
+                <div class="booking-info-meta">ERT-2604-007 · 2 minutes ago</div>
+              </div>
+            </div>
+          </div>
+          <div class="booking-row">
+            <div style="display:flex; align-items:flex-start; gap:12px;">
+              <div style="width:8px; height:8px; border-radius:50%; background:var(--green-light); margin-top:5px; flex-shrink:0;"></div>
+              <div>
+                <div class="booking-info-name">New booking — Mwiza Phiri</div>
+                <div class="booking-info-meta">Startup Foundation · Awaiting deposit · 1 hour ago</div>
+              </div>
+            </div>
+          </div>
+          <div class="booking-row">
+            <div style="display:flex; align-items:flex-start; gap:12px;">
+              <div style="width:8px; height:8px; border-radius:50%; background:var(--text-dim); margin-top:5px; flex-shrink:0;"></div>
+              <div>
+                <div class="booking-info-name" style="color:var(--text-muted);">Project ERT-2604-006 marked complete</div>
+                <div class="booking-info-meta">Both parties signed off · Yesterday</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ═══ LINKS PAGE ═══ -->
+    <div class="page" id="page-links">
+      <div class="panel">
+        <div class="panel-header"><div class="panel-title">🔗 All Tracker Links</div></div>
+        <div class="panel-body" style="padding:0;">
+          <table class="proj-table">
+            <thead><tr><th>Project Code</th><th>Client</th><th>Link</th><th>Status</th><th>Actions</th></tr></thead>
+            <tbody id="linksTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- NEW PROJECT MODAL -->
+<div class="modal-overlay" id="newProjectModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('newProjectModal')">×</button>
+    <div class="modal-title">New Project</div>
+    <div class="modal-sub">Create a project and generate the client tracker link.</div>
+    <div class="editor-grid">
+      <div class="form-group">
+        <label class="form-label">Client Name</label>
+        <input type="text" class="form-input" id="npName" placeholder="e.g. Mwiza Phiri">
+      </div>
+      <div class="form-group">
+        <label class="form-label">WhatsApp Number</label>
+        <input type="tel" class="form-input" id="npPhone" placeholder="+260 9XX XXX XXX">
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Service / Package</label>
+      <select class="form-select" id="npService">
+        <option>Identity Lite — K1,500</option>
+        <option>Startup Foundation — K4,000</option>
+        <option>Corporate Growth Suite — K9,500</option>
+        <option>Elite Executive — K17,500</option>
+        <option>Foundation Kit — K800</option>
+        <option>Professional Kit — K1,600</option>
+        <option>Identity Kit — K2,300</option>
+        <option>Full Suite Kit — K3,500</option>
+        <option>Starter Sprint — K5,000</option>
+        <option>Growth Momentum — K9,400</option>
+        <option>Market Authority — K17,000</option>
+      </select>
+    </div>
+    <div class="editor-grid">
+      <div class="form-group">
+        <label class="form-label">Start Date</label>
+        <input type="date" class="form-input" id="npDate">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Deposit Received?</label>
+        <select class="form-select" id="npDeposit">
+          <option value="yes">Yes — 50% paid</option>
+          <option value="no">No — pending</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Initial Notes</label>
+      <textarea class="form-textarea" id="npNotes" placeholder="Brief, style direction, assets to collect..."></textarea>
+    </div>
+    <button class="btn-sm btn-green" style="width:100%; padding:13px; font-size:14px;" onclick="createNewProject()">Create Project & Generate Link →</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><span id="toastIcon"></span> <span id="toastMsg"></span></div>
+
+<script>
+// ─── AUTH CHECK ─────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    const session = sessionStorage.getItem('erthdot_creator');
+    if (!session) {
+      window.location.href = 'creator-login.html';
+      return;
+    }
+    try {
+      const user = JSON.parse(session);
+      // Session expires after 8 hours
+      if (Date.now() - user.loginTime > 8 * 60 * 60 * 1000) {
+        sessionStorage.removeItem('erthdot_creator');
+        window.location.href = 'creator-login.html';
+        return;
+      }
+      // Populate user info
+      document.getElementById('sidebarName').textContent = user.name;
+      document.getElementById('sidebarRole').textContent = user.role === 'admin' ? 'Administrator' : 'Designer';
+      document.getElementById('sidebarAvatar').textContent = user.name.charAt(0).toUpperCase();
+      document.getElementById('authGate').classList.add('hidden');
+      initDashboard();
+    } catch(e) {
+      window.location.href = 'creator-login.html';
+    }
+  }, 600);
+});
+
+function logout() {
+  if (confirm('Sign out of the creator portal?')) {
+    sessionStorage.removeItem('erthdot_creator');
+    window.location.href = 'creator-login.html';
+  }
+}
+
+// ─── DATA ────────────────────────────────────────────────
+const projects = [
+  { id: 'ERT-2604-007', client: 'Chanda Mwale',   pkg: 'Startup Foundation',      pct: 65, status: 'review',    started: 'Apr 18', stages: [
+    {name:'Requirements Gathered', pct:10, status:'done'},
+    {name:'Concept Design Started', pct:25, status:'done'},
+    {name:'First Draft — Under Review', pct:65, status:'active'},
+    {name:'Revisions & Refinement', pct:80, status:'pending'},
+    {name:'Final Files Delivered', pct:100, status:'pending'},
+  ]},
+  { id: 'ERT-2604-008', client: 'Lufuno Brands',  pkg: 'Corporate Growth Suite',  pct: 30, status: 'active',    started: 'Apr 20', stages: [
+    {name:'Requirements Gathered', pct:10, status:'done'},
+    {name:'Mood Board & Direction', pct:30, status:'active'},
+    {name:'Logo Concept Development', pct:55, status:'pending'},
+    {name:'Full Communication Set', pct:80, status:'pending'},
+    {name:'Brand Kit Delivery', pct:100, status:'pending'},
+  ]},
+  { id: 'ERT-2604-009', client: 'Zima Ventures',  pkg: 'Identity Lite',           pct: 90, status: 'review',    started: 'Apr 15', stages: [
+    {name:'Brief & Assets', pct:15, status:'done'},
+    {name:'2 Logo Concepts Drafted', pct:60, status:'done'},
+    {name:'Client Review Round 1', pct:90, status:'active'},
+    {name:'Final Refinement', pct:95, status:'pending'},
+    {name:'Files Packaged & Sent', pct:100, status:'pending'},
+  ]},
+];
+
+let activeEditorProject = null;
+
+function initDashboard() {
+  renderOverviewTable();
+  renderAllProjectsTable();
+  renderLinksTable();
+}
+
+// ─── PAGES ───────────────────────────────────────────────
+const pageTitles = { overview:'Overview', projects:'Projects', bookings:'Bookings', editor:'Project Editor', notifications:'Notifications', links:'Tracker Links' };
+
+function showPage(name) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar-nav a').forEach(a => a.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  const navEl = document.getElementById('nav-' + name);
+  if (navEl) navEl.classList.add('active');
+  document.getElementById('pageTitle').textContent = pageTitles[name] || '';
+}
+
+// ─── TABLES ──────────────────────────────────────────────
+function statusPill(s) {
+  const map = { active:'status-active Active', review:'status-review In Review', complete:'status-complete Complete', pending:'status-pending Pending' };
+  const parts = (map[s] || 'status-pending Unknown').split(' ');
+  return `<span class="status-pill ${parts[0]}">● ${parts.slice(1).join(' ')}</span>`;
+}
+
+function renderOverviewTable() {
+  const tbody = document.getElementById('overviewProjectsBody');
+  tbody.innerHTML = projects.map(p => `
+    <tr>
+      <td><div class="proj-name">${p.client}</div></td>
+      <td><div class="proj-meta" style="color:var(--text-muted);font-size:13px;">${p.pkg}</div></td>
+      <td>
+        <div class="mini-bar"><div class="mini-fill" style="width:${p.pct}%"></div></div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:3px;">${p.pct}%</div>
+      </td>
+      <td>${statusPill(p.status)}</td>
+      <td><button class="action-btn" onclick="openEditorForProject('${p.id}')">Edit</button></td>
+    </tr>
+  `).join('');
+}
+
+function renderAllProjectsTable() {
+  const tbody = document.getElementById('allProjectsBody');
+  tbody.innerHTML = projects.map(p => `
+    <tr>
+      <td><div class="proj-name">${p.client}</div></td>
+      <td><div class="proj-code">${p.id}</div></td>
+      <td><div class="proj-meta" style="color:var(--text-muted);font-size:12px;">${p.pkg}</div></td>
+      <td>
+        <div class="mini-bar" style="width:80px;"><div class="mini-fill" style="width:${p.pct}%"></div></div>
+        <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${p.pct}%</div>
+      </td>
+      <td>${statusPill(p.status)}</td>
+      <td><div style="font-size:12px;color:var(--text-muted);">${p.started}</div></td>
+      <td>
+        <div class="action-btns">
+          <button class="action-btn" onclick="openEditorForProject('${p.id}')">Edit</button>
+          <button class="action-btn" onclick="copyLink('${p.id}')">Link</button>
+          <button class="action-btn danger" onclick="archiveProject('${p.id}')">Archive</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function renderLinksTable() {
+  const tbody = document.getElementById('linksTableBody');
+  tbody.innerHTML = projects.map(p => `
+    <tr>
+      <td><div class="proj-code">${p.id}</div></td>
+      <td><div class="proj-name">${p.client}</div></td>
+      <td><div class="link-url" style="max-width:220px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; color:var(--text-muted); font-family:'Space Mono',monospace;">erthdot.design/track/${p.id}</div></td>
+      <td><span class="status-pill status-active" style="font-size:10px;">● Active</span></td>
+      <td>
+        <div class="action-btns">
+          <button class="action-btn" onclick="copyLink('${p.id}')">Copy</button>
+          <button class="action-btn" onclick="sendLinkForProject('${p.id}', '${p.client}')">WhatsApp</button>
+          <button class="action-btn danger" onclick="deactivateLinkForProject('${p.id}')">Deactivate</button>
+        </div>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function filterProjects(status) {
+  const rows = document.querySelectorAll('#allProjectsBody tr');
+  rows.forEach((r, i) => {
+    if (!status || projects[i]?.status === status) r.style.display = '';
+    else r.style.display = 'none';
+  });
+}
+
+// ─── EDITOR ──────────────────────────────────────────────
+function openEditorForProject(id) {
+  showPage('editor');
+  const sel = document.getElementById('editorProjectSelect');
+  const idx = projects.findIndex(p => p.id === id);
+  if (idx >= 0) {
+    sel.value = idx;
+    loadProjectIntoEditor();
+  }
+}
+
+function loadProjectIntoEditor() {
+  const idx = document.getElementById('editorProjectSelect').value;
+  if (idx === '') {
+    document.getElementById('editorDetailsPanel').style.display = 'none';
+    document.getElementById('editorStagesPanel').style.display = 'none';
+    document.getElementById('editorLinkPanel').style.display = 'none';
+    document.getElementById('completePanel').style.display = 'none';
+    return;
+  }
+  activeEditorProject = projects[parseInt(idx)];
+  const p = activeEditorProject;
+
+  document.getElementById('editorDetailsPanel').style.display = '';
+  document.getElementById('editorStagesPanel').style.display = '';
+  document.getElementById('editorLinkPanel').style.display = '';
+  document.getElementById('completePanel').style.display = 'none';
+
+  document.getElementById('editorPctDisplay').textContent = p.pct + '%';
+  document.getElementById('editorSlider').value = p.pct;
+  document.getElementById('editorSliderVal').textContent = p.pct;
+  document.getElementById('editorProgressVal').textContent = p.pct + '%';
+  const done = p.stages.filter(s => s.status === 'done').length;
+  document.getElementById('editorStagesDone').textContent = `${done}/${p.stages.length}`;
+  document.getElementById('editorTrackerLink').textContent = `erthdot.design/track/${p.id}`;
+
+  renderEditorStages(p.stages);
+  updateNotifPreview(p.pct, p.client, p.id);
+}
+
+function renderEditorStages(stages) {
+  const list = document.getElementById('stagesEditorList');
+  list.innerHTML = stages.map((s, i) => `
+    <div class="stage-row" id="stageRow${i}">
+      <input type="text" class="form-input" value="${s.name}" placeholder="Stage name" oninput="updateNotifFromEditor()">
+      <input type="number" class="form-input" value="${s.pct}" min="0" max="100" placeholder="%" oninput="updateNotifFromEditor()" style="padding:9px 8px;">
+      <select class="stage-status-sel" onchange="updateNotifFromEditor()">
+        <option ${s.status==='done'?'selected':''}>Done ✓</option>
+        <option ${s.status==='active'?'selected':''}>Active ↻</option>
+        <option ${s.status==='pending'?'selected':''}>Pending</option>
+      </select>
+      <button class="remove-stage-btn" onclick="removeEditorStage(${i})">×</button>
+    </div>
+  `).join('');
+}
+
+function addEditorStage() {
+  if (!activeEditorProject) return;
+  activeEditorProject.stages.push({name:'', pct:0, status:'pending'});
+  renderEditorStages(activeEditorProject.stages);
+}
+
+function removeEditorStage(i) {
+  if (!activeEditorProject) return;
+  activeEditorProject.stages.splice(i, 1);
+  renderEditorStages(activeEditorProject.stages);
+}
+
+function onSliderChange(val) {
+  document.getElementById('editorSliderVal').textContent = val;
+  document.getElementById('editorProgressVal').textContent = val + '%';
+  document.getElementById('editorPctDisplay').textContent = val + '%';
+  updateNotifPreview(val, activeEditorProject?.client, activeEditorProject?.id);
+}
+
+function updateNotifFromEditor() {
+  if (!activeEditorProject) return;
+  const val = document.getElementById('editorSlider').value;
+  updateNotifPreview(val, activeEditorProject.client, activeEditorProject.id);
+}
+
+function updateNotifPreview(pct, client, id) {
+  const rows = document.querySelectorAll('#stagesEditorList .stage-row');
+  let activeStageName = 'In progress';
+  rows.forEach(row => {
+    const sel = row.querySelector('select');
+    if (sel && sel.value.includes('Active')) {
+      activeStageName = row.querySelector('input[type=text]').value || 'In progress';
+    }
+  });
+  document.getElementById('editorNotifPreview').innerHTML =
+    `<strong>📲 Notification Preview:</strong> "Hi ${client || 'there'}! Your Erthdot project is now <strong>${pct}%</strong> complete. Current stage: ${activeStageName}. Track your project: erthdot.design/track/${id}"`;
+}
+
+function pushProjectUpdate() {
+  if (!activeEditorProject) { showToast('⚠', 'Select a project first.'); return; }
+  const pct = document.getElementById('editorSlider').value;
+  activeEditorProject.pct = parseInt(pct);
+  renderOverviewTable();
+  renderAllProjectsTable();
+  showToast('📲', `Client notified! Project updated to ${pct}%.`);
+}
+
+function markProjectComplete() {
+  if (!activeEditorProject) { showToast('⚠', 'Select a project first.'); return; }
+  if (confirm(`Mark ${activeEditorProject.client}'s project as complete? This will notify the client for sign-off.`)) {
+    document.getElementById('completePanel').style.display = '';
+    showToast('✓', 'Completion notification sent to client.');
+  }
+}
+
+// ─── NEW PROJECT ─────────────────────────────────────────
+function openNewProjectModal() { document.getElementById('newProjectModal').classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function createNewProject() {
+  const name = document.getElementById('npName').value.trim();
+  const phone = document.getElementById('npPhone').value.trim();
+  const service = document.getElementById('npService').value;
+  if (!name || !phone) { showToast('⚠', 'Name and phone required.'); return; }
+  const code = 'ERT-' + Date.now().toString().slice(-7);
+  const newProj = {
+    id: code, client: name, pkg: service, pct: 0, status: 'active',
+    started: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short'}),
+    stages: [
+      {name:'Requirements Gathering', pct:10, status:'active'},
+      {name:'Concept Development', pct:40, status:'pending'},
+      {name:'Client Review', pct:70, status:'pending'},
+      {name:'Revisions', pct:85, status:'pending'},
+      {name:'Final Delivery', pct:100, status:'pending'},
+    ]
+  };
+  projects.unshift(newProj);
+  renderOverviewTable();
+  renderAllProjectsTable();
+  renderLinksTable();
+  document.getElementById('badge-active').textContent = projects.filter(p => p.status !== 'complete').length;
+  closeModal('newProjectModal');
+  showToast('✓', `Project created! Code: ${code}`);
+  document.getElementById('npName').value = '';
+  document.getElementById('npPhone').value = '';
+}
+
+// ─── LINK TOOLS ──────────────────────────────────────────
+function copyLink(id) { navigator.clipboard.writeText(`https://erthdot.design/track/${id}`).then(() => showToast('📋', `Link copied for ${id}`)); }
+function copyEditorLink() { if (!activeEditorProject) return; copyLink(activeEditorProject.id); }
+function sendLinkWhatsApp() {
+  if (!activeEditorProject) return;
+  const link = `https://erthdot.design/track/${activeEditorProject.id}`;
+  window.open(`https://wa.me/?text=Hi! Track your Erthdot project here: ${link}`, '_blank');
+}
+function sendLinkForProject(id, client) {
+  const link = `https://erthdot.design/track/${id}`;
+  window.open(`https://wa.me/?text=Hi ${client}! Track your Erthdot project here: ${link}`, '_blank');
+}
+function generateQR() { showToast('📷', 'QR code generation — connect a QR library in production.'); }
+function deactivateLink() {
+  if (confirm('Deactivate this tracker link? The client will no longer be able to access it.'))
+    showToast('🗑', 'Link deactivated. Client notified.');
+}
+function deactivateLinkForProject(id) {
+  if (confirm(`Deactivate link for ${id}?`)) showToast('🗑', `Link ${id} deactivated.`);
+}
+function archiveProject(id) {
+  if (confirm(`Archive project ${id}? It will be removed from the active list.`)) {
+    const idx = projects.findIndex(p => p.id === id);
+    if (idx >= 0) { projects.splice(idx, 1); renderAllProjectsTable(); renderOverviewTable(); renderLinksTable(); }
+    showToast('📁', `Project ${id} archived.`);
+  }
+}
+function convertBookingToProject(name, pkg) {
+  document.getElementById('npName').value = name;
+  document.getElementById('npService').value = pkg + ' — K' + ({
+    'Startup Foundation':'4,000', 'Corporate Growth Suite':'9,500'
+  }[pkg] || '0');
+  openNewProjectModal();
+}
+function markAllRead() { showToast('✓', 'All notifications marked as read.'); }
+
+// ─── TOAST ────────────────────────────────────────────────
+function showToast(icon, msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastIcon').textContent = icon;
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+// ─── MOBILE SIDEBAR ──────────────────────────────────────
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
+});
+</script>
+</body>
+</html>

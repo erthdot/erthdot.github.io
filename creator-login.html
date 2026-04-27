@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/jpeg" href="data:image/jpeg;base64,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">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Erthdot — Creator Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #1a7a4a;
+    --green-light: #22a060;
+    --green-dark: #0e4a2e;
+    --black: #0a0a0a;
+    --off-black: #111111;
+    --dark-card: #161616;
+    --border: #2a2a2a;
+    --text: #e8e8e8;
+    --text-muted: #777;
+    --white: #ffffff;
+    --red: #c44444;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--black);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* BG ELEMENTS */
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0;
+    opacity: 0.03;
+    background-image: linear-gradient(var(--green) 1px, transparent 1px),
+                      linear-gradient(90deg, var(--green) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .bg-glow {
+    position: fixed; inset: 0; z-index: 0;
+    background: radial-gradient(ellipse 60% 60% at 50% 50%, rgba(26,122,74,0.1) 0%, transparent 70%);
+  }
+  .bg-corner {
+    position: fixed; bottom: -80px; right: -80px; z-index: 0;
+    width: 400px; height: 400px; border-radius: 50%;
+    border: 1px solid rgba(26,122,74,0.12);
+  }
+  .bg-corner2 {
+    position: fixed; bottom: -40px; right: -40px; z-index: 0;
+    width: 280px; height: 280px; border-radius: 50%;
+    border: 1px solid rgba(26,122,74,0.08);
+  }
+  .bg-topleft {
+    position: fixed; top: -60px; left: -60px; z-index: 0;
+    width: 300px; height: 300px; border-radius: 50%;
+    border: 1px solid rgba(26,122,74,0.07);
+  }
+
+  /* CARD */
+  .login-wrap { position: relative; z-index: 1; width: 100%; max-width: 440px; padding: 20px; }
+
+  .login-card {
+    background: var(--dark-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 48px 44px;
+    animation: fadeIn 0.5s ease both;
+  }
+  @keyframes fadeIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+  /* LOGO */
+  .login-logo {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 40px;
+  }
+  .login-logo-circle {
+    width: 38px; height: 38px; border-radius: 50%;
+    border: 2px solid var(--green);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Space Mono', monospace; font-size: 10px; color: var(--green);
+  }
+  .login-brand { font-family: 'Bebas Neue', sans-serif; font-size: 22px; letter-spacing: 3px; color: var(--white); }
+
+  /* BADGE */
+  .creator-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 5px 12px; background: rgba(26,122,74,0.12);
+    border: 1px solid rgba(26,122,74,0.35); border-radius: 20px;
+    font-size: 11px; color: var(--green-light); letter-spacing: 2px;
+    text-transform: uppercase; margin-bottom: 20px;
+  }
+  .creator-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green-light); }
+
+  .login-title { font-family: 'Bebas Neue', sans-serif; font-size: 36px; letter-spacing: 1px; color: var(--white); margin-bottom: 6px; }
+  .login-subtitle { font-size: 14px; color: var(--text-muted); margin-bottom: 36px; line-height: 1.5; }
+
+  /* FORM */
+  .form-group { margin-bottom: 20px; }
+  .form-label { font-size: 11px; color: var(--text-muted); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 8px; display: block; }
+  .form-input {
+    width: 100%; padding: 13px 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 6px; color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 15px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .form-input:focus { outline: none; border-color: var(--green); background: rgba(26,122,74,0.05); }
+  .form-input::placeholder { color: #444; }
+
+  .password-wrap { position: relative; }
+  .password-wrap .form-input { padding-right: 48px; }
+  .toggle-pw {
+    position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+    background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 16px; padding: 0;
+    transition: color 0.2s;
+  }
+  .toggle-pw:hover { color: var(--green-light); }
+
+  .login-btn {
+    width: 100%; padding: 14px;
+    background: var(--green); color: var(--white);
+    border: none; border-radius: 6px;
+    font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600;
+    cursor: pointer; letter-spacing: 0.5px;
+    transition: background 0.2s, transform 0.1s;
+    margin-top: 8px; position: relative; overflow: hidden;
+  }
+  .login-btn:hover { background: var(--green-light); transform: translateY(-1px); }
+  .login-btn:active { transform: translateY(0); }
+  .login-btn.loading { pointer-events: none; opacity: 0.7; }
+  .login-btn.loading::after { content: ''; position: absolute; inset: 0; background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%); animation: shimmer 1.2s infinite; }
+  @keyframes shimmer { from{transform:translateX(-100%)} to{transform:translateX(100%)} }
+
+  /* ERROR */
+  .error-box {
+    display: none; padding: 12px 16px; background: rgba(196,68,68,0.1);
+    border: 1px solid rgba(196,68,68,0.3); border-radius: 6px;
+    font-size: 13px; color: #e88; margin-bottom: 20px;
+    animation: shake 0.3s ease;
+  }
+  .error-box.show { display: flex; align-items: center; gap: 10px; }
+  @keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-6px)} 75%{transform:translateX(6px)} }
+
+  /* DIVIDER */
+  .login-divider { height: 1px; background: var(--border); margin: 28px 0; }
+
+  .back-link {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    font-size: 13px; color: var(--text-muted); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--green-light); }
+
+  /* SECURITY NOTE */
+  .security-note {
+    display: flex; align-items: flex-start; gap: 10px;
+    margin-top: 24px; padding: 14px 16px;
+    background: rgba(255,255,255,0.02); border-radius: 6px;
+    font-size: 12px; color: var(--text-muted); line-height: 1.6;
+  }
+  .security-note-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+
+  /* ATTEMPTS */
+  .attempts-left { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 10px; }
+  .attempts-left span { color: var(--red); }
+</style>
+</head>
+<body>
+
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+<div class="bg-corner"></div>
+<div class="bg-corner2"></div>
+<div class="bg-topleft"></div>
+
+<div class="login-wrap">
+  <div class="login-card">
+
+    <!-- LOGO -->
+    <div class="login-logo">
+      <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCABZAFkDASIAAhEBAxEB/8QAHAAAAgMBAQEBAAAAAAAAAAAAAAYFBwgEAQID/8QAPBAAAQMDAQYEAgYIBwAAAAAAAQIDBAAFEQYHEiExQWETUXGBFJEVIjJCobEIIzNSYnKCkhYmQ1OiweH/xAAaAQEAAgMBAAAAAAAAAAAAAAAABQYCAwQB/8QALhEAAQMCAwYEBwEAAAAAAAAAAQACAwQRBSExEhMiQWGxMlGRoRQjcYHR4fDB/9oADAMBAAIRAxEAPwDGVFFPuyzQLupnxcbiFtWlpWCQcKfUPup8h5n2HHkWqaZkLC95yUBpHSV71RIKLZG/UpOHJDh3Wkep6nsMmre03sisEBKXLs47dH+ZSSW2gewByfc+1WDBiRYERuJDYbYYaTuobQnASK70xQi3O3SdKiW22MnDs2a8GmUnGQnJ+0o44JSCo9BRVmfEqipdsRZDpqoe3WSz25ITAtcKNjq2ylJ+YFd9KN82t7OLStTUNV61I6knKoraYcdXH7rjoUv5tDpUGrb1YPEJTs9lBGeAN+ycevgc/aixGE1b83e5T3cbLaLiCJ9rhSs9XWEqPzIpJ1Hsj09PSpy1rdtb3QJJcbPqknPyI9KkrNtj2dXNzw7hB1BpxSjhKypu4NJ/mUkNLA9EKPan2PFan2f6csdwh3u0b26ZsFZWhCv3XEkBbSuX1VpSaLx0NbR8QuB0zCynrHR970tI3bhH346jhuS1ktr7Z6HsfxperXs2LGmxHIktht9h1O6ttacpUO4qhtq2z1WnSbtaQ47alqwtB+sqOTyBPVPQE+h6ElLUGKiYiOTJ3dV3RRRRTCntB6ce1RqRi2IKkM/tJDg+42OZ9TwA7kVp+BEjwYTMOI0llhlAQ2hPJIFV9sDsiYGlV3ZxGH7g4SkkcQ2kkAe53j8qs+EmGFPSrk+Y1uhsrlTXhzQy2kqWR5qIGAOqiB1oqpiU7qmo3TNBkPqo7VeoLLojTadQagQZLsglNrtiVFK5yknClKI4oZSeBVzJ+qnjkpzPrvWmota3VM+/zi8GxuRozY3GIqM53GmxwSn8TzJJ417tH1bP1tq2VfpwDSV4bixkqyiKwng20nskdepyTxJpcorBR0bKZlhrzKKKKKLrTxsk0YnVN1ckTkq+jImPFAOC6o8kA+XUkdMeea0jp6S9p5bSrKoQQ0ncShpICN3qkp5FJ6gjBpH2MW5Nv2fwVbuHJRVIX33jgf8AEJpyoqfiNW+Wc2OTTkmOdEh3yA/dbRGTFlR0eJOgoP1d3q60Oe4PvJ+7zGRnCxJYZkxnI0hpDrLqChxCxkKSRggjyrutM+Ta7ixPhr3HmVbycjIPmCOoIyCOoJrv1XCjMSmLhb0blvuLXxEdOc+EckLbz/CoEdxunrRcZ4htjUa/lZH2jaZXpbUrsFO8qI4PFirPMoJ5HuDkH59aW60Jt0sibno1U9tGZFuX4qSBkls4Cx6clf01nuit2HVJqIA46jIrWmm4Sbdp+3wEjHw8Zts+oSAfxqC263Ry0bH347W+l2+3FuIVAnBYZHjOp9d8xj7U2VWn6Ua1f4V0W1n6gkXJYHc/DAn5JHyooDChvKvaPUqh6KKKK2or1IKlBKQSScADrXlNmyayKvet4TZTliKr4l444YQQQPdW6Pc0WuWQRMLzyWirDDFuskG3gAfDR22uH8KQP+q7aKKKhOJcblFT8VXxmhpsdRBXbpaJLXZDo3HB/cln8agKndL5Ns1G2clCrWCrjyxIYIPzAHvRbItSOh7JaukRufbJUF79nJZW0v0Ukg/nWRK2HVI0UthE5iDxa+n+q39OTBcdP2+eDn4iM24TnPEpBNLH6RsBc/ZNarkhO99DXlxtwjOUolNJIPpvRSPVQ864Ngl7TP0oq1OLHj25wpA6ltRJSfnvD2FWYi3wr9abppW5vIYhXqKYqnl8mHd4LZdPZLiUE/w7w60WmA/B11naXt9josa0V3X603CxXubZrtFXFnwn1MSGVjihaTgj/wB61zwYkmdLbiQ2HH33VbqG205Uo+lFbCQBdfDDTr7yGWW1uOuKCUISMlRPIAdTWkNlWkhpawYkJSbjKwuSRx3f3UA9sn3J7VF7LtnTOnwi63cIeupGUIHFEfPl5q8z05DzNiUVYxTEBN8qPw8+v6RRRRRQqKnrQPh9H3yYrh8SpiEjh9rK/FVj08JOf5hUGhCnFpQhJUtRwlIGST5Cp/VhTAjwtNtqBVACnJZSeBkrxvj+kJQj1SrzotseQLv7NK1zltwLbKnPHDcdlbq/RIJP5VkfxXf9xf8Aca0JtyvYtejFwm3N2TcVeCkA8dwcVnHljCf6qzxRWLBIi2JzzzPZMGgNRu6X1IxcU7ymD+rktg/bbPP3HAjuK07ClR5sRqXEeS8w8gLbWk8FA8jWQqsHZVtAXptwWu6FbtpcVkEcVR1HmQOqfMe445BLPFKAzjeR+Ie6urajs+a2oW5ubbVtMa1hMpaaSshCbuykYS2pR4B9IwlKj9oAJPEA1V+x672rTl0k6ev1r+irz4pbMiQgpXvZx4S97ig59AevHnccKVHmRWpcR9DzDqQptxtWQoeYNdep4WmNbxERtd2dU+Q2jcZu0VYanNDoFK5OgeS+PeijIq4SRbiovbz/ACvxorlsehLnaEpY09rq1Xy2pGG4l5JhSWR0AdOUH0yR6UyI0tejwU3AB5cLlHIPod/iO9FwSUzmnh4h5hQte1PDTrUf611v1piJHNLL4lOHsA1vJz6qFfoi9WyzH/LkRxUocrjNSkup7ttjKWz3JUryIosN1bxm3f0X7RWRpJgTpiB9OuIBhxzxMQH/AFnB0Xj7KeYP1jyAKpJfQ007JkOpQhCStxxasAAcSSTX1NlAB6ZNkYAy4686v3KlKP5mqE2s7QjfiqzWZa0WxKv1rvIySOXDokfjwouqmpn1bwxgs0f3ql7aTqdeqdSuzEFSYbI8KKg9EA/aI81Hj8h0pYooorhHG2NgY3QIoooos0xaN1letLSN6A/4kZRy5FdyW198dD3HlxyOFXFpvavpq5pQ3PW5apBwCl4bzZPZYHLuoCs90UXDU4fDUG7hY+YWu4E+DPa8WDNjSm/32XUrHzBrorHlWrRQ0+ECIiz9en7VzTp0KAyXp0yPFbH33nQhPzJpL1JtV0za0rbhOLuskZASwMN56ZWeGO6d6s9v/t3P5j+dfFF2Q4JE03e4n2TPrTW981S4UTHgxDCsois5CB5FXVR7n2ApYooopiONkbdlgsEUUUUWa//Z" alt="Erthdot" style="width:38px;height:38px;border-radius:50%;border:2px solid var(--green);">
+      <span class="login-brand">ERTHDOT</span>
+    </div>
+
+    <!-- HEADING -->
+    <div class="creator-badge">Creator Portal</div>
+    <h1 class="login-title">Welcome Back</h1>
+    <p class="login-subtitle">Sign in to manage projects, update client trackers, and handle bookings.</p>
+
+    <!-- ERROR -->
+    <div class="error-box" id="errorBox">
+      <span>🔒</span>
+      <span id="errorMsg">Incorrect username or password.</span>
+    </div>
+
+    <!-- FORM -->
+    <div class="form-group">
+      <label class="form-label">Username</label>
+      <input type="text" class="form-input" id="username" placeholder="e.g. erthdot_admin" autocomplete="username" onkeydown="handleKey(event)">
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Password</label>
+      <div class="password-wrap">
+        <input type="password" class="form-input" id="password" placeholder="••••••••" autocomplete="current-password" onkeydown="handleKey(event)">
+        <button class="toggle-pw" onclick="togglePassword()" id="togglePwBtn" type="button" title="Show/hide password">👁</button>
+      </div>
+    </div>
+
+    <button class="login-btn" id="loginBtn" onclick="attemptLogin()">Sign In to Dashboard</button>
+    <div class="attempts-left" id="attemptsDisplay" style="display:none;">
+      <span id="attemptsText"></span> attempt(s) remaining before lockout
+    </div>
+
+    <div class="login-divider"></div>
+
+    <a href="erthdot-website.html" class="back-link">← Back to public website</a>
+
+    <div class="security-note">
+      <span class="security-note-icon">🔐</span>
+      <span>This portal is for Erthdot team members only. Unauthorised access attempts are logged. If you've forgotten your credentials, contact the admin.</span>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Demo credentials — in production replace with real auth
+  const CREATORS = [
+    { username: 'erthdot_admin', password: 'Design2026!', name: 'Admin', role: 'admin' },
+    { username: 'creator1', password: 'Erthdot123', name: 'Designer', role: 'creator' }
+  ];
+
+  let attempts = 0;
+  const MAX_ATTEMPTS = 5;
+  let lockedUntil = null;
+
+  function handleKey(e) {
+    if (e.key === 'Enter') attemptLogin();
+  }
+
+  function togglePassword() {
+    const pw = document.getElementById('password');
+    const btn = document.getElementById('togglePwBtn');
+    if (pw.type === 'password') { pw.type = 'text'; btn.textContent = '🙈'; }
+    else { pw.type = 'password'; btn.textContent = '👁'; }
+  }
+
+  function attemptLogin() {
+    // Check lockout
+    if (lockedUntil && Date.now() < lockedUntil) {
+      const secs = Math.ceil((lockedUntil - Date.now()) / 1000);
+      showError(`Too many attempts. Try again in ${secs} seconds.`);
+      return;
+    }
+
+    const btn = document.getElementById('loginBtn');
+    btn.classList.add('loading');
+    btn.textContent = 'Signing in...';
+
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+
+    setTimeout(() => {
+      btn.classList.remove('loading');
+      btn.textContent = 'Sign In to Dashboard';
+
+      const match = CREATORS.find(c => c.username === username && c.password === password);
+
+      if (match) {
+        // Store session
+        sessionStorage.setItem('erthdot_creator', JSON.stringify({ name: match.name, role: match.role, username: match.username, loginTime: Date.now() }));
+        attempts = 0;
+        btn.textContent = '✓ Redirecting...';
+        btn.style.background = '#0e4a2e';
+        setTimeout(() => { window.location.href = 'creator-dashboard.html'; }, 700);
+      } else {
+        attempts++;
+        document.getElementById('username').value = '';
+        document.getElementById('password').value = '';
+
+        if (attempts >= MAX_ATTEMPTS) {
+          lockedUntil = Date.now() + 60000; // 60s lockout
+          showError('Too many failed attempts. Locked for 60 seconds.');
+          document.getElementById('attemptsDisplay').style.display = 'none';
+        } else {
+          const remaining = MAX_ATTEMPTS - attempts;
+          showError('Incorrect username or password.');
+          const disp = document.getElementById('attemptsDisplay');
+          disp.style.display = 'block';
+          document.getElementById('attemptsText').textContent = remaining;
+        }
+      }
+    }, 800);
+  }
+
+  function showError(msg) {
+    const box = document.getElementById('errorBox');
+    document.getElementById('errorMsg').textContent = msg;
+    box.classList.remove('show');
+    void box.offsetWidth; // reflow to re-trigger animation
+    box.classList.add('show');
+  }
+
+  // Auto-focus
+  document.getElementById('username').focus();
+</script>
+</body>
+</html>
