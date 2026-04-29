@@ -37,10 +37,10 @@
 <meta name="twitter:description" content="Professional logos, brand kits &amp; social media management from Lusaka, Zambia. Clean, bold, and built to last — starting from K350.">
 <meta name="twitter:image" content="https://erthdot.com/og-image.jpg">
 <meta name="twitter:image:alt" content="Erthdot Design — Professional Branding Studio, Lusaka Zambia">
-<link rel="icon" type="image/x-icon" href="favicon.ico">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<link rel="icon" type="image/png" sizes="16x16" href="favicon-16.png">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<link rel="icon" type="image/x-icon" href="https://erthdot.com/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="https://erthdot.com/favicon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="https://erthdot.com/favicon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="https://erthdot.com/apple-touch-icon.png">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
@@ -976,101 +976,7 @@ footer{background:var(--off-black);border-top:1px solid var(--border);padding:60
   <div class="gal-viewport" id="galViewport">
     <div class="gal-track" id="galTrack">
 
-      <div class="gal-item" data-index="0">
-        <div class="gal-img-wrap">
-          <img src="projects/er-1.avif" alt="Erthdot Project 1" draggable="false">
-          <div class="gal-overlay">
-            <div class="gal-overlay-inner">
-              <span class="gal-tag">Brand Identity</span>
-              <span class="gal-num">01</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="gal-item" data-index="1">
-        <div class="gal-img-wrap">
-          <img src="projects/er-2.avif" alt="Erthdot Project 2" draggable="false">
-          <div class="gal-overlay">
-            <div class="gal-overlay-inner">
-              <span class="gal-tag">Logo Design</span>
-              <span class="gal-num">02</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="gal-item" data-index="2">
-        <div class="gal-img-wrap">
-          <img src="projects/er-3.avif" alt="Erthdot Project 3" draggable="false">
-          <div class="gal-overlay">
-            <div class="gal-overlay-inner">
-              <span class="gal-tag">Company Profile</span>
-              <span class="gal-num">03</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="gal-item" data-index="3">
-        <div class="gal-img-wrap">
-          <img src="projects/er-4.avif" alt="Erthdot Project 4" draggable="false">
-          <div class="gal-overlay">
-            <div class="gal-overlay-inner">
-              <span class="gal-tag">Social Media</span>
-              <span class="gal-num">04</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="gal-item" data-index="4">
-        <div class="gal-img-wrap">
-          <img src="projects/er-5.avif" alt="Erthdot Project 5" draggable="false">
-          <div class="gal-overlay">
-            <div class="gal-overlay-inner">
-              <span class="gal-tag">Brand Identity</span>
-              <span class="gal-num">05</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="gal-item" data-index="5">
-        <div class="gal-img-wrap">
-          <img src="projects/er-6.avif" alt="Erthdot Project 6" draggable="false">
-          <div class="gal-overlay">
-            <div class="gal-overlay-inner">
-              <span class="gal-tag">Stationery</span>
-              <span class="gal-num">06</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="gal-item" data-index="6">
-        <div class="gal-img-wrap">
-          <img src="projects/er-7.avif" alt="Erthdot Project 7" draggable="false">
-          <div class="gal-overlay">
-            <div class="gal-overlay-inner">
-              <span class="gal-tag">Logo Design</span>
-              <span class="gal-num">07</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="gal-item" data-index="7">
-        <div class="gal-img-wrap">
-          <img src="projects/er-8.avif" alt="Erthdot Project 8" draggable="false">
-          <div class="gal-overlay">
-            <div class="gal-overlay-inner">
-              <span class="gal-tag">Brand Kit</span>
-              <span class="gal-num">08</span>
-            </div>
-          </div>
-        </div>
-      </div>
+      <!-- Gallery items injected by JS below -->
 
     </div><!-- /gal-track -->
 
@@ -1329,9 +1235,71 @@ footer{background:var(--off-black);border-top:1px solid var(--border);padding:60
   const progress = document.getElementById('galProgress');
   const label    = document.getElementById('galLabel');
   const hint     = document.getElementById('galHint');
+  if (!track) return;
+
+  /* ── Auto-load ALL images from projects/ folder ──
+     Tries every common image extension. Probes up to index 60.
+     Stops after 6 consecutive misses so it doesn't hang forever.
+     To add new images just drop them in projects/ — no code change needed. */
+  const tags = ['Brand Identity','Logo Design','Company Profile','Social Media',
+                'Brand Identity','Stationery','Logo Design','Brand Kit',
+                'Brand Identity','Logo Design','Company Profile','Social Media'];
+  const exts = ['avif','webp','jpg','jpeg','png'];
+
+  async function probeImage(src) {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload  = () => resolve(true);
+      img.onerror = () => resolve(false);
+      img.src = src;
+    });
+  }
+
+  async function buildGallery() {
+    let index = 1, misses = 0, loaded = 0;
+    while (misses < 6 && index <= 60) {
+      let found = false;
+      for (const ext of exts) {
+        const src = `projects/er-${index}.${ext}`;
+        const ok  = await probeImage(src);
+        if (ok) {
+          const tag = tags[(loaded) % tags.length];
+          const num = String(loaded + 1).padStart(2, '0');
+          const el  = document.createElement('div');
+          el.className = 'gal-item';
+          el.dataset.index = loaded;
+          el.innerHTML = `
+            <div class="gal-img-wrap">
+              <img src="${src}" alt="Erthdot Project ${index}" draggable="false">
+              <div class="gal-overlay">
+                <div class="gal-overlay-inner">
+                  <span class="gal-tag">${tag}</span>
+                  <span class="gal-num">${num}</span>
+                </div>
+              </div>
+            </div>`;
+          track.querySelector('.gal-item') === null
+            ? track.insertBefore(el, track.firstChild)
+            : track.appendChild(el);
+          loaded++;
+          misses = 0;
+          found = true;
+          break;
+        }
+      }
+      if (!found) misses++;
+      index++;
+    }
+    // Update progress label total
+    if (label) label.textContent = `01 / ${String(loaded).padStart(2,'0')}`;
+    initGallery();
+  }
+
+  buildGallery();
+
+  function initGallery() {
   const items    = Array.from(track.querySelectorAll('.gal-item'));
   const TOTAL    = items.length;
-  if (!track) return;
 
   /* ── State ── */
   let isDragging = false;
@@ -1639,6 +1607,7 @@ footer{background:var(--off-black);border-top:1px solid var(--border);padding:60
     if (e.key === 'ArrowRight')  lbNav(1);
     if (e.key === 'ArrowLeft')   lbNav(-1);
   });
+  } // end initGallery
 })();
 </script>
 
