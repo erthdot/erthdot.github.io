@@ -614,6 +614,7 @@ footer{background:var(--off-black);border-top:1px solid var(--border);padding:60
     <li><a href="erthdot-tools.html" style="color:var(--green-light);">Tools</a></li>
   </ul>
   <div class="nav-right">
+    <button class="nav-creator-btn" onclick="openClientPreviewPrompt()" style="border-color:rgba(34,160,96,0.3);">View My Project</button>
     <button class="nav-creator-btn" onclick="goToCreator()">Creator Login</button>
     <button class="nav-cta" onclick="openQuoteModal()">Get a Quote</button>
     <button class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
@@ -2222,6 +2223,19 @@ document.querySelectorAll('.mobile-menu a[href^="#"]').forEach(link => {
 function goToCreator(){
   window.location.href='creator-login.html';
 }
+function openClientPreviewPrompt(){
+  document.getElementById('clientPreviewModal').classList.add('open');
+  document.getElementById('clientPreviewInput').value='';
+  setTimeout(()=>document.getElementById('clientPreviewInput').focus(),100);
+}
+function goToClientPreview(){
+  const val=document.getElementById('clientPreviewInput').value.trim();
+  if(!val){showToast('Please enter your preview link or ID.');return;}
+  // Accept full URL or just the ID
+  let id=val;
+  if(val.includes('?id=')) id=val.split('?id=')[1].split('&')[0];
+  window.location.href='client-preview.html?id='+encodeURIComponent(id);
+}
 
 // ─── REVEAL ON SCROLL ──────────────────────────────────
 const reveals = document.querySelectorAll('.reveal,.reveal-left,.reveal-right');
@@ -2240,7 +2254,8 @@ function cardGlow(e,el){
 }
 
 // ─── CALENDAR ──────────────────────────────────────────
-let currentDate=new Date(2026,3,1), selectedDate=null;
+let currentDate=new Date(), selectedDate=null;
+currentDate.setDate(1); // always start on 1st of current month
 const bookedDays=[3,7,10,11,14,17,21,24,28];
 const monthNames=['January','February','March','April','May','June','July','August','September','October','November','December'];
 
@@ -2603,5 +2618,25 @@ document.querySelectorAll('.modal-overlay').forEach(m=>{
   });
 })();
 </script>
+
+<!-- CLIENT PREVIEW MODAL -->
+<div class="modal-overlay" id="clientPreviewModal">
+  <div class="modal" style="max-width:420px; text-align:center;">
+    <button class="modal-close" onclick="closeModal('clientPreviewModal')">&times;</button>
+    <div style="font-size:28px; margin-bottom:10px;">◉</div>
+    <div class="modal-title">View Your Project</div>
+    <div class="modal-sub" style="margin-bottom:22px;">Enter the preview link or ID sent to you by your designer.</div>
+    <input type="text" id="clientPreviewInput"
+      style="width:100%; background:var(--input-bg); border:1px solid var(--input-border); color:var(--text); padding:12px 16px; border-radius:6px; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:1px; outline:none; margin-bottom:14px;"
+      placeholder="Paste your link or ID here..."
+      onkeydown="if(event.key==='Enter') goToClientPreview()">
+    <button onclick="goToClientPreview()"
+      style="width:100%; padding:13px; background:var(--green); color:#fff; border:none; border-radius:6px; font-family:'DM Sans',sans-serif; font-weight:600; font-size:14px; cursor:pointer; transition:background .2s;"
+      onmouseover="this.style.background='var(--green-light)'" onmouseout="this.style.background='var(--green)'">
+      Open Preview →
+    </button>
+    <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:2px; color:var(--text-muted); text-transform:uppercase; margin-top:16px;">Your link looks like: erthdot.com/client-preview.html?id=PV-XXXXX</div>
+  </div>
+</div>
 </body>
 </html>
