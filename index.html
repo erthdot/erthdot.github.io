@@ -244,7 +244,7 @@ section{padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);}
 .section-sub{font-size:clamp(14px,1.2vw,16px);color:var(--text-muted);max-width:540px;line-height:1.75;margin-bottom:clamp(32px,4vw,56px);}
 
 /* TABS */
-.tabs{display:flex;gap:0;margin-bottom:32px;border-bottom:1px solid var(--border);overflow-x:auto;}
+.tabs{display:flex;gap:0;margin-bottom:32px;border-bottom:1px solid var(--border);overflow-x:auto;position:relative;}
 .tab{
   padding:12px 26px;background:none;border:none;border-bottom:2px solid transparent;
   color:var(--text-muted);font-size:12px;cursor:pointer;
@@ -255,6 +255,57 @@ section{padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);}
 .tab-content{display:none;animation:tabIn .35s ease both;}
 .tab-content.active{display:block;}
 @keyframes tabIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+/* Mobile: show scroll cue on the tabs row */
+@media(max-width:640px){
+  .tabs{
+    -webkit-overflow-scrolling:touch;
+    scroll-snap-type:x mandatory;
+    padding-bottom:2px;
+  }
+  .tabs::after{
+    content:'';
+    position:sticky;
+    right:0;
+    top:0;
+    bottom:0;
+    width:44px;
+    flex-shrink:0;
+    background:linear-gradient(to left,var(--black) 40%,transparent);
+    pointer-events:none;
+    z-index:2;
+  }
+  .tab{
+    scroll-snap-align:start;
+    font-size:11px;
+    padding:10px 18px;
+    /* subtle separator between tabs on mobile */
+    border-right:1px solid rgba(255,255,255,0.05);
+  }
+  .tab:last-child{ border-right:none; }
+  /* scroll arrow hint — appears on the wrapper */
+  .tabs-wrap{position:relative;}
+  .tabs-wrap::after{
+    content:'›';
+    position:absolute;
+    right:0;top:0;bottom:6px;
+    width:36px;
+    background:linear-gradient(to left,var(--black) 55%,transparent);
+    display:flex;align-items:center;justify-content:flex-end;
+    font-size:18px;color:var(--green-light);
+    padding-right:6px;
+    pointer-events:none;
+    line-height:1;
+    animation:tabArrowPulse 2s ease infinite;
+  }
+  @keyframes tabArrowPulse{
+    0%,100%{opacity:.5;transform:translateX(0);}
+    50%{opacity:1;transform:translateX(3px);}
+  }
+  .tabs-wrap.tabs-interacted::after{
+    display:none;
+  }
+}
 
 /* SERVICE CARDS */
 .services-grid{
@@ -664,10 +715,12 @@ footer{background:var(--off-black);border-top:1px solid var(--border);padding:60
     <div class="section-label reveal">What We Offer</div>
     <h2 class="section-title reveal">Pick Your Package</h2>
     <p class="section-sub reveal">Choose a service below to instantly get a quote and book your slot.</p>
+    <div class="tabs-wrap">
     <div class="tabs">
       <button class="tab active" onclick="switchTab('logos',this)">Logo Design</button>
       <button class="tab" onclick="switchTab('brandkits',this)">Company Brand Kits</button>
       <button class="tab" onclick="switchTab('social',this)">Social Media Mgmt</button>
+    </div>
     </div>
 
     <!-- LOGOS -->
@@ -2297,7 +2350,21 @@ function switchTab(name,btn){
   document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('tab-'+name).classList.add('active');
+  // Hide the mobile scroll arrow once user has interacted with tabs
+  const wrap=document.querySelector('.tabs-wrap');
+  if(wrap) wrap.classList.add('tabs-interacted');
 }
+
+// Hide mobile tabs arrow after user scrolls the tabs row
+document.addEventListener('DOMContentLoaded',function(){
+  const tabs=document.querySelector('.tabs');
+  if(tabs){
+    tabs.addEventListener('scroll',function(){
+      const wrap=document.querySelector('.tabs-wrap');
+      if(wrap) wrap.classList.add('tabs-interacted');
+    },{passive:true,once:true});
+  }
+});
 
 // ─── QUOTE MODAL ───────────────────────────────────────
 const packages={

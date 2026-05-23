@@ -330,6 +330,8 @@
     </div>
     <div class="topbar-right">
       <button class="topbar-notif" onclick="showPage('notifications')">🔔<div class="notif-dot"></div></button>
+      <button id="dashCheckCmsBtn" onclick="checkCmsSync()" style="display:flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--border);color:var(--text-muted);padding:8px 13px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;transition:0.2s;" onmouseover="this.style.borderColor='var(--green)';this.style.color='var(--green-light)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">⟳ Check CMS</button>
+      <button id="dashFolderBtn" onclick="dashPickFolder()" style="display:flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--border);color:var(--text-muted);padding:8px 13px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;transition:0.2s;max-width:160px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" onmouseover="this.style.borderColor='var(--green)';this.style.color='var(--green-light)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'" title="Set repo folder to write project data offline">📁 <span id="dashFolderLabel">Set Repo Folder</span></button>
       <button class="btn-sm btn-green" onclick="openNewProjectModal()">+ New Project</button>
     </div>
   </div>
@@ -696,6 +698,35 @@
             </div>
           </div>
         </div>
+        <div class="panel" style="grid-column:1/-1; margin-top:20px;">
+          <div class="panel-header">
+            <div class="panel-title">📁 Repo Folder / GitHub Sync</div>
+          </div>
+          <div class="panel-body">
+            <div style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:rgba(26,122,74,0.06);border:1px solid rgba(26,122,74,0.2);border-radius:6px;margin-bottom:18px;">
+              <span style="font-size:18px;flex-shrink:0;">📴</span>
+              <div style="font-size:12px;color:var(--text-muted);line-height:1.7;">
+                <strong style="color:var(--text);">Repo Folder (Offline only)</strong> — Pick your local GitHub repo folder to write project data directly to disk. Then push via GitHub Desktop as usual. <span style="color:var(--gold);">This only works when offline or on the same device as your repo.</span><br><br>
+                <strong style="color:var(--text);">GitHub API (Online)</strong> — Push project data directly to your GitHub repo without leaving the browser. Requires a Personal Access Token with repo write permissions.
+              </div>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px;">
+              <button class="btn-sm btn-outline" onclick="dashPickFolder()">📁 Set Repo Folder</button>
+              <span id="accFolderStatus" style="font-family:'Space Mono',monospace;font-size:10px;color:var(--text-muted);">
+                ${localStorage.getItem('erthdot_dash_folder_name') ? '📁 ' + localStorage.getItem('erthdot_dash_folder_name') : 'No folder selected'}
+              </span>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button class="btn-sm btn-green" onclick="writeProjectsToRepo()">Write to Repo Folder <span style="font-size:10px;opacity:0.7;">(offline)</span></button>
+              <button class="btn-sm" style="background:rgba(74,122,204,0.15);border:1px solid rgba(74,122,204,0.35);color:#7aabf0;font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;padding:8px 16px;border-radius:6px;" onclick="writeProjectsToGitHub()">Push to GitHub <span style="font-size:10px;opacity:0.7;">(online)</span></button>
+              <button class="btn-sm btn-outline" onclick="() => { localStorage.removeItem('erthdot_gh_token'); localStorage.removeItem('erthdot_gh_repo'); showToast('✓','GitHub credentials cleared.'); }">Clear GitHub Token</button>
+            </div>
+            <div style="margin-top:12px;font-family:'Space Mono',monospace;font-size:9px;letter-spacing:2px;color:var(--text-dim);">
+              GitHub token is stored in this browser only and never transmitted to Erthdot servers.
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
@@ -878,16 +909,34 @@
 // ─── AUTH CHECK ─────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
-    const session = sessionStorage.getItem('erthdot_creator');
+    // Check sessionStorage first, then fall back to localStorage persistent session
+    let session = sessionStorage.getItem('erthdot_creator');
+    if (!session) {
+      const persistent = localStorage.getItem('erthdot_creator_session');
+      if (persistent) {
+        // Validate persistent session (30 days)
+        try {
+          const sess = JSON.parse(persistent);
+          if (Date.now() - sess.loginTime < 30 * 24 * 60 * 60 * 1000) {
+            sessionStorage.setItem('erthdot_creator', persistent);
+            session = persistent;
+          } else {
+            localStorage.removeItem('erthdot_creator_session');
+          }
+        } catch(e) { localStorage.removeItem('erthdot_creator_session'); }
+      }
+    }
+
     if (!session) {
       window.location.href = 'creator-login.html';
       return;
     }
     try {
       const user = JSON.parse(session);
-      // Session expires after 8 hours
-      if (Date.now() - user.loginTime > 8 * 60 * 60 * 1000) {
+      // Session expires after 30 days (matching login page)
+      if (Date.now() - user.loginTime > 30 * 24 * 60 * 60 * 1000) {
         sessionStorage.removeItem('erthdot_creator');
+        localStorage.removeItem('erthdot_creator_session');
         window.location.href = 'creator-login.html';
         return;
       }
@@ -906,12 +955,15 @@ window.addEventListener('DOMContentLoaded', () => {
 function logout() {
   if (confirm('Sign out of the creator portal?')) {
     sessionStorage.removeItem('erthdot_creator');
+    localStorage.removeItem('erthdot_creator_session');
     window.location.href = 'creator-login.html';
   }
 }
 
 // ─── DATA ────────────────────────────────────────────────
-const projects = [
+const PROJ_KEY = 'erthdot_projects';
+
+const DEFAULT_PROJECTS = [
   { id: 'ERT-2604-007', client: 'Chanda Mwale',   pkg: 'Startup Foundation',      pct: 65, status: 'review',    started: 'Apr 18', stages: [
     {name:'Requirements Gathered', pct:10, status:'done'},
     {name:'Concept Design Started', pct:25, status:'done'},
@@ -934,6 +986,24 @@ const projects = [
     {name:'Files Packaged & Sent', pct:100, status:'pending'},
   ]},
 ];
+
+// Load projects from shared localStorage (synced with CMS), fallback to defaults
+function loadProjects() {
+  try {
+    const raw = localStorage.getItem(PROJ_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length) return parsed;
+    }
+  } catch(e) {}
+  return JSON.parse(JSON.stringify(DEFAULT_PROJECTS));
+}
+
+function saveProjects(arr) {
+  localStorage.setItem(PROJ_KEY, JSON.stringify(arr));
+}
+
+let projects = loadProjects();
 
 let activeEditorProject = null;
 
@@ -1164,6 +1234,7 @@ function pushProjectUpdate() {
   if (!activeEditorProject) { showToast('⚠', 'Select a project first.'); return; }
   const pct = document.getElementById('editorSlider').value;
   activeEditorProject.pct = parseInt(pct);
+  persistProjects(); // sync to shared localStorage
   renderOverviewTable();
   renderAllProjectsTable();
   showToast('📲', `Client notified! Project updated to ${pct}%.`);
@@ -1202,6 +1273,7 @@ function createNewProject() {
   renderOverviewTable();
   renderAllProjectsTable();
   renderLinksTable();
+  persistProjects(); // sync to shared localStorage so CMS sees the change
   document.getElementById('badge-active').textContent = projects.filter(p => p.status !== 'complete').length;
   closeModal('newProjectModal');
   showToast('✓', `Project created! Code: ${code}`);
@@ -1652,6 +1724,106 @@ function toggleSidebar() { document.getElementById('sidebar').classList.toggle('
 document.querySelectorAll('.modal-overlay').forEach(m => {
   m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
 });
+
+// ─── CMS SYNC CHECK ──────────────────────────────────────
+function checkCmsSync() {
+  // Re-load projects from shared localStorage (CMS may have updated it)
+  const refreshed = loadProjects();
+  if (JSON.stringify(refreshed) !== JSON.stringify(projects)) {
+    if (confirm('The CMS has updated project data. Pull the latest changes into your dashboard?')) {
+      projects = refreshed;
+      renderOverviewTable();
+      renderAllProjectsTable();
+      renderLinksTable();
+      showToast('✓', 'Projects updated from CMS');
+    }
+  } else {
+    // Count in each source
+    const cmsRaw = localStorage.getItem(PROJ_KEY);
+    const count = cmsRaw ? JSON.parse(cmsRaw).length : 0;
+    showToast('⟳', 'In sync — ' + count + ' project(s). Last checked now.');
+  }
+}
+
+// ─── REPO FOLDER WRITING (offline) / GITHUB API (online) ────
+let dashFolderHandle = null;
+
+// Restore folder name from previous session (handle itself can't persist — user must re-pick)
+const _savedFolderName = localStorage.getItem('erthdot_dash_folder_name');
+if (_savedFolderName) {
+  document.getElementById('dashFolderLabel').textContent = '📁 ' + _savedFolderName.slice(0, 16);
+}
+
+async function dashPickFolder() {
+  if (!('showDirectoryPicker' in window)) {
+    showToast('⚠', 'Use Chrome or Edge for folder access.', true);
+    return;
+  }
+  try {
+    dashFolderHandle = await window.showDirectoryPicker({ mode: 'readwrite' });
+    localStorage.setItem('erthdot_dash_folder_name', dashFolderHandle.name);
+    document.getElementById('dashFolderLabel').textContent = '📁 ' + dashFolderHandle.name.slice(0, 16);
+    showToast('📁', 'Repo folder set: ' + dashFolderHandle.name);
+  } catch(e) {
+    if (e.name !== 'AbortError') showToast('⚠', 'Could not access folder.', true);
+  }
+}
+
+// Write project data to repo folder (creates/updates erthdot-projects.json in root)
+// Also available to CMS publish — it patches demoProjects in index.html on next publish.
+async function writeProjectsToRepo() {
+  if (!dashFolderHandle) {
+    showToast('📁', 'Pick a repo folder first (top-right button).', true);
+    return;
+  }
+  try {
+    const content = JSON.stringify(projects, null, 2);
+    const fh = await dashFolderHandle.getFileHandle('erthdot-projects.json', { create: true });
+    const w  = await fh.createWritable();
+    await w.write(content);
+    await w.close();
+    showToast('✓', 'Projects written to repo folder. Push via GitHub Desktop to go live.');
+  } catch(e) {
+    showToast('⚠', 'Write failed: ' + e.message, true);
+  }
+}
+
+// GitHub direct write (online) — requires a Personal Access Token stored by user
+async function writeProjectsToGitHub() {
+  const token = localStorage.getItem('erthdot_gh_token');
+  const repo  = localStorage.getItem('erthdot_gh_repo'); // e.g. "username/erthdot"
+  if (!token || !repo) {
+    const t = prompt('Enter your GitHub Personal Access Token (stored locally, never sent to us):');
+    const r = prompt('Enter your repo path (e.g. YourUsername/erthdot):');
+    if (!t || !r) return;
+    localStorage.setItem('erthdot_gh_token', t);
+    localStorage.setItem('erthdot_gh_repo', r);
+    return writeProjectsToGitHub();
+  }
+  showToast('⬆', 'Pushing to GitHub...');
+  try {
+    const content = btoa(unescape(encodeURIComponent(JSON.stringify(projects, null, 2))));
+    // Get current SHA first
+    const getRes = await fetch(`https://api.github.com/repos/${repo}/contents/erthdot-projects.json`, {
+      headers: { Authorization: 'token ' + token, Accept: 'application/vnd.github.v3+json' }
+    });
+    const sha = getRes.ok ? (await getRes.json()).sha : undefined;
+    const putRes = await fetch(`https://api.github.com/repos/${repo}/contents/erthdot-projects.json`, {
+      method: 'PUT',
+      headers: { Authorization: 'token ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: 'Update project data from Creator Dashboard', content, sha })
+    });
+    if (putRes.ok) showToast('✓', 'Pushed to GitHub! Site will update in ~30s.');
+    else { const err = await putRes.json(); showToast('⚠', err.message || 'GitHub push failed.', true); }
+  } catch(e) {
+    showToast('⚠', 'GitHub push failed: ' + e.message, true);
+  }
+}
+
+// Auto-save projects to shared localStorage whenever they change
+function persistProjects() {
+  saveProjects(projects);
+}
 </script>
 
 <!-- FIREBASE MODULE — initialises Firestore and exposes it globally -->

@@ -246,6 +246,23 @@
   const MAX_ATTEMPTS = 5;
   let lockedUntil = null;
 
+  // ── Auto-login: check for remembered session ──
+  (function checkRememberedSession(){
+    const raw = localStorage.getItem('erthdot_creator_session');
+    if (!raw) return;
+    try {
+      const sess = JSON.parse(raw);
+      // Sessions last 30 days
+      if (sess && sess.loginTime && (Date.now() - sess.loginTime) < 30 * 24 * 60 * 60 * 1000) {
+        // Store in sessionStorage too then redirect
+        sessionStorage.setItem('erthdot_creator', JSON.stringify(sess));
+        window.location.href = 'creator-dashboard.html';
+      } else {
+        localStorage.removeItem('erthdot_creator_session');
+      }
+    } catch(e) { localStorage.removeItem('erthdot_creator_session'); }
+  })();
+
   function handleKey(e) {
     if (e.key === 'Enter') attemptLogin();
   }
@@ -279,8 +296,11 @@
       const match = CREATORS.find(c => c.username === username && c.password === password);
 
       if (match) {
-        // Store session
-        sessionStorage.setItem('erthdot_creator', JSON.stringify({ name: match.name, role: match.role, username: match.username, loginTime: Date.now() }));
+        // Build session object
+        const sess = { name: match.name, role: match.role, username: match.username, loginTime: Date.now() };
+        // Store in both sessionStorage (current tab) and localStorage (remember across devices/restarts)
+        sessionStorage.setItem('erthdot_creator', JSON.stringify(sess));
+        localStorage.setItem('erthdot_creator_session', JSON.stringify(sess));
         attempts = 0;
         btn.textContent = '✓ Redirecting...';
         btn.style.background = '#0e4a2e';
@@ -313,8 +333,10 @@
     box.classList.add('show');
   }
 
-  // Auto-focus
-  document.getElementById('username').focus();
+  // Auto-focus only if not auto-redirecting
+  if (!localStorage.getItem('erthdot_creator_session')) {
+    document.getElementById('username').focus();
+  }
 </script>
 </body>
 </html>
