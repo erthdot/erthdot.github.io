@@ -439,41 +439,11 @@
       <div class="panel">
         <div class="panel-header">
           <div class="panel-title">📅 All Bookings</div>
+          <button class="btn-sm btn-outline" onclick="renderBookings()" style="margin-left:auto;">Refresh</button>
         </div>
-        <div class="panel-body" style="padding: 0 24px;">
-          <div class="booking-row" style="border-top:none;">
-            <div>
-              <div class="booking-info-name">Mwiza Phiri</div>
-              <div class="booking-info-meta">Startup Foundation · +260971234567 · "Need logo for new restaurant"</div>
-            </div>
-            <div style="text-align:right;">
-              <div class="booking-date">Apr 25, 2026</div>
-              <span class="status-pill status-review" style="font-size:10px; margin-top:4px;">Deposit Pending</span>
-            </div>
-            <div><button class="btn-sm btn-green" onclick="convertBookingToProject('Mwiza Phiri','Startup Foundation')">→ Start Project</button></div>
-          </div>
-          <div class="booking-row">
-            <div>
-              <div class="booking-info-name">TechSpark Ltd</div>
-              <div class="booking-info-meta">Corporate Growth Suite · +260977654321 · "Tech consulting firm rebrand"</div>
-            </div>
-            <div style="text-align:right;">
-              <div class="booking-date">Apr 28, 2026</div>
-              <span class="status-pill status-active" style="font-size:10px; margin-top:4px;">Confirmed</span>
-            </div>
-            <div><button class="btn-sm btn-green" onclick="convertBookingToProject('TechSpark Ltd','Corporate Growth Suite')">→ Start Project</button></div>
-          </div>
-          <div class="booking-row">
-            <div>
-              <div class="booking-info-name">Bwalya Designs</div>
-              <div class="booking-info-meta">Social: Market Authority · +260966112233 · "4-month social package"</div>
-            </div>
-            <div style="text-align:right;">
-              <div class="booking-date">May 2, 2026</div>
-              <span class="status-pill status-pending" style="font-size:10px; margin-top:4px;">Pending</span>
-            </div>
-            <div><button class="btn-sm btn-outline">View Details</button></div>
-          </div>
+        <div class="panel-body" style="padding: 0 24px;" id="bookings-list">
+          <!-- Rendered by renderBookings() -->
+          <div style="padding:24px 0;color:var(--text-muted);font-size:14px;">Loading bookings…</div>
         </div>
       </div>
     </div>
@@ -1315,6 +1285,65 @@ function convertBookingToProject(name, pkg) {
   }[pkg] || '0');
   openNewProjectModal();
 }
+
+// ─── BOOKINGS — render from localStorage ────────────────
+const BOOKING_KEY = 'erthdot_bookings';
+function getBookings(){ try{ return JSON.parse(localStorage.getItem(BOOKING_KEY)||'[]'); }catch(e){ return []; } }
+function saveBookings(arr){ localStorage.setItem(BOOKING_KEY, JSON.stringify(arr)); }
+
+function renderBookings(){
+  const container = document.getElementById('bookings-list');
+  if(!container) return;
+  const bookings = getBookings();
+
+  // Update nav badge
+  const badge = document.getElementById('badge-bookings');
+  if(badge) badge.textContent = bookings.filter(b=>b.status==='Pending').length || bookings.length;
+
+  if(!bookings.length){
+    container.innerHTML = '<div style="padding:32px 0;text-align:center;color:var(--text-muted);font-size:14px;">No bookings yet — they will appear here when clients book on the website.</div>';
+    return;
+  }
+
+  const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const statusClass = s => s==='Confirmed'?'status-active':s==='Pending'?'status-pending':'status-review';
+
+  container.innerHTML = bookings.map((b,i) => `
+    <div class="booking-row" ${i===0?'style="border-top:none;"':''}>
+      <div>
+        <div class="booking-info-name">${esc(b.name)}</div>
+        <div class="booking-info-meta">${esc(b.service)} · ${esc(b.phone)}${b.brief?' · "'+esc(b.brief.slice(0,60))+(b.brief.length>60?'…':'')+'"':''}</div>
+      </div>
+      <div style="text-align:right;">
+        <div class="booking-date">${esc(b.date)}</div>
+        <span class="status-pill ${statusClass(b.status)}" style="font-size:10px;margin-top:4px;">${esc(b.status)}</span>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;">
+        <button class="btn-sm btn-green" onclick="convertBookingFromData(${i})">→ Start Project</button>
+        <button class="btn-sm btn-outline" onclick="markBookingConfirmed(${i})">Confirm</button>
+        <button class="btn-sm btn-outline" style="color:#e05;border-color:#e05;" onclick="deleteBooking(${i})">✕</button>
+      </div>
+    </div>`).join('');
+}
+
+function convertBookingFromData(idx){
+  const b = getBookings()[idx];
+  if(!b) return;
+  document.getElementById('npName').value = b.name;
+  document.getElementById('npService').value = b.service;
+  openNewProjectModal();
+  // Mark booking as confirmed
+  const arr = getBookings(); arr[idx].status='Confirmed'; saveBookings(arr); renderBookings();
+}
+function markBookingConfirmed(idx){
+  const arr=getBookings(); arr[idx].status='Confirmed'; saveBookings(arr); renderBookings();
+  showToast('✓','Booking marked as Confirmed.');
+}
+function deleteBooking(idx){
+  if(!confirm('Remove this booking?')) return;
+  const arr=getBookings(); arr.splice(idx,1); saveBookings(arr); renderBookings();
+}
+
 function markAllRead() { showToast('✓', 'All notifications marked as read.'); }
 
 // ─── TOAST ────────────────────────────────────────────────
@@ -1716,7 +1745,11 @@ const _origShowPage = showPage;
 function showPage(name) {
   _origShowPage(name);
   if (name === 'previews') renderPreviews();
+  if (name === 'bookings') renderBookings();
 }
+
+// ── Render bookings on initial load ──
+renderBookings();
 
 // ─── MOBILE SIDEBAR ──────────────────────────────────────
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }

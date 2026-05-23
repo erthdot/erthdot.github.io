@@ -2437,7 +2437,29 @@ function submitBooking(){
   if(!name||!phone||!service){showToast('Please fill in name, phone and service.');return;}
   if(!selectedDate){showToast('Please select a date from the calendar.');return;}
   const dateStr=monthNames[currentDate.getMonth()]+' '+selectedDate+', '+currentDate.getFullYear();
-  showToast('Booking sent! We will confirm via WhatsApp shortly.');
+
+  // ── Save booking to localStorage so Creator Dashboard can see it ──
+  const booking = {
+    id: 'BK-'+Date.now(),
+    name, phone, service, brief,
+    date: dateStr,
+    submittedAt: new Date().toISOString(),
+    status: 'Pending'
+  };
+  try {
+    const existing = JSON.parse(localStorage.getItem('erthdot_bookings')||'[]');
+    existing.unshift(booking);
+    localStorage.setItem('erthdot_bookings', JSON.stringify(existing));
+  } catch(e){ console.warn('Could not save booking locally:', e); }
+
+  // Clear form fields
+  document.getElementById('bookingName').value='';
+  document.getElementById('bookingPhone').value='';
+  document.getElementById('bookingService').value='';
+  document.getElementById('bookingBrief').value='';
+  selectedDate=null;
+
+  showToast('Booking received! We will confirm via WhatsApp shortly.');
   setTimeout(()=>{
     const msg=encodeURIComponent('Hi Erthdot! I would like to book:\n\nService: '+service+'\nName: '+name+'\nDate: '+dateStr+'\nPhone: '+phone+(brief?'\nBrief: '+brief:''));
     window.open('https://wa.me/260971009632?text='+msg,'_blank');
@@ -2627,15 +2649,33 @@ function copyTrackerLink(){ copyLink('ERT-2604-007'); }
 function lookupProject(){
   const c=document.getElementById('projectCodeInput').value.trim();
   if(!c){showToast('Please enter your project code.');return;}
-  // Try to find and jump to that project in the demo
+
+  // 1. Search live projects saved by Creator Dashboard
+  try {
+    const saved = JSON.parse(localStorage.getItem('erthdot_projects')||'[]');
+    const match = saved.find(p => (p.id||'').toLowerCase()===c.toLowerCase());
+    if(match){
+      showToast('✓ Project '+c+' found. Progress: '+(match.pct||0)+'%');
+      document.getElementById('tracker').scrollIntoView({behavior:'smooth'});
+      return;
+    }
+  } catch(e){}
+
+  // 2. Fall back to demo projects in the slider
   const idx = demoProjects.findIndex(p => p.id.toLowerCase() === c.toLowerCase());
   if(idx >= 0){ goToSlide(idx); document.getElementById('tracker').scrollIntoView({behavior:'smooth'}); showToast('Found — showing project '+c); }
-  else { showToast('Searching for project '+c+'...'); }
+  else { showToast('No project found for code "'+c+'". Double-check the code from your confirmation message.'); }
 }
 function sendOTP(){
   const p=document.getElementById('trackPhone').value.trim();
   if(!p){showToast('Please enter your phone number.');return;}
-  showToast('Project link sent to your WhatsApp!');
+  // Look up bookings by phone to confirm we have a record
+  try {
+    const bookings = JSON.parse(localStorage.getItem('erthdot_bookings')||'[]');
+    const found = bookings.find(b => b.phone.replace(/\s/g,'')===p.replace(/\s/g,''));
+    if(found){ showToast('Your booking was found. Project link will be sent to your WhatsApp!'); }
+    else { showToast('Phone number not found. Please use the number you booked with.'); return; }
+  } catch(e){ showToast('Project link sent to your WhatsApp!'); }
 }
 function installPWA(){showToast('Open your project link on mobile > Share > Add to Home Screen.');}
 function showToast(msg){
