@@ -332,6 +332,10 @@
       <button class="topbar-notif" onclick="showPage('notifications')">🔔<div class="notif-dot"></div></button>
       <button id="dashCheckCmsBtn" onclick="checkCmsSync()" style="display:flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--border);color:var(--text-muted);padding:8px 13px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;transition:0.2s;" onmouseover="this.style.borderColor='var(--green)';this.style.color='var(--green-light)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'">⟳ Check CMS</button>
       <button id="dashFolderBtn" onclick="dashPickFolder()" style="display:flex;align-items:center;gap:6px;background:transparent;border:1px solid var(--border);color:var(--text-muted);padding:8px 13px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;transition:0.2s;max-width:160px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;" onmouseover="this.style.borderColor='var(--green)';this.style.color='var(--green-light)'" onmouseout="this.style.borderColor='var(--border)';this.style.color='var(--text-muted)'" title="Set repo folder to write project data offline">📁 <span id="dashFolderLabel">Set Repo Folder</span></button>
+      <button onclick="exportDashReport()" style="display:flex;align-items:center;gap:6px;background:rgba(100,180,255,0.1);border:1px solid rgba(100,180,255,0.25);color:#64b4ff;padding:8px 13px;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:12px;cursor:pointer;transition:0.2s;" title="Download offline HTML report" onmouseover="this.style.background='rgba(100,180,255,0.2)'" onmouseout="this.style.background='rgba(100,180,255,0.1)'">
+        <svg viewBox="0 0 24 24" style="width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Export Report
+      </button>
       <button class="btn-sm btn-green" onclick="openNewProjectModal()">+ New Project</button>
     </div>
   </div>
@@ -461,9 +465,6 @@
                 <label class="form-label">Active Projects</label>
                 <select class="form-select" id="editorProjectSelect" onchange="loadProjectIntoEditor()">
                   <option value="">— Choose a project —</option>
-                  <option value="0">Chanda Mwale — ERT-2604-007</option>
-                  <option value="1">Lufuno Brands — ERT-2604-008</option>
-                  <option value="2">Zima Ventures — ERT-2604-009</option>
                 </select>
               </div>
             </div>
@@ -963,10 +964,14 @@ function loadProjects() {
     const raw = localStorage.getItem(PROJ_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed) && parsed.length) return parsed;
+      // Allow empty arrays — user may have deleted all projects intentionally
+      if (Array.isArray(parsed)) return parsed;
     }
   } catch(e) {}
-  return JSON.parse(JSON.stringify(DEFAULT_PROJECTS));
+  // First ever load — seed defaults into localStorage so they can be permanently deleted
+  const seed = JSON.parse(JSON.stringify(DEFAULT_PROJECTS));
+  localStorage.setItem(PROJ_KEY, JSON.stringify(seed));
+  return seed;
 }
 
 function saveProjects(arr) {
@@ -981,6 +986,8 @@ function initDashboard() {
   renderOverviewTable();
   renderAllProjectsTable();
   renderLinksTable();
+  populateEditorSelect();
+  if (typeof renderBookings === 'function') renderBookings();
 }
 
 // ─── PAGES ───────────────────────────────────────────────
@@ -993,7 +1000,12 @@ function showPage(name) {
   const navEl = document.getElementById('nav-' + name);
   if (navEl) navEl.classList.add('active');
   document.getElementById('pageTitle').textContent = pageTitles[name] || '';
-  if (name === 'account') populateAccountPage();
+  if (name === 'account')   populateAccountPage();
+  if (name === 'previews')  { if (typeof renderPreviews  === 'function') renderPreviews(); }
+  if (name === 'bookings')  { if (typeof renderBookings  === 'function') renderBookings(); }
+  if (name === 'editor')    populateEditorSelect();   // always fresh when navigating to editor
+  if (name === 'projects')  renderAllProjectsTable(); // refresh on tab visit
+  if (name === 'links')     renderLinksTable();
 }
 
 function populateAccountPage() {
@@ -1055,8 +1067,22 @@ function renderOverviewTable() {
   `).join('');
 }
 
+function populateEditorSelect(preserveId) {
+  const sel = document.getElementById('editorProjectSelect');
+  if (!sel) return;
+  const prev = preserveId || sel.value; // keep selection if possible
+  sel.innerHTML = '<option value="">— Choose a project —</option>' +
+    projects.map((p, i) => `<option value="${i}">${p.client} — ${p.id}</option>`).join('');
+  // restore previous selection by index that still matches same project id
+  if (prev !== '' && prev !== undefined) {
+    const matchIdx = projects.findIndex((p, i) => String(i) === String(prev) || p.id === prev);
+    if (matchIdx >= 0) sel.value = String(matchIdx);
+  }
+}
+
 function renderAllProjectsTable() {
   const tbody = document.getElementById('allProjectsBody');
+  populateEditorSelect();
   tbody.innerHTML = projects.map(p => `
     <tr>
       <td><div class="proj-name">${p.client}</div></td>
@@ -1200,14 +1226,36 @@ function updateNotifPreview(pct, client, id) {
     `<strong>📲 Notification Preview:</strong> "Hi ${client || 'there'}! Your Erthdot project is now <strong>${pct}%</strong> complete. Current stage: ${activeStageName}. Track your project: erthdot.com/track/${id}"`;
 }
 
+function collectEditorStages() {
+  // Read the current stage rows from the DOM and write back into activeEditorProject
+  if (!activeEditorProject) return;
+  const rows = document.querySelectorAll('#stagesEditorList .stage-row');
+  activeEditorProject.stages = Array.from(rows).map(row => {
+    const inputs = row.querySelectorAll('input');
+    const sel    = row.querySelector('select');
+    const rawStatus = sel ? sel.value.toLowerCase() : 'pending';
+    const status = rawStatus.includes('done') ? 'done'
+                 : rawStatus.includes('active') ? 'active' : 'pending';
+    return {
+      name: inputs[0] ? inputs[0].value.trim() : '',
+      pct:  inputs[1] ? parseInt(inputs[1].value) || 0 : 0,
+      status
+    };
+  });
+}
+
 function pushProjectUpdate() {
   if (!activeEditorProject) { showToast('⚠', 'Select a project first.'); return; }
   const pct = document.getElementById('editorSlider').value;
   activeEditorProject.pct = parseInt(pct);
+  collectEditorStages(); // read stage edits from DOM
+  // Write back into the projects array so the in-memory copy is updated
+  const idx = projects.findIndex(p => p.id === activeEditorProject.id);
+  if (idx >= 0) projects[idx] = activeEditorProject;
   persistProjects(); // sync to shared localStorage
   renderOverviewTable();
   renderAllProjectsTable();
-  showToast('📲', `Client notified! Project updated to ${pct}%.`);
+  showToast('📲', `Project saved and client notified! Updated to ${pct}%.`);
 }
 
 function markProjectComplete() {
@@ -1272,10 +1320,27 @@ function deactivateLinkForProject(id) {
   if (confirm(`Deactivate link for ${id}?`)) showToast('🗑', `Link ${id} deactivated.`);
 }
 function archiveProject(id) {
-  if (confirm(`Archive project ${id}? It will be removed from the active list.`)) {
+  if (confirm(`Delete project ${id}? It will be permanently removed.`)) {
     const idx = projects.findIndex(p => p.id === id);
-    if (idx >= 0) { projects.splice(idx, 1); renderAllProjectsTable(); renderOverviewTable(); renderLinksTable(); }
-    showToast('📁', `Project ${id} archived.`);
+    if (idx >= 0) {
+      projects.splice(idx, 1);
+      saveProjects(projects); // persist deletion — won't come back on reload
+      renderOverviewTable();
+      renderAllProjectsTable(); // also repopulates editor select
+      renderLinksTable();
+      // If the deleted project was open in the editor, clear it
+      const sel = document.getElementById('editorProjectSelect');
+      if (sel) {
+        sel.value = '';
+        activeEditorProject = null;
+      }
+      ['editorDetailsPanel','editorStagesPanel','editorLinkPanel','completePanel'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = 'none';
+      });
+      document.getElementById('badge-active').textContent = projects.filter(p => p.status !== 'complete').length;
+    }
+    showToast('🗑', `Project ${id} deleted.`);
   }
 }
 function convertBookingToProject(name, pkg) {
@@ -1284,6 +1349,54 @@ function convertBookingToProject(name, pkg) {
     'Startup Foundation':'4,000', 'Corporate Growth Suite':'9,500'
   }[pkg] || '0');
   openNewProjectModal();
+}
+
+
+// ═══════════════════════════════════════
+// OFFLINE REPORT EXPORT
+// ═══════════════════════════════════════
+function exportDashReport(){
+  const projs = projects || [];
+  const bookings = (() => { try{ return JSON.parse(localStorage.getItem('erthdot_bookings')||'[]'); }catch(e){ return []; } })();
+  const now = new Date();
+  const dateStr = now.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  const statusBadge = s => {
+    const col = s==='active'||s==='In Progress'?'#7fff7a':s==='review'||s==='Final Review'?'#ffd700':s==='complete'||s==='Complete'?'#aaa':'#888';
+    return `<span style="background:${col}22;color:${col};border:1px solid ${col}44;border-radius:3px;padding:2px 7px;font-size:10px;font-weight:600;">${esc(s)}</span>`;
+  };
+  const projRows = projs.map(p=>`<tr>
+    <td style="font-family:monospace;color:#7fff7a;">${esc(p.id)}</td>
+    <td><strong>${esc(p.client)}</strong></td>
+    <td>${esc(p.pkg)}</td>
+    <td><div style="display:flex;align-items:center;gap:8px;"><div style="flex:1;background:#222;border-radius:4px;height:6px;overflow:hidden;min-width:60px;"><div style="height:100%;background:#7fff7a;width:${p.pct}%;"></div></div><span style="font-size:11px;color:#7fff7a;">${p.pct}%</span></div></td>
+    <td>${statusBadge(p.status)}</td>
+    <td style="font-size:11px;color:#888;">${esc(p.started||'—')}</td>
+    <td style="font-size:11px;">${(p.stages||[]).map(s=>{const ic=s.status==='done'?'✓':s.status==='active'?'↻':'○';const col=s.status==='done'?'#7fff7a':s.status==='active'?'#ffd700':'#555';return `<div style="color:${col};margin-bottom:2px;">${ic} ${esc(s.name)}</div>`;}).join('')}</td>
+  </tr>`).join('');
+  const bookingRows = bookings.map(b=>`<tr>
+    <td style="font-family:monospace;font-size:11px;color:#888;">${esc(b.id||'—')}</td>
+    <td><strong>${esc(b.name)}</strong></td>
+    <td>${esc(b.phone)}</td>
+    <td>${esc(b.service)}</td>
+    <td>${esc(b.date)}</td>
+    <td>${statusBadge(b.status||'Pending')}</td>
+    <td style="font-size:11px;color:#888;">${esc((b.brief||'').slice(0,80))}</td>
+  </tr>`).join('');
+  const html = `<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>Erthdot Dashboard Report — ${dateStr}</title>
+<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:'Segoe UI',system-ui,sans-serif;background:#0a0a0a;color:#e0e0e0;padding:40px;}h1{font-size:28px;margin-bottom:4px;color:#fff;}.sub{color:#777;font-size:13px;margin-bottom:40px;}h2{font-size:15px;letter-spacing:2px;text-transform:uppercase;color:#7fff7a;margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid #222;}section{margin-bottom:48px;}table{width:100%;border-collapse:collapse;font-size:13px;}th{text-align:left;padding:10px 14px;background:#141414;color:#888;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;border-bottom:1px solid #222;}td{padding:12px 14px;border-bottom:1px solid #1a1a1a;vertical-align:top;}tr:hover td{background:#0f0f0f;}.empty{color:#555;font-size:13px;padding:20px 0;}@media print{body{background:#fff;color:#000;}td,th{border-color:#ddd;}h2{color:#000;}}</style>
+</head><body>
+<h1>Erthdot Studio — Dashboard Report</h1>
+<div class="sub">Generated ${dateStr} &nbsp;·&nbsp; ${projs.length} project(s) &nbsp;·&nbsp; ${bookings.length} booking(s)</div>
+<section><h2>Active Projects</h2>${projs.length?`<table><thead><tr><th>ID</th><th>Client</th><th>Package</th><th>Progress</th><th>Status</th><th>Started</th><th>Stages</th></tr></thead><tbody>${projRows}</tbody></table>`:'<div class="empty">No projects.</div>'}</section>
+<section><h2>Client Bookings</h2>${bookings.length?`<table><thead><tr><th>Booking ID</th><th>Name</th><th>Phone</th><th>Service</th><th>Date</th><th>Status</th><th>Brief</th></tr></thead><tbody>${bookingRows}</tbody></table>`:'<div class="empty">No bookings.</div>'}</section>
+</body></html>`;
+  const blob = new Blob([html],{type:'text/html'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href=url; a.download='erthdot-dashboard-report-'+now.toISOString().slice(0,10)+'.html'; a.click();
+  URL.revokeObjectURL(url);
+  showToast('📄','Report downloaded ✓');
 }
 
 // ─── BOOKINGS — render from localStorage ────────────────
@@ -1740,16 +1853,9 @@ function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
-// init previews when page shown
-const _origShowPage = showPage;
-function showPage(name) {
-  _origShowPage(name);
-  if (name === 'previews') renderPreviews();
-  if (name === 'bookings') renderBookings();
-}
+// previews and bookings are triggered inside showPage directly (see definition above)
 
-// ── Render bookings on initial load ──
-renderBookings();
+// bookings rendered on page nav and after initDashboard
 
 // ─── MOBILE SIDEBAR ──────────────────────────────────────
 function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
