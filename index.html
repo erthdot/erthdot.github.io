@@ -2456,45 +2456,50 @@ function submitBooking(){
   },1000);
 }
 
-// ─── MULTI-PROJECT SLIDER ─────────────────────────────
-const demoProjects = [
-  {
-    id:'ERT-2604-007', client:'Chanda Mwale',
-    pkg:'Startup Foundation', pct:65, status:'In Progress',
-    statusColor:'var(--green-light)',
-    stages:[
-      {name:'Requirements Gathered',    status:'done',   date:'Apr 18'},
-      {name:'Concept Design Started',   status:'done',   date:'Apr 19'},
-      {name:'First Draft — Under Review',status:'active', date:'Now'},
-      {name:'Revisions & Refinement',    status:'pending',date:'—'},
-      {name:'Final Files Delivered',     status:'pending',date:'—'},
-    ]
-  },
-  {
-    id:'ERT-2604-008', client:'Lufuno Brands',
-    pkg:'Corporate Growth Suite', pct:30, status:'In Progress',
-    statusColor:'var(--green-light)',
-    stages:[
-      {name:'Brief & Brand Assets',      status:'done',   date:'Apr 20'},
-      {name:'Mood Board & Direction',    status:'active', date:'Now'},
-      {name:'Logo Concept Development',  status:'pending',date:'—'},
-      {name:'Full Communication Set',    status:'pending',date:'—'},
-      {name:'Brand Kit Delivery',        status:'pending',date:'—'},
-    ]
-  },
-  {
-    id:'ERT-2604-009', client:'Zima Ventures',
-    pkg:'Identity Lite', pct:90, status:'Final Review',
-    statusColor:'var(--gold)',
-    stages:[
-      {name:'Brief & Assets Collected',  status:'done',   date:'Apr 15'},
-      {name:'2 Logo Concepts Drafted',   status:'done',   date:'Apr 16'},
-      {name:'Client Review Round 1',     status:'done',   date:'Apr 18'},
-      {name:'Final Refinement',          status:'active', date:'Now'},
-      {name:'Files Packaged & Sent',     status:'pending',date:'—'},
-    ]
+// ─── MULTI-PROJECT SLIDER — LIVE DATA (Firestore) ──────
+// Real projects are created/edited by the designer in the Creator Dashboard
+// and saved to the "previews" Firestore collection. Only published previews
+// (p.published === true) show up here — nothing below is hardcoded/demo data.
+let demoProjects = []; // populated by loadLiveProjects(); kept name for min. diff w/ rest of file
+
+const STATUS_LABELS = {
+  progress: 'In Progress',
+  review:   'Final Review',
+  done:     'Completed'
+};
+const STATUS_COLORS = {
+  progress: 'var(--green-light)',
+  review:   'var(--gold)',
+  done:     'var(--green-light)'
+};
+
+function mapPreviewToSlide(p) {
+  return {
+    id: p.id,
+    client: p.clientName || 'Client',
+    pkg: p.package || '—',
+    pct: p.progress || 0,
+    status: STATUS_LABELS[p.status] || p.status || 'In Progress',
+    statusColor: STATUS_COLORS[p.status] || 'var(--green-light)',
+    stages: (p.stages || []).map(s => ({ name: s.name, status: s.status, date: s.date || '—' }))
+  };
+}
+
+async function loadLiveProjects() {
+  if (!window.__firestoreDb || !window.__firestoreAPI) return [];
+  try {
+    const { getDocs, collection, query, orderBy } = window.__firestoreAPI;
+    const q = query(collection(window.__firestoreDb, 'previews'), orderBy('createdAt', 'desc'));
+    const snap = await getDocs(q);
+    return snap.docs
+      .map(d => ({ id: d.id, ...d.data() }))
+      .filter(p => p.published)
+      .map(mapPreviewToSlide);
+  } catch (e) {
+    console.error('loadLiveProjects failed', e);
+    return [];
   }
-];
+}
 
 let currentSlide = 0;
 
@@ -2538,13 +2543,13 @@ function buildSlide(p) {
             <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
             Copy Link
           </button>
-          <button class="tracker-btn" onclick="installPWA()">
+          <button class="tracker-btn" onclick="installPWA('${p.id}')">
             <svg viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
             Add to Phone
           </button>
         </div>
         <div class="link-box">
-          <div class="link-url">erthdot.com/track/${p.id}</div>
+          <div class="link-url">erthdot.com/client-preview.html?id=${p.id}</div>
           <button class="copy-btn" onclick="copyLink('${p.id}')">Copy</button>
         </div>
         <div class="expiry">Link auto-archives 30 days after project sign-off.</div>
@@ -2558,6 +2563,16 @@ function buildSlider() {
   const dots  = document.getElementById('projDots');
   const thumbs = document.getElementById('projThumbStrip');
   if (!track) return;
+
+  if (!demoProjects.length) {
+    track.innerHTML = `<div class="proj-slide"><div class="tracker-demo" style="display:flex;align-items:center;justify-content:center;min-height:280px;text-align:center;padding:32px;">
+      <p style="color:var(--text-muted);font-size:14px;">No active projects yet. Once your designer publishes your project, it'll appear here — or use the lookup on the right with your project code.</p>
+    </div></div>`;
+    dots.innerHTML = ''; thumbs.innerHTML = '';
+    const counter = document.getElementById('projCounter');
+    if (counter) counter.textContent = '0 / 0';
+    return;
+  }
 
   track.innerHTML  = demoProjects.map(p => buildSlide(p)).join('');
   dots.innerHTML   = demoProjects.map((_,i) => `<div class="proj-dot${i===0?' active':''}" onclick="goToSlide(${i})"></div>`).join('');
@@ -2632,42 +2647,58 @@ document.addEventListener('keydown', e => {
   }, {passive:true});
 })();
 
-buildSlider();
+// Build slider once Firestore is ready, then refresh live data
+async function initLiveTracker() {
+  demoProjects = await loadLiveProjects();
+  currentSlide = 0;
+  buildSlider();
+}
+window.addEventListener('firestoreReady', initLiveTracker);
+buildSlider(); // render empty/loading state immediately, replaced once Firestore resolves
 
 // ─── TRACKER HELPERS ──────────────────────────────────
-function copyTrackerLink(){ copyLink('ERT-2604-007'); }
-function lookupProject(){
+function copyTrackerLink(){ if(demoProjects[0]) copyLink(demoProjects[0].id); }
+
+async function lookupProject(){
   const c=document.getElementById('projectCodeInput').value.trim();
   if(!c){showToast('Please enter your project code.');return;}
 
-  // 1. Search live projects saved by Creator Dashboard
-  try {
-    const saved = JSON.parse(localStorage.getItem('erthdot_projects')||'[]');
-    const match = saved.find(p => (p.id||'').toLowerCase()===c.toLowerCase());
-    if(match){
-      showToast('✓ Project '+c+' found. Progress: '+(match.pct||0)+'%');
-      document.getElementById('tracker').scrollIntoView({behavior:'smooth'});
-      return;
-    }
-  } catch(e){}
-
-  // 2. Fall back to demo projects in the slider
+  // 1. Check the slider — projects already loaded from Firestore
   const idx = demoProjects.findIndex(p => p.id.toLowerCase() === c.toLowerCase());
-  if(idx >= 0){ goToSlide(idx); document.getElementById('tracker').scrollIntoView({behavior:'smooth'}); showToast('Found — showing project '+c); }
-  else { showToast('No project found for code "'+c+'". Double-check the code from your confirmation message.'); }
+  if(idx >= 0){ goToSlide(idx); document.getElementById('tracker').scrollIntoView({behavior:'smooth'}); showToast('Found — showing project '+c); return; }
+
+  // 2. Not in the slider (e.g. unpublished or older project) — query Firestore directly
+  if (window.__firestoreDb && window.__firestoreAPI) {
+    try {
+      const { doc, getDoc } = window.__firestoreAPI;
+      const snap = await getDoc(doc(window.__firestoreDb, 'previews', c.toUpperCase()));
+      if (snap.exists()) {
+        window.location.href = `client-preview.html?id=${encodeURIComponent(c.toUpperCase())}`;
+        return;
+      }
+    } catch(e){ console.error('lookupProject firestore error', e); }
+  }
+
+  showToast('No project found for code "'+c+'". Double-check the code from your confirmation message.');
 }
+
 function sendOTP(){
   const p=document.getElementById('trackPhone').value.trim();
   if(!p){showToast('Please enter your phone number.');return;}
-  // Look up bookings by phone to confirm we have a record
-  try {
-    const bookings = JSON.parse(localStorage.getItem('erthdot_bookings')||'[]');
-    const found = bookings.find(b => b.phone.replace(/\s/g,'')===p.replace(/\s/g,''));
-    if(found){ showToast('Your booking was found. Project link will be sent to your WhatsApp!'); }
-    else { showToast('Phone number not found. Please use the number you booked with.'); return; }
-  } catch(e){ showToast('Project link sent to your WhatsApp!'); }
+  const clean = p.replace(/\s/g,'');
+  const msg = encodeURIComponent(`Hi, I'd like my Erthdot project tracker link. My number used to book: ${clean}`);
+  window.open(`https://wa.me/260971009632?text=${msg}`, '_blank');
+  showToast('Opening WhatsApp — send the message and we\'ll reply with your link.');
 }
-function installPWA(){showToast('Open your project link on mobile > Share > Add to Home Screen.');}
+
+function installPWA(id){
+  const targetId = id || (demoProjects[0] && demoProjects[0].id);
+  if (targetId) {
+    window.location.href = `client-preview.html?id=${encodeURIComponent(targetId)}`;
+    return;
+  }
+  showToast('Open your project link on mobile > Share > Add to Home Screen.');
+}
 function showToast(msg){
   const t=document.getElementById('toast');
   document.getElementById('toastMsg').textContent=msg;
@@ -2735,5 +2766,26 @@ document.querySelectorAll('.modal-overlay').forEach(m=>{
     <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:2px; color:var(--text-muted); text-transform:uppercase; margin-top:16px;">Your link looks like: erthdot.com/client-preview.html?id=PV-XXXXX</div>
   </div>
 </div>
+
+<!-- FIREBASE MODULE — same project as Creator Dashboard, so the tracker
+     above reads real, live projects instead of demo data -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getFirestore, collection, doc, getDocs, getDoc, query, orderBy }
+    from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+  const app = initializeApp({
+    apiKey:            "AIzaSyCyuxzP6OcMNi7MW9cua9ZspvJzAcW-Pjc",
+    authDomain:        "erthdot26-website.firebaseapp.com",
+    projectId:         "erthdot26-website",
+    storageBucket:     "erthdot26-website.firebasestorage.app",
+    messagingSenderId: "597989992823",
+    appId:             "1:597989992823:web:2f5704da8f7e52c0715972"
+  });
+
+  window.__firestoreDb  = getFirestore(app);
+  window.__firestoreAPI = { collection, doc, getDocs, getDoc, query, orderBy };
+  window.dispatchEvent(new Event("firestoreReady"));
+</script>
 </body>
 </html>

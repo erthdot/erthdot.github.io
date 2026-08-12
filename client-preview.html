@@ -6,6 +6,20 @@
 <meta name="robots" content="noindex, nofollow">
 <title>Project Preview — Erthdot</title>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
+<meta name="theme-color" content="#090909">
+
+<!-- INSTALLABLE SHORTCUT — one per client -->
+<!-- The manifest below is generated dynamically per project (see _worker.js).
+     When a client opens this link and taps "Add to Home Screen" / installs
+     the app prompt, the icon that lands on their phone opens THEIR project
+     directly — no ID entry, no landing page. iOS reads apple-mobile-web-app-*
+     meta tags (set by JS below once we know the project ID); Android/Chrome
+     reads the manifest link (also set dynamically below). -->
+<link rel="manifest" id="dynManifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" id="appleTitleMeta" content="Erthdot Project">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root{--green:#1a7a4a;--green-light:#22a060;--green-glow:rgba(34,160,96,0.15);--black:#090909;--card:#111;--card2:#161616;--border:#222;--border-light:#2c2c2c;--text:#e0e0e0;--text-muted:#666;--text-dim:#333;--white:#fff;--gold:#c8a84b;}
@@ -332,6 +346,21 @@ document.addEventListener('touchstart', e => {
 // DATA LOAD — Firestore
 // ══════════════════════════════════════════════
 const previewId = new URLSearchParams(location.search).get('id');
+
+// Point the installable-app manifest at THIS project so "Add to Home Screen" /
+// the browser install prompt creates a shortcut that opens straight to it.
+if (previewId) {
+  const manifestLink = document.getElementById('dynManifest');
+  if (manifestLink) manifestLink.setAttribute('href', `/client-manifest.json?id=${encodeURIComponent(previewId)}`);
+  const appleTitle = document.getElementById('appleTitleMeta');
+  if (appleTitle) appleTitle.setAttribute('content', `${previewId} — Erthdot`);
+}
+
+// Register a lightweight service worker so Chrome/Android treats this as an
+// installable app (required for the "Add to Home Screen" install prompt).
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
+}
 
 function showNotFound() {
   document.getElementById('loader').classList.add('out');
