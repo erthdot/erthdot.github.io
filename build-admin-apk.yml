@@ -1,0 +1,61 @@
+name: Build Erthdot Studio Admin APK
+
+# Builds an installable Android package for the Designer Admin dashboard
+# (a "Trusted Web Activity" wrapper around creator-dashboard.html) and
+# publishes it to the site root as erthdot-admin.apk, so the dashboard
+# can link to it as a direct download.
+#
+# This runs on GitHub's servers, which have normal internet access — it
+# downloads the Android SDK / build tools itself, no local setup needed.
+#
+# Trigger:
+#   - automatically whenever twa-manifest.json changes on main
+#   - manually any time from the Actions tab ("Run workflow")
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "twa-manifest.json"
+      - "dashboard-manifest.json"
+  workflow_dispatch: {}
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Install Bubblewrap CLI
+        run: npm install -g @bubblewrap/cli
+
+      - name: Build APK (debug-signed — installs directly, no Play Store needed)
+        run: |
+          mkdir -p build
+          cp twa-manifest.json build/twa-manifest.json
+          cd build
+          # --skipPwaValidation: the live site already serves a valid manifest,
+          # no need to re-validate on every CI run.
+          bubblewrap build --skipPwaValidation || bubblewrap build
+        env:
+          BUBBLEWRAP_NONINTERACTIVE: "true"
+
+      - name: Move APK to site root as erthdot-admin.apk
+        run: |
+          find build -name "*.apk" -exec cp {} ./erthdot-admin.apk \;
+          ls -la erthdot-admin.apk
+
+      - name: Commit APK back to repo
+        run: |
+          git config user.name "erthdot-ci"
+          git config user.email "ci@erthdot.com"
+          git add erthdot-admin.apk
+          git diff --cached --quiet || git commit -m "chore: rebuild erthdot-admin.apk [skip ci]"
+          git push

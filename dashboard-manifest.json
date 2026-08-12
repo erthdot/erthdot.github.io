@@ -1,0 +1,16 @@
+{
+  "name": "Erthdot Studio — Designer Admin",
+  "short_name": "Erthdot Studio",
+  "description": "Manage clients, projects and site tools for Erthdot Design Studio, from your phone.",
+  "start_url": "/creator-dashboard.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#090909",
+  "theme_color": "#090909",
+  "icons": [
+    { "src": "/favicon-16.png", "sizes": "16x16", "type": "image/png" },
+    { "src": "/favicon-32.png", "sizes": "32x32", "type": "image/png" },
+    { "src": "/apple-touch-icon.png", "sizes": "180x180", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

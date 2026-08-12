@@ -10,6 +10,13 @@
 <meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Erthdot — Creator Dashboard</title>
+
+<!-- INSTALLABLE ADMIN APP — designer's mobile control panel -->
+<link rel="manifest" href="dashboard-manifest.json">
+<meta name="theme-color" content="#090909">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Erthdot Studio">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -160,6 +167,22 @@
   .form-label { font-size: 11px; color: var(--text-muted); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; display: block; }
   .form-input, .form-select, .form-textarea { width: 100%; padding: 11px 14px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 14px; transition: border-color 0.2s; }
   .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: var(--green); }
+  .quote-totals { background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; margin-top: 16px; }
+  .quote-totals-row { display: flex; justify-content: space-between; font-size: 13px; color: var(--text-muted); padding: 5px 0; }
+  .quote-totals-row span:last-child { color: var(--text); font-family: 'Space Mono', monospace; }
+  .quote-totals-grand { border-top: 1px solid var(--border); margin-top: 4px; padding-top: 10px; font-size: 15px; }
+  .quote-totals-grand span { color: var(--white) !important; font-weight: 700; }
+  .quote-totals-grand span:last-child { color: var(--green-light) !important; }
+  .qitem-input { width: 100%; padding: 6px 8px; background: rgba(255,255,255,0.04); border: 1px solid var(--border); border-radius: 4px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 12px; }
+  .qitem-del { background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 15px; }
+  .qitem-del:hover { color: var(--red); }
+  .qh-card { background: var(--card2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; }
+  .qh-card-title { font-size: 13px; color: var(--white); font-weight: 600; margin-bottom: 2px; }
+  .qh-card-meta { font-size: 11px; color: var(--text-muted); margin-bottom: 8px; }
+  .qh-card-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+  .qh-card-actions button { background: none; border: 1px solid var(--border); color: var(--text-muted); border-radius: 4px; padding: 4px 8px; font-size: 11px; cursor: pointer; }
+  .qh-card-actions button:hover { border-color: var(--green); color: var(--green-light); }
+  @media (max-width: 900px) { .quote-grid { grid-template-columns: 1fr !important; } }
   .form-select option { background: var(--off-black); }
   .form-textarea { min-height: 80px; resize: vertical; }
 
@@ -228,6 +251,8 @@
   .pv-card-title { font-family:'Bebas Neue',sans-serif; font-size:17px; letter-spacing:1px; color:var(--white); margin-bottom:2px; }
   .pv-card-client { font-size:12px; color:var(--text-muted); }
   .pv-pub-badge { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:2px; padding:3px 9px; border-radius:3px; text-transform:uppercase; flex-shrink:0; margin-top:2px; }
+  .pkg-badge{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,var(--gold,#c8a84b),#e0c26b);color:#171205;font-family:'Space Mono',monospace;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:16px;box-shadow:0 2px 10px rgba(200,168,75,.35);white-space:nowrap;}
+  .pkg-badge::before{content:'◆';font-size:7px;}
   .pv-pub-badge.live { background:rgba(34,160,96,0.1); color:var(--green-light); border:1px solid rgba(34,160,96,0.2); }
   .pv-pub-badge.draft { background:rgba(100,100,100,0.08); color:var(--text-muted); border:1px solid var(--border); }
   .pv-card-body { padding:10px 18px; }
@@ -298,6 +323,7 @@
   <div class="sidebar-section-label">Tools</div>
   <ul class="sidebar-nav">
     <li><a onclick="showPage('editor')" id="nav-editor"><span class="nav-icon">✎</span> Project Editor</a></li>
+    <li><a onclick="showPage('quotes')" id="nav-quotes"><span class="nav-icon">🧾</span> Quotations</a></li>
     <li><a onclick="showPage('previews')" id="nav-previews"><span class="nav-icon">◉</span> Client Previews</a></li>
     <li><a onclick="showPage('notifications')" id="nav-notifications"><span class="nav-icon">🔔</span> Notifications</a></li>
     <li><a onclick="showPage('links')" id="nav-links"><span class="nav-icon">🔗</span> Tracker Links</a></li>
@@ -307,6 +333,8 @@
   <div class="sidebar-divider"></div>
   <ul class="sidebar-nav">
     <li><a href="index.html" target="_blank"><span class="nav-icon">↗</span> View Public Site</a></li>
+    <li id="installAppNavItem" style="display:none;"><a onclick="installDashboardApp()"><span class="nav-icon">📲</span> Install This App</a></li>
+    <li><a href="erthdot-admin.apk" download><span class="nav-icon">⬇</span> Download Admin APK</a></li>
   </ul>
 
   <div class="sidebar-user">
@@ -494,6 +522,21 @@
                   <div class="progress-val" id="editorProgressVal">65%</div>
                 </div>
               </div>
+              <div class="editor-grid" style="margin-top:18px;">
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label">Total Package Price (K)</label>
+                  <input type="number" class="form-input" id="editorTotal" min="0" oninput="onPaymentEditorChange()">
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label">Amount Paid (K)</label>
+                  <input type="number" class="form-input" id="editorPaid" min="0" oninput="onPaymentEditorChange()">
+                </div>
+              </div>
+              <div style="font-size:12px; color:var(--text-muted); margin-top:8px;">Balance due (shown to client): <strong id="editorBalanceOut" style="color:#fff;">K0</strong></div>
+              <div class="form-group" style="margin-top:14px; margin-bottom:0;">
+                <label class="form-label">Note to Client (shown on their tracker page)</label>
+                <textarea class="form-textarea" id="editorClientNote" placeholder="e.g. First logo concepts are ready for your review!" oninput="if(activeEditorProject) activeEditorProject.note=this.value"></textarea>
+              </div>
             </div>
           </div>
 
@@ -502,7 +545,7 @@
             <div class="panel-header"><div class="panel-title">🔗 Client Tracker Link</div></div>
             <div class="panel-body">
               <div class="link-box">
-                <div class="link-url" id="editorTrackerLink">erthdot.com/track/ERT-2604-007</div>
+                <div class="link-url" id="editorTrackerLink">erthdot.com/client-preview.html?id=ERT-2604-007</div>
                 <button class="copy-btn" onclick="copyEditorLink()">Copy</button>
               </div>
               <div class="link-actions">
@@ -510,7 +553,15 @@
                 <button class="link-action-btn" onclick="generateQR()">📷 QR Code</button>
                 <button class="link-action-btn danger" onclick="deactivateLink()">🗑 Deactivate Link</button>
               </div>
-              <div style="font-size:11px; color:var(--text-dim); margin-top:10px; font-family:'Space Mono',monospace;">Link expires on project sign-off · auto-archived after 30 days</div>
+              <div style="font-size:11px; color:var(--text-dim); margin-top:10px; font-family:'Space Mono',monospace;">This is the real, working link your client should tap. It opens live on their phone or laptop.</div>
+              <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border);">
+                <label class="form-label">Rename Project / Custom Client ID</label>
+                <div style="display:flex; gap:8px;">
+                  <input type="text" class="form-input" id="editorNewId" placeholder="e.g. CHANDA-LOGO or ERT-2604-007" style="flex:1;">
+                  <button class="link-action-btn" style="white-space:nowrap;" onclick="renameProjectId()">Rename →</button>
+                </div>
+                <div style="font-size:11px; color:var(--text-dim); margin-top:8px;">Changes the ID in the client's link (letters, numbers, dashes only). The old link stops working — send the client the new one after renaming.</div>
+              </div>
             </div>
           </div>
         </div>
@@ -613,6 +664,106 @@
       </div>
       <div class="pv-grid" id="pvGrid">
         <div class="pv-empty" id="pvEmpty" style="grid-column:1/-1;">No preview rooms yet. Create one to get started.</div>
+      </div>
+    </div>
+
+    <!-- ═══ QUOTATION GENERATOR PAGE ═══ -->
+    <div class="page" id="page-quotes">
+      <div style="display:grid; grid-template-columns:1.3fr 1fr; gap:22px; align-items:start;" class="quote-grid">
+        <!-- BUILDER -->
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">🧾 New Quotation</div></div>
+          <div class="panel-body">
+            <div class="two-col">
+              <div class="form-group">
+                <label class="form-label">Client Name</label>
+                <input type="text" class="form-input" id="qClientName" placeholder="e.g. Chanda Mwale">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Phone / WhatsApp</label>
+                <input type="tel" class="form-input" id="qClientPhone" placeholder="+260 9XX XXX XXX">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Client Email (optional)</label>
+              <input type="email" class="form-input" id="qClientEmail" placeholder="client@email.com">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Quick-Add From Price List</label>
+              <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                <select class="form-select" id="qCategorySelect" style="flex:1; min-width:140px;" onchange="populateQuotePackageSelect()">
+                  <option value="">— Category —</option>
+                  <option value="logo">Logo Design</option>
+                  <option value="brandkit">Company Brand Kits</option>
+                  <option value="social">Social Media Management</option>
+                  <option value="ala">À La Carte Stationery</option>
+                </select>
+                <select class="form-select" id="qPackageSelect" style="flex:1.4; min-width:180px;"><option value="">— Package —</option></select>
+                <button class="btn-sm btn-green" onclick="addPackageAsQuoteItem()">+ Add</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Line Items</label>
+              <table class="proj-table" id="quoteItemsTable">
+                <thead><tr><th>Description</th><th style="width:70px;">Qty</th><th style="width:110px;">Unit Price (K)</th><th style="width:100px;">Line Total</th><th style="width:36px;"></th></tr></thead>
+                <tbody id="quoteItemsBody"></tbody>
+              </table>
+              <button class="btn-sm btn-outline" style="margin-top:10px;" onclick="addBlankQuoteItem()">+ Add Custom Line Item</button>
+            </div>
+
+            <div class="two-col">
+              <div class="form-group">
+                <label class="form-label">Discount</label>
+                <div style="display:flex; gap:8px;">
+                  <input type="number" class="form-input" id="qDiscountVal" placeholder="0" min="0" value="0" oninput="recalcQuoteTotals()" style="flex:1;">
+                  <select class="form-select" id="qDiscountType" style="width:90px;" onchange="recalcQuoteTotals()">
+                    <option value="pct">%</option>
+                    <option value="flat">K flat</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Deposit Required</label>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <input type="number" class="form-input" id="qDepositPct" placeholder="50" min="0" max="100" value="50" oninput="recalcQuoteTotals()" style="flex:1;">
+                  <span style="color:var(--text-muted); font-size:13px;">%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Notes / Terms (optional)</label>
+              <textarea class="form-textarea" id="qNotes" rows="2" placeholder="e.g. Valid for 14 days. Turnaround begins after deposit received."></textarea>
+            </div>
+
+            <div class="quote-totals">
+              <div class="quote-totals-row"><span>Subtotal</span><span id="qSubtotalOut">K0</span></div>
+              <div class="quote-totals-row"><span>Discount</span><span id="qDiscountOut">K0</span></div>
+              <div class="quote-totals-row quote-totals-grand"><span>Total</span><span id="qTotalOut">K0</span></div>
+              <div class="quote-totals-row"><span>Deposit Due Now (<span id="qDepositPctLabel">50</span>%)</span><span id="qDepositOut">K0</span></div>
+              <div class="quote-totals-row"><span>Balance on Completion</span><span id="qBalanceOut">K0</span></div>
+            </div>
+
+            <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:18px;">
+              <button class="btn-sm btn-green" onclick="saveQuotation()">💾 Save Quotation</button>
+              <button class="btn-sm btn-outline" onclick="copyQuoteText()">📋 Copy as Text</button>
+              <button class="btn-sm btn-outline" onclick="sendQuoteWhatsApp()">📲 Send via WhatsApp</button>
+              <button class="btn-sm btn-outline" onclick="printQuote()">🖨 Download / Print PDF</button>
+              <button class="btn-sm btn-outline" onclick="resetQuoteForm()">↺ Clear Form</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- HISTORY -->
+        <div class="panel">
+          <div class="panel-header"><div class="panel-title">Saved Quotations</div></div>
+          <div class="panel-body" style="padding:14px;">
+            <div id="quotesHistoryEmpty" style="color:var(--text-muted); font-size:13px; padding:10px 4px;">No quotations saved yet.</div>
+            <div id="quotesHistoryList" style="display:flex; flex-direction:column; gap:10px;"></div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -749,6 +900,16 @@
         </select>
       </div>
     </div>
+    <div class="editor-grid">
+      <div class="form-group">
+        <label class="form-label">Total Package Price (K)</label>
+        <input type="number" class="form-input" id="npTotal" min="0" placeholder="e.g. 4000">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Amount Paid So Far (K)</label>
+        <input type="number" class="form-input" id="npPaid" min="0" placeholder="e.g. 2000">
+      </div>
+    </div>
     <div class="form-group">
       <label class="form-label">Initial Notes</label>
       <textarea class="form-textarea" id="npNotes" placeholder="Brief, style direction, assets to collect..."></textarea>
@@ -827,6 +988,7 @@
           <select class="form-select" id="addItemType" onchange="onAddTypeChange()">
             <option value="image">🖼 Image (URL)</option>
             <option value="video">▶ Video (URL)</option>
+            <option value="pdf">📄 File / Document (URL)</option>
             <option value="link">🔗 Link</option>
             <option value="website">🌐 Embedded Website</option>
           </select>
@@ -869,6 +1031,10 @@
     <button onclick="shareViaWhatsApp()" style="width:100%; padding:13px; background:#25d366; border:none; border-radius:6px; color:#fff; font-family:'DM Sans',sans-serif; font-weight:600; font-size:14px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;">
       <span>📲</span> Send via WhatsApp
     </button>
+    <div style="background:var(--dark-card); border:1px solid var(--border); border-radius:6px; padding:14px 16px; margin-top:14px;">
+      <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:2px; color:var(--green-light); text-transform:uppercase; margin-bottom:6px;">📲 Install as an app on their phone</div>
+      <div style="font-size:12px; color:var(--text-muted); line-height:1.6;">This link is a real installable shortcut. When your client opens it and taps <strong style="color:var(--text);">Add to Home Screen</strong> (iPhone) or accepts the <strong style="color:var(--text);">Install</strong> prompt (Android), it creates an icon on their phone that opens straight into THEIR project — no ID entry, ever. The WhatsApp message above already includes that instruction.</div>
+    </div>
     <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:2px; color:var(--text-dim); text-transform:uppercase; text-align:center; margin-top:14px;">Anyone with this link can view the preview</div>
   </div>
 </div>
@@ -877,6 +1043,37 @@
 <div class="toast" id="toast"><span id="toastIcon"></span> <span id="toastMsg"></span></div>
 
 <script>
+// ─── INSTALL AS APP (mobile admin PWA) ─────────────────
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
+}
+
+let _deferredInstallPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  _deferredInstallPrompt = e;
+  const item = document.getElementById('installAppNavItem');
+  if (item) item.style.display = '';
+});
+
+async function installDashboardApp() {
+  if (_deferredInstallPrompt) {
+    _deferredInstallPrompt.prompt();
+    await _deferredInstallPrompt.userChoice;
+    _deferredInstallPrompt = null;
+    document.getElementById('installAppNavItem').style.display = 'none';
+    return;
+  }
+  // iOS Safari has no install prompt API — guide manually
+  showToast('📲', 'On iPhone: tap Share → Add to Home Screen to install.');
+}
+
+window.addEventListener('appinstalled', () => {
+  const item = document.getElementById('installAppNavItem');
+  if (item) item.style.display = 'none';
+  showToast('✓', 'Erthdot Studio installed! Find it on your home screen.');
+});
+
 // ─── AUTH CHECK ─────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
   setTimeout(() => {
@@ -991,7 +1188,7 @@ function initDashboard() {
 }
 
 // ─── PAGES ───────────────────────────────────────────────
-const pageTitles = { overview:'Overview', projects:'Projects', bookings:'Bookings', editor:'Project Editor', notifications:'Notifications', links:'Tracker Links', previews:'Client Previews', account:'Account & Password' };
+const pageTitles = { overview:'Overview', projects:'Projects', bookings:'Bookings', editor:'Project Editor', quotes:'Quotation Generator', notifications:'Notifications', links:'Tracker Links', previews:'Client Previews', account:'Account & Password' };
 
 function showPage(name) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1006,6 +1203,7 @@ function showPage(name) {
   if (name === 'editor')    populateEditorSelect();   // always fresh when navigating to editor
   if (name === 'projects')  renderAllProjectsTable(); // refresh on tab visit
   if (name === 'links')     renderLinksTable();
+  if (name === 'quotes')    { populateQuoteCategorySelect(); renderQuotesHistory(); }
 }
 
 function populateAccountPage() {
@@ -1056,7 +1254,7 @@ function renderOverviewTable() {
   tbody.innerHTML = projects.map(p => `
     <tr>
       <td><div class="proj-name">${p.client}</div></td>
-      <td><div class="proj-meta" style="color:var(--text-muted);font-size:13px;">${p.pkg}</div></td>
+      <td><div class="pkg-badge" style="font-size:10px;">${p.pkg}</div></td>
       <td>
         <div class="mini-bar"><div class="mini-fill" style="width:${p.pct}%"></div></div>
         <div style="font-size:11px;color:var(--text-muted);margin-top:3px;">${p.pct}%</div>
@@ -1087,7 +1285,7 @@ function renderAllProjectsTable() {
     <tr>
       <td><div class="proj-name">${p.client}</div></td>
       <td><div class="proj-code">${p.id}</div></td>
-      <td><div class="proj-meta" style="color:var(--text-muted);font-size:12px;">${p.pkg}</div></td>
+      <td><div class="pkg-badge" style="font-size:9px;">${p.pkg}</div></td>
       <td>
         <div class="mini-bar" style="width:80px;"><div class="mini-fill" style="width:${p.pct}%"></div></div>
         <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${p.pct}%</div>
@@ -1166,10 +1364,26 @@ function loadProjectIntoEditor() {
   document.getElementById('editorProgressVal').textContent = p.pct + '%';
   const done = p.stages.filter(s => s.status === 'done').length;
   document.getElementById('editorStagesDone').textContent = `${done}/${p.stages.length}`;
-  document.getElementById('editorTrackerLink').textContent = `erthdot.com/track/${p.id}`;
+  document.getElementById('editorTrackerLink').textContent = `erthdot.com/client-preview.html?id=${p.id}`;
+  document.getElementById('editorNewId').value = '';
+  document.getElementById('editorNewId').placeholder = p.id;
+  document.getElementById('editorTotal').value = p.amountTotal || '';
+  document.getElementById('editorPaid').value  = p.amountPaid  || '';
+  document.getElementById('editorClientNote').value = p.note || '';
+  onPaymentEditorChange();
 
   renderEditorStages(p.stages);
   updateNotifPreview(p.pct, p.client, p.id);
+}
+
+function onPaymentEditorChange() {
+  if (!activeEditorProject) return;
+  const total = parseFloat(document.getElementById('editorTotal').value) || 0;
+  const paid  = parseFloat(document.getElementById('editorPaid').value)  || 0;
+  activeEditorProject.amountTotal = total;
+  activeEditorProject.amountPaid  = paid;
+  const balance = Math.max(0, total - paid);
+  document.getElementById('editorBalanceOut').textContent = 'K' + balance.toLocaleString();
 }
 
 function renderEditorStages(stages) {
@@ -1244,10 +1458,12 @@ function collectEditorStages() {
   });
 }
 
-function pushProjectUpdate() {
+async function pushProjectUpdate() {
   if (!activeEditorProject) { showToast('⚠', 'Select a project first.'); return; }
   const pct = document.getElementById('editorSlider').value;
   activeEditorProject.pct = parseInt(pct);
+  activeEditorProject.note = document.getElementById('editorClientNote').value.trim();
+  onPaymentEditorChange(); // captures editorTotal/editorPaid into activeEditorProject
   collectEditorStages(); // read stage edits from DOM
   // Write back into the projects array so the in-memory copy is updated
   const idx = projects.findIndex(p => p.id === activeEditorProject.id);
@@ -1255,6 +1471,7 @@ function pushProjectUpdate() {
   persistProjects(); // sync to shared localStorage
   renderOverviewTable();
   renderAllProjectsTable();
+  await syncProjectToPreview(activeEditorProject); // push live so the client's link reflects this instantly
   showToast('📲', `Project saved and client notified! Updated to ${pct}%.`);
 }
 
@@ -1270,15 +1487,20 @@ function markProjectComplete() {
 function openNewProjectModal() { document.getElementById('newProjectModal').classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-function createNewProject() {
+async function createNewProject() {
   const name = document.getElementById('npName').value.trim();
   const phone = document.getElementById('npPhone').value.trim();
   const service = document.getElementById('npService').value;
+  const total = parseFloat(document.getElementById('npTotal').value) || 0;
+  const paid  = parseFloat(document.getElementById('npPaid').value)  || 0;
+  const notes = document.getElementById('npNotes').value.trim();
   if (!name || !phone) { showToast('⚠', 'Name and phone required.'); return; }
   const code = 'ERT-' + Date.now().toString().slice(-7);
   const newProj = {
     id: code, client: name, pkg: service, pct: 0, status: 'active',
     started: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short'}),
+    createdAt: Date.now(),
+    amountTotal: total, amountPaid: paid, note: notes,
     stages: [
       {name:'Requirements Gathering', pct:10, status:'active'},
       {name:'Concept Development', pct:40, status:'pending'},
@@ -1297,19 +1519,24 @@ function createNewProject() {
   showToast('✓', `Project created! Code: ${code}`);
   document.getElementById('npName').value = '';
   document.getElementById('npPhone').value = '';
+  document.getElementById('npTotal').value = '';
+  document.getElementById('npPaid').value = '';
+  document.getElementById('npNotes').value = '';
+  await syncProjectToPreview(newProj); // pushes it live — this is what makes it appear on the homepage & client link right away
 }
 
 // ─── LINK TOOLS ──────────────────────────────────────────
-function copyLink(id) { navigator.clipboard.writeText(`https://erthdot.com/track/${id}`).then(() => showToast('📋', `Link copied for ${id}`)); }
+function clientLinkFor(id) { return `https://erthdot.com/client-preview.html?id=${encodeURIComponent(id)}`; }
+function copyLink(id) { navigator.clipboard.writeText(clientLinkFor(id)).then(() => showToast('📋', `Link copied for ${id}`)); }
 function copyEditorLink() { if (!activeEditorProject) return; copyLink(activeEditorProject.id); }
 function sendLinkWhatsApp() {
   if (!activeEditorProject) return;
-  const link = `https://erthdot.com/track/${activeEditorProject.id}`;
-  window.open(`https://wa.me/?text=Hi! Track your Erthdot project here: ${link}`, '_blank');
+  const link = clientLinkFor(activeEditorProject.id);
+  window.open(`https://wa.me/?text=Hi! Track your Erthdot project here: ${link} — open it and tap "Add to Home Screen" to install it as an app.`, '_blank');
 }
 function sendLinkForProject(id, client) {
-  const link = `https://erthdot.com/track/${id}`;
-  window.open(`https://wa.me/?text=Hi ${client}! Track your Erthdot project here: ${link}`, '_blank');
+  const link = clientLinkFor(id);
+  window.open(`https://wa.me/?text=Hi ${client}! Track your Erthdot project here: ${link} — open it and tap "Add to Home Screen" to install it as an app.`, '_blank');
 }
 function generateQR() { showToast('📷', 'QR code generation — connect a QR library in production.'); }
 function deactivateLink() {
@@ -1325,6 +1552,7 @@ function archiveProject(id) {
     if (idx >= 0) {
       projects.splice(idx, 1);
       saveProjects(projects); // persist deletion — won't come back on reload
+      deleteProjectPreview(id); // also remove the live client-facing doc
       renderOverviewTable();
       renderAllProjectsTable(); // also repopulates editor select
       renderLinksTable();
@@ -1479,6 +1707,75 @@ const PREVIEW_BASE_URL = 'https://erthdot.com/client-preview.html?id=';
 // The module script at the bottom of this file sets window._db.
 
 function _db() { return window.__firestoreDb; }
+
+// ── Keep a Project's client-facing preview doc in sync with Firestore ──
+// This is what makes a Project actually show up on the homepage tracker
+// and on the client's link — Projects alone only live in this browser's
+// localStorage, so without this sync a "new project" never appears live.
+async function syncProjectToPreview(p) {
+  if (!_db()) { showToast('⚠', 'Firebase not ready — link will work once it reconnects.'); return; }
+  try {
+    const { doc, setDoc } = window.__firestoreAPI;
+    const total   = p.amountTotal || 0;
+    const paid    = p.amountPaid  || 0;
+    const data = {
+      clientName:   p.client,
+      projectTitle: p.pkg || 'Design Project',
+      package:      p.pkg || '',
+      started:      p.started || '',
+      createdAt:    p.createdAt || Date.now(),
+      progress:     p.pct || 0,
+      status:       p.status || 'active',
+      published:    true,
+      note:         p.note || '',
+      items:        p.items || [],
+      linkedProjectId: p.id,
+      amountTotal:  total,
+      amountPaid:   paid,
+      balanceDue:   Math.max(0, total - paid),
+      stages:       p.stages || []
+    };
+    await setDoc(doc(_db(), 'previews', p.id), data);
+  } catch (e) { console.error('syncProjectToPreview', e); showToast('⚠', 'Could not push to client link — check connection.'); }
+}
+
+async function deleteProjectPreview(id) {
+  if (!_db()) return;
+  try {
+    const { doc, deleteDoc } = window.__firestoreAPI;
+    await deleteDoc(doc(_db(), 'previews', id));
+  } catch (e) { console.error('deleteProjectPreview', e); }
+}
+
+// ── Rename a project's ID / client link ──
+// Firestore doc IDs can't be edited in place, so this copies the preview
+// to a new doc under the new ID, deletes the old one, and updates the
+// project everywhere it's referenced locally.
+async function renameProjectId() {
+  if (!activeEditorProject) { showToast('⚠', 'Select a project first.'); return; }
+  const raw = document.getElementById('editorNewId').value.trim();
+  if (!raw) { showToast('⚠', 'Enter a new ID first.'); return; }
+  const newId = raw.toUpperCase().replace(/[^A-Z0-9-]/g, '-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+  if (!newId) { showToast('⚠', 'Use letters, numbers and dashes only.'); return; }
+  const oldId = activeEditorProject.id;
+  if (newId === oldId) { showToast('⚠', 'That is already the current ID.'); return; }
+  if (projects.some(p => p.id === newId)) { showToast('⚠', `${newId} is already in use.`); return; }
+
+  activeEditorProject.id = newId;
+  const idx = projects.findIndex(p => p.id === oldId || p === activeEditorProject);
+  if (idx >= 0) projects[idx] = activeEditorProject;
+
+  await syncProjectToPreview(activeEditorProject); // create new doc under newId
+  await deleteProjectPreview(oldId);                // remove old doc so it 404s cleanly
+
+  persistProjects();
+  renderOverviewTable();
+  renderAllProjectsTable();
+  renderLinksTable();
+  loadProjectIntoEditor(); // refreshes editorTrackerLink, editorNewId, etc. for the renamed project
+  showToast('✓', `Renamed to ${newId} — send the client the new link.`);
+  copyLink(newId);
+}
 
 async function loadPreviews() {
   if (!_db()) return [];
@@ -1844,7 +2141,7 @@ async function shareViaWhatsApp() {
   const snap = await getDoc(doc(_db(), 'previews', currentShareId));
   const p    = snap.exists() ? snap.data() : {};
   const name = p.clientName ? p.clientName.split(' ')[0] : 'there';
-  const msg  = `Hi ${name}! Your project preview from Erthdot is ready. View it here: ${link}`;
+  const msg  = `Hi ${name}! Your project preview from Erthdot is ready 🎉\n\nView it here: ${link}\n\nTip: open the link, then tap "Add to Home Screen" (iPhone) or "Install" (Android) to save it as an app on your phone — it'll open straight to your project every time, no ID needed.`;
   window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
@@ -1963,6 +2260,276 @@ async function writeProjectsToGitHub() {
 function persistProjects() {
   saveProjects(projects);
 }
+
+// ═══════════════════════════════════════════════════════════
+// QUOTATION GENERATOR
+// Real prices, same numbers used on the public site's quote
+// builder — kept in sync manually since they live in two files.
+// ═══════════════════════════════════════════════════════════
+const QUOTE_PACKAGES = {
+  logo:     [{name:'Identity Lite',price:1500},{name:'Startup Foundation',price:4000},{name:'Corporate Growth Suite',price:9500},{name:'Elite Executive',price:17500}],
+  brandkit: [{name:'Foundation Kit',price:800},{name:'Professional Kit',price:1600},{name:'Identity Kit',price:2300},{name:'Full Suite Kit',price:3500}],
+  social:   [{name:'Starter Sprint — 1 month',price:5000},{name:'Growth Momentum — 2 months',price:9400},{name:'Market Authority — 4 months',price:17000}],
+  ala:      [{name:'Stationery Quick-Pack',price:350},{name:'Business Card Design',price:150},{name:'Letterhead / Invoice / Quote',price:0}]
+};
+
+let quoteItems = []; // {desc, qty, price}
+
+function populateQuoteCategorySelect() {
+  populateQuotePackageSelect();
+}
+
+function populateQuotePackageSelect() {
+  const cat = document.getElementById('qCategorySelect').value;
+  const pkgSel = document.getElementById('qPackageSelect');
+  pkgSel.innerHTML = '<option value="">— Package —</option>';
+  if (!cat || !QUOTE_PACKAGES[cat]) return;
+  QUOTE_PACKAGES[cat].forEach((p, i) => {
+    pkgSel.innerHTML += `<option value="${i}">${esc(p.name)} — K${p.price.toLocaleString()}</option>`;
+  });
+}
+
+function addPackageAsQuoteItem() {
+  const cat = document.getElementById('qCategorySelect').value;
+  const idx = document.getElementById('qPackageSelect').value;
+  if (!cat || idx === '') { showToast('⚠','Pick a category and package first.'); return; }
+  const pkg = QUOTE_PACKAGES[cat][idx];
+  quoteItems.push({ desc: pkg.name, qty: 1, price: pkg.price });
+  renderQuoteItems();
+}
+
+function addBlankQuoteItem() {
+  quoteItems.push({ desc: '', qty: 1, price: 0 });
+  renderQuoteItems();
+}
+
+function removeQuoteItem(i) {
+  quoteItems.splice(i, 1);
+  renderQuoteItems();
+}
+
+function updateQuoteItem(i, field, val) {
+  if (field === 'qty' || field === 'price') val = Number(val) || 0;
+  quoteItems[i][field] = val;
+  recalcQuoteTotals();
+  // Only re-render the line total cell, not the whole table (keeps focus while typing)
+  const row = document.getElementById('qitem-row-' + i);
+  if (row) row.querySelector('.qitem-linetotal').textContent = 'K' + (quoteItems[i].qty * quoteItems[i].price).toLocaleString();
+}
+
+function renderQuoteItems() {
+  const body = document.getElementById('quoteItemsBody');
+  if (!quoteItems.length) {
+    body.innerHTML = `<tr><td colspan="5" style="color:var(--text-muted); font-size:12px; text-align:center; padding:16px;">No items yet — add from the price list above or add a custom line.</td></tr>`;
+  } else {
+    body.innerHTML = quoteItems.map((it, i) => `
+      <tr id="qitem-row-${i}">
+        <td><input class="qitem-input" value="${esc(it.desc)}" oninput="updateQuoteItem(${i},'desc',this.value)" placeholder="Item description"></td>
+        <td><input class="qitem-input" type="number" min="1" value="${it.qty}" oninput="updateQuoteItem(${i},'qty',this.value)"></td>
+        <td><input class="qitem-input" type="number" min="0" value="${it.price}" oninput="updateQuoteItem(${i},'price',this.value)"></td>
+        <td class="qitem-linetotal">K${(it.qty * it.price).toLocaleString()}</td>
+        <td><button class="qitem-del" onclick="removeQuoteItem(${i})" title="Remove">✕</button></td>
+      </tr>`).join('');
+  }
+  recalcQuoteTotals();
+}
+
+function getQuoteSubtotal() {
+  return quoteItems.reduce((sum, it) => sum + (it.qty * it.price), 0);
+}
+
+function recalcQuoteTotals() {
+  const subtotal = getQuoteSubtotal();
+  const discVal  = Number(document.getElementById('qDiscountVal').value) || 0;
+  const discType = document.getElementById('qDiscountType').value;
+  const discount = discType === 'pct' ? subtotal * (discVal / 100) : discVal;
+  const total    = Math.max(0, subtotal - discount);
+  const depPct   = Number(document.getElementById('qDepositPct').value) || 0;
+  const deposit  = total * (depPct / 100);
+  const balance  = total - deposit;
+
+  document.getElementById('qSubtotalOut').textContent   = 'K' + subtotal.toLocaleString();
+  document.getElementById('qDiscountOut').textContent   = '-K' + discount.toLocaleString();
+  document.getElementById('qTotalOut').textContent      = 'K' + total.toLocaleString();
+  document.getElementById('qDepositPctLabel').textContent = depPct;
+  document.getElementById('qDepositOut').textContent    = 'K' + deposit.toLocaleString();
+  document.getElementById('qBalanceOut').textContent    = 'K' + balance.toLocaleString();
+}
+
+function buildQuoteObject() {
+  const subtotal = getQuoteSubtotal();
+  const discVal  = Number(document.getElementById('qDiscountVal').value) || 0;
+  const discType = document.getElementById('qDiscountType').value;
+  const discount = discType === 'pct' ? subtotal * (discVal / 100) : discVal;
+  const total    = Math.max(0, subtotal - discount);
+  const depPct   = Number(document.getElementById('qDepositPct').value) || 0;
+  const deposit  = total * (depPct / 100);
+  const balance  = total - deposit;
+  return {
+    clientName:  document.getElementById('qClientName').value.trim() || 'Client',
+    clientPhone: document.getElementById('qClientPhone').value.trim(),
+    clientEmail: document.getElementById('qClientEmail').value.trim(),
+    items:       JSON.parse(JSON.stringify(quoteItems)),
+    subtotal, discount, total, depositPct: depPct, deposit, balance,
+    notes:       document.getElementById('qNotes').value.trim(),
+    createdAt:   Date.now()
+  };
+}
+
+function generateQuoteText(q) {
+  const lines = q.items.map(it => `  • ${it.desc || 'Item'}  x${it.qty}  —  K${(it.qty*it.price).toLocaleString()}`).join('\n');
+  return `ERTHDOT DESIGN STUDIO — QUOTATION
+Lusaka, Zambia · +260971009632
+
+Client: ${q.clientName}
+Date: ${new Date(q.createdAt).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}
+
+ITEMS
+${lines || '  (no items added)'}
+
+Subtotal: K${q.subtotal.toLocaleString()}
+Discount: -K${q.discount.toLocaleString()}
+TOTAL: K${q.total.toLocaleString()}
+
+Deposit due now (${q.depositPct}%): K${q.deposit.toLocaleString()}
+Balance on completion: K${q.balance.toLocaleString()}
+${q.notes ? '\nNotes: ' + q.notes : ''}
+
+This quotation is prepared by Erthdot Design Studio.`;
+}
+
+function copyQuoteText() {
+  const text = generateQuoteText(buildQuoteObject());
+  navigator.clipboard.writeText(text).then(() => showToast('📋','Quotation copied to clipboard.'));
+}
+
+function sendQuoteWhatsApp() {
+  const q = buildQuoteObject();
+  const text = generateQuoteText(q);
+  const phone = q.clientPhone.replace(/[^\d+]/g,'');
+  const url = phone
+    ? `https://wa.me/${phone.replace('+','')}?text=${encodeURIComponent(text)}`
+    : `https://wa.me/?text=${encodeURIComponent(text)}`;
+  window.open(url, '_blank');
+}
+
+function printQuote() {
+  const q = buildQuoteObject();
+  const rows = q.items.map(it => `<tr><td>${esc(it.desc)||'Item'}</td><td style="text-align:center;">${it.qty}</td><td style="text-align:right;">K${it.price.toLocaleString()}</td><td style="text-align:right;">K${(it.qty*it.price).toLocaleString()}</td></tr>`).join('');
+  const win = window.open('', '_blank');
+  win.document.write(`
+    <html><head><title>Quotation — ${esc(q.clientName)}</title>
+    <style>
+      body{font-family:Arial,sans-serif;color:#111;padding:40px;max-width:700px;margin:0 auto;}
+      h1{font-size:20px;letter-spacing:2px;margin-bottom:2px;}
+      .sub{color:#666;font-size:12px;margin-bottom:24px;}
+      table{width:100%;border-collapse:collapse;margin:20px 0;}
+      th,td{padding:8px 6px;border-bottom:1px solid #ddd;font-size:13px;text-align:left;}
+      th{font-size:11px;text-transform:uppercase;color:#666;}
+      .totals{margin-top:14px;width:100%;}
+      .totals td{border:none;padding:4px 0;font-size:13px;}
+      .totals .grand td{font-weight:700;font-size:16px;border-top:1px solid #111;padding-top:10px;}
+      .notes{margin-top:20px;font-size:12px;color:#444;}
+      @media print{ button{display:none;} }
+    </style></head><body>
+      <h1>ERTHDOT DESIGN STUDIO</h1>
+      <div class="sub">Lusaka, Zambia · +260 971 009 632 · QUOTATION</div>
+      <p><strong>Client:</strong> ${esc(q.clientName)}${q.clientPhone ? ' · ' + esc(q.clientPhone) : ''}${q.clientEmail ? ' · ' + esc(q.clientEmail) : ''}</p>
+      <p><strong>Date:</strong> ${new Date(q.createdAt).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</p>
+      <table>
+        <thead><tr><th>Description</th><th style="text-align:center;">Qty</th><th style="text-align:right;">Unit Price</th><th style="text-align:right;">Line Total</th></tr></thead>
+        <tbody>${rows || '<tr><td colspan="4">No items</td></tr>'}</tbody>
+      </table>
+      <table class="totals">
+        <tr><td>Subtotal</td><td style="text-align:right;">K${q.subtotal.toLocaleString()}</td></tr>
+        <tr><td>Discount</td><td style="text-align:right;">-K${q.discount.toLocaleString()}</td></tr>
+        <tr class="grand"><td>Total</td><td style="text-align:right;">K${q.total.toLocaleString()}</td></tr>
+        <tr><td>Deposit due now (${q.depositPct}%)</td><td style="text-align:right;">K${q.deposit.toLocaleString()}</td></tr>
+        <tr><td>Balance on completion</td><td style="text-align:right;">K${q.balance.toLocaleString()}</td></tr>
+      </table>
+      ${q.notes ? `<div class="notes"><strong>Notes:</strong> ${esc(q.notes)}</div>` : ''}
+      <button onclick="window.print()" style="margin-top:24px;padding:10px 20px;">Print / Save as PDF</button>
+    </body></html>`);
+  win.document.close();
+}
+
+async function saveQuotation() {
+  if (!_db()) { showToast('⚠','Firebase not ready'); return; }
+  const q = buildQuoteObject();
+  if (!q.items.length) { showToast('⚠','Add at least one line item first.'); return; }
+  const id = 'QT-' + Date.now().toString(36).toUpperCase();
+  try {
+    const { doc, setDoc } = window.__firestoreAPI;
+    await setDoc(doc(_db(), 'quotations', id), q);
+    showToast('✓', `Quotation saved for ${q.clientName}`);
+    renderQuotesHistory();
+  } catch(e) { console.error('saveQuotation', e); showToast('⚠','Save failed — check connection'); }
+}
+
+async function loadQuotations() {
+  if (!_db()) return [];
+  try {
+    const { getDocs, collection, query, orderBy } = window.__firestoreAPI;
+    const q = query(collection(_db(), 'quotations'), orderBy('createdAt','desc'));
+    const snap = await getDocs(q);
+    return snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  } catch(e) { console.error('loadQuotations', e); return []; }
+}
+
+async function renderQuotesHistory() {
+  const list  = document.getElementById('quotesHistoryList');
+  const empty = document.getElementById('quotesHistoryEmpty');
+  const items = await loadQuotations();
+  if (!items.length) { list.innerHTML = ''; empty.style.display = ''; return; }
+  empty.style.display = 'none';
+  list.innerHTML = items.map(q => `
+    <div class="qh-card">
+      <div class="qh-card-title">${esc(q.clientName)} — K${(q.total||0).toLocaleString()}</div>
+      <div class="qh-card-meta">${q.id} · ${new Date(q.createdAt).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})} · ${q.items ? q.items.length : 0} item(s)</div>
+      <div class="qh-card-actions">
+        <button onclick='loadQuoteIntoForm(${JSON.stringify(q).replace(/'/g,"&#39;")})'>↺ Reload into form</button>
+        <button onclick="deleteQuotation('${q.id}')">✕ Delete</button>
+      </div>
+    </div>`).join('');
+}
+
+function loadQuoteIntoForm(q) {
+  document.getElementById('qClientName').value  = q.clientName || '';
+  document.getElementById('qClientPhone').value = q.clientPhone || '';
+  document.getElementById('qClientEmail').value = q.clientEmail || '';
+  document.getElementById('qNotes').value       = q.notes || '';
+  document.getElementById('qDepositPct').value  = q.depositPct != null ? q.depositPct : 50;
+  quoteItems = JSON.parse(JSON.stringify(q.items || []));
+  renderQuoteItems();
+  showPage('quotes');
+  showToast('↺', 'Quotation loaded into form for editing.');
+}
+
+async function deleteQuotation(id) {
+  if (!_db()) return;
+  if (!confirm('Delete this saved quotation? This cannot be undone.')) return;
+  try {
+    const { doc, deleteDoc } = window.__firestoreAPI;
+    await deleteDoc(doc(_db(), 'quotations', id));
+    renderQuotesHistory();
+    showToast('✓','Quotation deleted');
+  } catch(e) { console.error('deleteQuotation', e); }
+}
+
+function resetQuoteForm() {
+  document.getElementById('qClientName').value  = '';
+  document.getElementById('qClientPhone').value = '';
+  document.getElementById('qClientEmail').value = '';
+  document.getElementById('qNotes').value       = '';
+  document.getElementById('qDiscountVal').value = 0;
+  document.getElementById('qDepositPct').value  = 50;
+  quoteItems = [];
+  renderQuoteItems();
+}
+
+// Initial empty-state render so the table isn't blank before first visit
+renderQuoteItems();
+
 </script>
 
 <!-- FIREBASE MODULE — initialises Firestore and exposes it globally -->
