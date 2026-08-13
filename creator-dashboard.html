@@ -251,8 +251,6 @@
   .pv-card-title { font-family:'Bebas Neue',sans-serif; font-size:17px; letter-spacing:1px; color:var(--white); margin-bottom:2px; }
   .pv-card-client { font-size:12px; color:var(--text-muted); }
   .pv-pub-badge { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:2px; padding:3px 9px; border-radius:3px; text-transform:uppercase; flex-shrink:0; margin-top:2px; }
-  .pkg-badge{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,var(--gold,#c8a84b),#e0c26b);color:#171205;font-family:'Space Mono',monospace;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:16px;box-shadow:0 2px 10px rgba(200,168,75,.35);white-space:nowrap;}
-  .pkg-badge::before{content:'◆';font-size:7px;}
   .pv-pub-badge.live { background:rgba(34,160,96,0.1); color:var(--green-light); border:1px solid rgba(34,160,96,0.2); }
   .pv-pub-badge.draft { background:rgba(100,100,100,0.08); color:var(--text-muted); border:1px solid var(--border); }
   .pv-card-body { padding:10px 18px; }
@@ -522,21 +520,6 @@
                   <div class="progress-val" id="editorProgressVal">65%</div>
                 </div>
               </div>
-              <div class="editor-grid" style="margin-top:18px;">
-                <div class="form-group" style="margin-bottom:0;">
-                  <label class="form-label">Total Package Price (K)</label>
-                  <input type="number" class="form-input" id="editorTotal" min="0" oninput="onPaymentEditorChange()">
-                </div>
-                <div class="form-group" style="margin-bottom:0;">
-                  <label class="form-label">Amount Paid (K)</label>
-                  <input type="number" class="form-input" id="editorPaid" min="0" oninput="onPaymentEditorChange()">
-                </div>
-              </div>
-              <div style="font-size:12px; color:var(--text-muted); margin-top:8px;">Balance due (shown to client): <strong id="editorBalanceOut" style="color:#fff;">K0</strong></div>
-              <div class="form-group" style="margin-top:14px; margin-bottom:0;">
-                <label class="form-label">Note to Client (shown on their tracker page)</label>
-                <textarea class="form-textarea" id="editorClientNote" placeholder="e.g. First logo concepts are ready for your review!" oninput="if(activeEditorProject) activeEditorProject.note=this.value"></textarea>
-              </div>
             </div>
           </div>
 
@@ -545,7 +528,7 @@
             <div class="panel-header"><div class="panel-title">🔗 Client Tracker Link</div></div>
             <div class="panel-body">
               <div class="link-box">
-                <div class="link-url" id="editorTrackerLink">erthdot.com/client-preview.html?id=ERT-2604-007</div>
+                <div class="link-url" id="editorTrackerLink">erthdot.com/track/ERT-2604-007</div>
                 <button class="copy-btn" onclick="copyEditorLink()">Copy</button>
               </div>
               <div class="link-actions">
@@ -553,15 +536,7 @@
                 <button class="link-action-btn" onclick="generateQR()">📷 QR Code</button>
                 <button class="link-action-btn danger" onclick="deactivateLink()">🗑 Deactivate Link</button>
               </div>
-              <div style="font-size:11px; color:var(--text-dim); margin-top:10px; font-family:'Space Mono',monospace;">This is the real, working link your client should tap. It opens live on their phone or laptop.</div>
-              <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border);">
-                <label class="form-label">Rename Project / Custom Client ID</label>
-                <div style="display:flex; gap:8px;">
-                  <input type="text" class="form-input" id="editorNewId" placeholder="e.g. CHANDA-LOGO or ERT-2604-007" style="flex:1;">
-                  <button class="link-action-btn" style="white-space:nowrap;" onclick="renameProjectId()">Rename →</button>
-                </div>
-                <div style="font-size:11px; color:var(--text-dim); margin-top:8px;">Changes the ID in the client's link (letters, numbers, dashes only). The old link stops working — send the client the new one after renaming.</div>
-              </div>
+              <div style="font-size:11px; color:var(--text-dim); margin-top:10px; font-family:'Space Mono',monospace;">Link expires on project sign-off · auto-archived after 30 days</div>
             </div>
           </div>
         </div>
@@ -900,16 +875,6 @@
         </select>
       </div>
     </div>
-    <div class="editor-grid">
-      <div class="form-group">
-        <label class="form-label">Total Package Price (K)</label>
-        <input type="number" class="form-input" id="npTotal" min="0" placeholder="e.g. 4000">
-      </div>
-      <div class="form-group">
-        <label class="form-label">Amount Paid So Far (K)</label>
-        <input type="number" class="form-input" id="npPaid" min="0" placeholder="e.g. 2000">
-      </div>
-    </div>
     <div class="form-group">
       <label class="form-label">Initial Notes</label>
       <textarea class="form-textarea" id="npNotes" placeholder="Brief, style direction, assets to collect..."></textarea>
@@ -988,7 +953,6 @@
           <select class="form-select" id="addItemType" onchange="onAddTypeChange()">
             <option value="image">🖼 Image (URL)</option>
             <option value="video">▶ Video (URL)</option>
-            <option value="pdf">📄 File / Document (URL)</option>
             <option value="link">🔗 Link</option>
             <option value="website">🌐 Embedded Website</option>
           </select>
@@ -1254,7 +1218,7 @@ function renderOverviewTable() {
   tbody.innerHTML = projects.map(p => `
     <tr>
       <td><div class="proj-name">${p.client}</div></td>
-      <td><div class="pkg-badge" style="font-size:10px;">${p.pkg}</div></td>
+      <td><div class="proj-meta" style="color:var(--text-muted);font-size:13px;">${p.pkg}</div></td>
       <td>
         <div class="mini-bar"><div class="mini-fill" style="width:${p.pct}%"></div></div>
         <div style="font-size:11px;color:var(--text-muted);margin-top:3px;">${p.pct}%</div>
@@ -1285,7 +1249,7 @@ function renderAllProjectsTable() {
     <tr>
       <td><div class="proj-name">${p.client}</div></td>
       <td><div class="proj-code">${p.id}</div></td>
-      <td><div class="pkg-badge" style="font-size:9px;">${p.pkg}</div></td>
+      <td><div class="proj-meta" style="color:var(--text-muted);font-size:12px;">${p.pkg}</div></td>
       <td>
         <div class="mini-bar" style="width:80px;"><div class="mini-fill" style="width:${p.pct}%"></div></div>
         <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${p.pct}%</div>
@@ -1364,26 +1328,10 @@ function loadProjectIntoEditor() {
   document.getElementById('editorProgressVal').textContent = p.pct + '%';
   const done = p.stages.filter(s => s.status === 'done').length;
   document.getElementById('editorStagesDone').textContent = `${done}/${p.stages.length}`;
-  document.getElementById('editorTrackerLink').textContent = `erthdot.com/client-preview.html?id=${p.id}`;
-  document.getElementById('editorNewId').value = '';
-  document.getElementById('editorNewId').placeholder = p.id;
-  document.getElementById('editorTotal').value = p.amountTotal || '';
-  document.getElementById('editorPaid').value  = p.amountPaid  || '';
-  document.getElementById('editorClientNote').value = p.note || '';
-  onPaymentEditorChange();
+  document.getElementById('editorTrackerLink').textContent = `erthdot.com/track/${p.id}`;
 
   renderEditorStages(p.stages);
   updateNotifPreview(p.pct, p.client, p.id);
-}
-
-function onPaymentEditorChange() {
-  if (!activeEditorProject) return;
-  const total = parseFloat(document.getElementById('editorTotal').value) || 0;
-  const paid  = parseFloat(document.getElementById('editorPaid').value)  || 0;
-  activeEditorProject.amountTotal = total;
-  activeEditorProject.amountPaid  = paid;
-  const balance = Math.max(0, total - paid);
-  document.getElementById('editorBalanceOut').textContent = 'K' + balance.toLocaleString();
 }
 
 function renderEditorStages(stages) {
@@ -1458,12 +1406,10 @@ function collectEditorStages() {
   });
 }
 
-async function pushProjectUpdate() {
+function pushProjectUpdate() {
   if (!activeEditorProject) { showToast('⚠', 'Select a project first.'); return; }
   const pct = document.getElementById('editorSlider').value;
   activeEditorProject.pct = parseInt(pct);
-  activeEditorProject.note = document.getElementById('editorClientNote').value.trim();
-  onPaymentEditorChange(); // captures editorTotal/editorPaid into activeEditorProject
   collectEditorStages(); // read stage edits from DOM
   // Write back into the projects array so the in-memory copy is updated
   const idx = projects.findIndex(p => p.id === activeEditorProject.id);
@@ -1471,7 +1417,6 @@ async function pushProjectUpdate() {
   persistProjects(); // sync to shared localStorage
   renderOverviewTable();
   renderAllProjectsTable();
-  await syncProjectToPreview(activeEditorProject); // push live so the client's link reflects this instantly
   showToast('📲', `Project saved and client notified! Updated to ${pct}%.`);
 }
 
@@ -1487,20 +1432,15 @@ function markProjectComplete() {
 function openNewProjectModal() { document.getElementById('newProjectModal').classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-async function createNewProject() {
+function createNewProject() {
   const name = document.getElementById('npName').value.trim();
   const phone = document.getElementById('npPhone').value.trim();
   const service = document.getElementById('npService').value;
-  const total = parseFloat(document.getElementById('npTotal').value) || 0;
-  const paid  = parseFloat(document.getElementById('npPaid').value)  || 0;
-  const notes = document.getElementById('npNotes').value.trim();
   if (!name || !phone) { showToast('⚠', 'Name and phone required.'); return; }
   const code = 'ERT-' + Date.now().toString().slice(-7);
   const newProj = {
     id: code, client: name, pkg: service, pct: 0, status: 'active',
     started: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short'}),
-    createdAt: Date.now(),
-    amountTotal: total, amountPaid: paid, note: notes,
     stages: [
       {name:'Requirements Gathering', pct:10, status:'active'},
       {name:'Concept Development', pct:40, status:'pending'},
@@ -1519,24 +1459,19 @@ async function createNewProject() {
   showToast('✓', `Project created! Code: ${code}`);
   document.getElementById('npName').value = '';
   document.getElementById('npPhone').value = '';
-  document.getElementById('npTotal').value = '';
-  document.getElementById('npPaid').value = '';
-  document.getElementById('npNotes').value = '';
-  await syncProjectToPreview(newProj); // pushes it live — this is what makes it appear on the homepage & client link right away
 }
 
 // ─── LINK TOOLS ──────────────────────────────────────────
-function clientLinkFor(id) { return `https://erthdot.com/client-preview.html?id=${encodeURIComponent(id)}`; }
-function copyLink(id) { navigator.clipboard.writeText(clientLinkFor(id)).then(() => showToast('📋', `Link copied for ${id}`)); }
+function copyLink(id) { navigator.clipboard.writeText(`https://erthdot.com/track/${id}`).then(() => showToast('📋', `Link copied for ${id}`)); }
 function copyEditorLink() { if (!activeEditorProject) return; copyLink(activeEditorProject.id); }
 function sendLinkWhatsApp() {
   if (!activeEditorProject) return;
-  const link = clientLinkFor(activeEditorProject.id);
-  window.open(`https://wa.me/?text=Hi! Track your Erthdot project here: ${link} — open it and tap "Add to Home Screen" to install it as an app.`, '_blank');
+  const link = `https://erthdot.com/track/${activeEditorProject.id}`;
+  window.open(`https://wa.me/?text=Hi! Track your Erthdot project here: ${link}`, '_blank');
 }
 function sendLinkForProject(id, client) {
-  const link = clientLinkFor(id);
-  window.open(`https://wa.me/?text=Hi ${client}! Track your Erthdot project here: ${link} — open it and tap "Add to Home Screen" to install it as an app.`, '_blank');
+  const link = `https://erthdot.com/track/${id}`;
+  window.open(`https://wa.me/?text=Hi ${client}! Track your Erthdot project here: ${link}`, '_blank');
 }
 function generateQR() { showToast('📷', 'QR code generation — connect a QR library in production.'); }
 function deactivateLink() {
@@ -1552,7 +1487,6 @@ function archiveProject(id) {
     if (idx >= 0) {
       projects.splice(idx, 1);
       saveProjects(projects); // persist deletion — won't come back on reload
-      deleteProjectPreview(id); // also remove the live client-facing doc
       renderOverviewTable();
       renderAllProjectsTable(); // also repopulates editor select
       renderLinksTable();
@@ -1707,75 +1641,6 @@ const PREVIEW_BASE_URL = 'https://erthdot.com/client-preview.html?id=';
 // The module script at the bottom of this file sets window._db.
 
 function _db() { return window.__firestoreDb; }
-
-// ── Keep a Project's client-facing preview doc in sync with Firestore ──
-// This is what makes a Project actually show up on the homepage tracker
-// and on the client's link — Projects alone only live in this browser's
-// localStorage, so without this sync a "new project" never appears live.
-async function syncProjectToPreview(p) {
-  if (!_db()) { showToast('⚠', 'Firebase not ready — link will work once it reconnects.'); return; }
-  try {
-    const { doc, setDoc } = window.__firestoreAPI;
-    const total   = p.amountTotal || 0;
-    const paid    = p.amountPaid  || 0;
-    const data = {
-      clientName:   p.client,
-      projectTitle: p.pkg || 'Design Project',
-      package:      p.pkg || '',
-      started:      p.started || '',
-      createdAt:    p.createdAt || Date.now(),
-      progress:     p.pct || 0,
-      status:       p.status || 'active',
-      published:    true,
-      note:         p.note || '',
-      items:        p.items || [],
-      linkedProjectId: p.id,
-      amountTotal:  total,
-      amountPaid:   paid,
-      balanceDue:   Math.max(0, total - paid),
-      stages:       p.stages || []
-    };
-    await setDoc(doc(_db(), 'previews', p.id), data);
-  } catch (e) { console.error('syncProjectToPreview', e); showToast('⚠', 'Could not push to client link — check connection.'); }
-}
-
-async function deleteProjectPreview(id) {
-  if (!_db()) return;
-  try {
-    const { doc, deleteDoc } = window.__firestoreAPI;
-    await deleteDoc(doc(_db(), 'previews', id));
-  } catch (e) { console.error('deleteProjectPreview', e); }
-}
-
-// ── Rename a project's ID / client link ──
-// Firestore doc IDs can't be edited in place, so this copies the preview
-// to a new doc under the new ID, deletes the old one, and updates the
-// project everywhere it's referenced locally.
-async function renameProjectId() {
-  if (!activeEditorProject) { showToast('⚠', 'Select a project first.'); return; }
-  const raw = document.getElementById('editorNewId').value.trim();
-  if (!raw) { showToast('⚠', 'Enter a new ID first.'); return; }
-  const newId = raw.toUpperCase().replace(/[^A-Z0-9-]/g, '-').replace(/-+/g,'-').replace(/^-|-$/g,'');
-  if (!newId) { showToast('⚠', 'Use letters, numbers and dashes only.'); return; }
-  const oldId = activeEditorProject.id;
-  if (newId === oldId) { showToast('⚠', 'That is already the current ID.'); return; }
-  if (projects.some(p => p.id === newId)) { showToast('⚠', `${newId} is already in use.`); return; }
-
-  activeEditorProject.id = newId;
-  const idx = projects.findIndex(p => p.id === oldId || p === activeEditorProject);
-  if (idx >= 0) projects[idx] = activeEditorProject;
-
-  await syncProjectToPreview(activeEditorProject); // create new doc under newId
-  await deleteProjectPreview(oldId);                // remove old doc so it 404s cleanly
-
-  persistProjects();
-  renderOverviewTable();
-  renderAllProjectsTable();
-  renderLinksTable();
-  loadProjectIntoEditor(); // refreshes editorTrackerLink, editorNewId, etc. for the renamed project
-  showToast('✓', `Renamed to ${newId} — send the client the new link.`);
-  copyLink(newId);
-}
 
 async function loadPreviews() {
   if (!_db()) return [];
