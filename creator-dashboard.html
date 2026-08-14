@@ -251,6 +251,8 @@
   .pv-card-title { font-family:'Bebas Neue',sans-serif; font-size:17px; letter-spacing:1px; color:var(--white); margin-bottom:2px; }
   .pv-card-client { font-size:12px; color:var(--text-muted); }
   .pv-pub-badge { font-family:'Space Mono',monospace; font-size:9px; letter-spacing:2px; padding:3px 9px; border-radius:3px; text-transform:uppercase; flex-shrink:0; margin-top:2px; }
+  .pkg-badge{display:inline-flex;align-items:center;gap:5px;background:#ffffff;color:#12120f;font-family:'Space Mono',monospace;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:4px 10px;border-radius:16px;border:1px solid var(--green-light,#22a060);box-shadow:0 2px 10px rgba(255,255,255,.12);white-space:nowrap;}
+  .pkg-badge::before{content:'◆';font-size:7px;color:var(--green-light,#22a060);}
   .pv-pub-badge.live { background:rgba(34,160,96,0.1); color:var(--green-light); border:1px solid rgba(34,160,96,0.2); }
   .pv-pub-badge.draft { background:rgba(100,100,100,0.08); color:var(--text-muted); border:1px solid var(--border); }
   .pv-card-body { padding:10px 18px; }
@@ -452,6 +454,7 @@
               <option value="review">In Review</option>
               <option value="complete">Complete</option>
             </select>
+            <button class="btn-sm btn-outline" onclick="syncAllProjectsToLive()" title="Push every project here to the live homepage / client links — use this once after updating, to bring older projects online">↻ Sync All to Live Site</button>
             <button class="btn-sm btn-green" onclick="openNewProjectModal()">+ New</button>
           </div>
         </div>
@@ -520,6 +523,39 @@
                   <div class="progress-val" id="editorProgressVal">65%</div>
                 </div>
               </div>
+              <div class="form-group" style="margin-top:18px; margin-bottom:0;">
+                <label class="form-label">Package / Service Name</label>
+                <select class="form-select" id="editorPkgSelect" onchange="onEditorPkgSelectChange()">
+                  <option>Identity Lite — K1,500</option>
+                  <option>Startup Foundation — K4,000</option>
+                  <option>Corporate Growth Suite — K9,500</option>
+                  <option>Elite Executive — K17,500</option>
+                  <option>Foundation Kit — K800</option>
+                  <option>Professional Kit — K1,600</option>
+                  <option>Identity Kit — K2,300</option>
+                  <option>Full Suite Kit — K3,500</option>
+                  <option>Starter Sprint — K5,000</option>
+                  <option>Growth Momentum — K9,400</option>
+                  <option>Market Authority — K17,000</option>
+                  <option value="__custom__">✏ Custom Package — type your own…</option>
+                </select>
+                <input type="text" class="form-input" id="editorPkgCustom" placeholder="e.g. Wedding Branding Bundle" style="display:none; margin-top:8px;" oninput="onEditorPkgCustomInput()">
+              </div>
+              <div class="editor-grid" style="margin-top:18px;">
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label">Total Package Price (K)</label>
+                  <input type="number" class="form-input" id="editorTotal" min="0" oninput="onPaymentEditorChange()">
+                </div>
+                <div class="form-group" style="margin-bottom:0;">
+                  <label class="form-label">Amount Paid (K)</label>
+                  <input type="number" class="form-input" id="editorPaid" min="0" oninput="onPaymentEditorChange()">
+                </div>
+              </div>
+              <div style="font-size:12px; color:var(--text-muted); margin-top:8px;">Balance due (shown to client): <strong id="editorBalanceOut" style="color:#fff;">K0</strong></div>
+              <div class="form-group" style="margin-top:14px; margin-bottom:0;">
+                <label class="form-label">Note to Client (shown on their tracker page)</label>
+                <textarea class="form-textarea" id="editorClientNote" placeholder="e.g. First logo concepts are ready for your review!" oninput="if(activeEditorProject) activeEditorProject.note=this.value"></textarea>
+              </div>
             </div>
           </div>
 
@@ -528,7 +564,7 @@
             <div class="panel-header"><div class="panel-title">🔗 Client Tracker Link</div></div>
             <div class="panel-body">
               <div class="link-box">
-                <div class="link-url" id="editorTrackerLink">erthdot.com/track/ERT-2604-007</div>
+                <div class="link-url" id="editorTrackerLink">erthdot.com/client-preview.html?id=ERT-2604-007</div>
                 <button class="copy-btn" onclick="copyEditorLink()">Copy</button>
               </div>
               <div class="link-actions">
@@ -536,7 +572,15 @@
                 <button class="link-action-btn" onclick="generateQR()">📷 QR Code</button>
                 <button class="link-action-btn danger" onclick="deactivateLink()">🗑 Deactivate Link</button>
               </div>
-              <div style="font-size:11px; color:var(--text-dim); margin-top:10px; font-family:'Space Mono',monospace;">Link expires on project sign-off · auto-archived after 30 days</div>
+              <div style="font-size:11px; color:var(--text-dim); margin-top:10px; font-family:'Space Mono',monospace;">This is the real, working link your client should tap. It opens live on their phone or laptop.</div>
+              <div style="margin-top:16px; padding-top:14px; border-top:1px solid var(--border);">
+                <label class="form-label">Rename Project / Custom Client ID</label>
+                <div style="display:flex; gap:8px;">
+                  <input type="text" class="form-input" id="editorNewId" placeholder="e.g. CHANDA-LOGO or ERT-2604-007" style="flex:1;">
+                  <button class="link-action-btn" style="white-space:nowrap;" onclick="renameProjectId()">Rename →</button>
+                </div>
+                <div style="font-size:11px; color:var(--text-dim); margin-top:8px;">Changes the ID in the client's link (letters, numbers, dashes only). The old link stops working — send the client the new one after renaming.</div>
+              </div>
             </div>
           </div>
         </div>
@@ -713,6 +757,23 @@
               <textarea class="form-textarea" id="qNotes" rows="2" placeholder="e.g. Valid for 14 days. Turnaround begins after deposit received."></textarea>
             </div>
 
+            <div class="form-group">
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <label class="form-label" style="margin-bottom:0;">Studio Address (shown on the quotation)</label>
+                <label style="display:flex; align-items:center; gap:6px; font-size:12px; color:var(--text-muted); cursor:pointer;">
+                  <input type="checkbox" id="qAddressEnabled" onchange="onAddressToggle()" style="cursor:pointer;"> Show on quote
+                </label>
+              </div>
+              <input type="text" class="form-input" id="qAddress" placeholder="e.g. Plot 12, Kabulonga Road, Lusaka" style="margin-top:8px;" oninput="localStorage.setItem('erthdot_address', this.value)" disabled>
+              <div style="font-size:11px; color:var(--text-muted); margin-top:5px;">Off by default — tick the box to include your address on quotations. Saved automatically once entered.</div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Payment Details (shown on the quotation)</label>
+              <textarea class="form-textarea" id="qPaymentDetails" rows="3" placeholder="e.g. MTN Mobile Money: 0971 009 632 (Erthdot Design Studio)&#10;Bank: Zanaco, Acc Name: Erthdot Design Studio, Acc No: 0123456789, Branch: Cairo Road" oninput="localStorage.setItem('erthdot_payment_details', this.value)"></textarea>
+              <div style="font-size:11px; color:var(--text-muted); margin-top:5px;">Saved automatically — fills in for every future quotation until you change it.</div>
+            </div>
+
             <div class="quote-totals">
               <div class="quote-totals-row"><span>Subtotal</span><span id="qSubtotalOut">K0</span></div>
               <div class="quote-totals-row"><span>Discount</span><span id="qDiscountOut">K0</span></div>
@@ -848,7 +909,7 @@
     </div>
     <div class="form-group">
       <label class="form-label">Service / Package</label>
-      <select class="form-select" id="npService">
+      <select class="form-select" id="npService" onchange="onNpServiceChange()">
         <option>Identity Lite — K1,500</option>
         <option>Startup Foundation — K4,000</option>
         <option>Corporate Growth Suite — K9,500</option>
@@ -860,7 +921,9 @@
         <option>Starter Sprint — K5,000</option>
         <option>Growth Momentum — K9,400</option>
         <option>Market Authority — K17,000</option>
+        <option value="__custom__">✏ Custom Package — type your own…</option>
       </select>
+      <input type="text" class="form-input" id="npServiceCustom" placeholder="e.g. Wedding Branding Bundle — K2,750" style="display:none; margin-top:8px;">
     </div>
     <div class="editor-grid">
       <div class="form-group">
@@ -873,6 +936,16 @@
           <option value="yes">Yes — 50% paid</option>
           <option value="no">No — pending</option>
         </select>
+      </div>
+    </div>
+    <div class="editor-grid">
+      <div class="form-group">
+        <label class="form-label">Total Package Price (K)</label>
+        <input type="number" class="form-input" id="npTotal" min="0" placeholder="e.g. 4000">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Amount Paid So Far (K)</label>
+        <input type="number" class="form-input" id="npPaid" min="0" placeholder="e.g. 2000">
       </div>
     </div>
     <div class="form-group">
@@ -953,6 +1026,7 @@
           <select class="form-select" id="addItemType" onchange="onAddTypeChange()">
             <option value="image">🖼 Image (URL)</option>
             <option value="video">▶ Video (URL)</option>
+            <option value="pdf">📄 File / Document (URL)</option>
             <option value="link">🔗 Link</option>
             <option value="website">🌐 Embedded Website</option>
           </select>
@@ -1040,6 +1114,14 @@ window.addEventListener('appinstalled', () => {
 
 // ─── AUTH CHECK ─────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
+  const savedPayDetails = localStorage.getItem('erthdot_payment_details');
+  if (savedPayDetails) { const el = document.getElementById('qPaymentDetails'); if (el) el.value = savedPayDetails; }
+  const savedAddress = localStorage.getItem('erthdot_address');
+  if (savedAddress) { const el = document.getElementById('qAddress'); if (el) el.value = savedAddress; }
+  if (localStorage.getItem('erthdot_address_enabled') === '1') {
+    const chk = document.getElementById('qAddressEnabled');
+    if (chk) { chk.checked = true; document.getElementById('qAddress').disabled = false; }
+  }
   setTimeout(() => {
     // Check sessionStorage first, then fall back to localStorage persistent session
     let session = sessionStorage.getItem('erthdot_creator');
@@ -1218,7 +1300,7 @@ function renderOverviewTable() {
   tbody.innerHTML = projects.map(p => `
     <tr>
       <td><div class="proj-name">${p.client}</div></td>
-      <td><div class="proj-meta" style="color:var(--text-muted);font-size:13px;">${p.pkg}</div></td>
+      <td><div class="pkg-badge" style="font-size:10px;">${p.pkg}</div></td>
       <td>
         <div class="mini-bar"><div class="mini-fill" style="width:${p.pct}%"></div></div>
         <div style="font-size:11px;color:var(--text-muted);margin-top:3px;">${p.pct}%</div>
@@ -1249,7 +1331,7 @@ function renderAllProjectsTable() {
     <tr>
       <td><div class="proj-name">${p.client}</div></td>
       <td><div class="proj-code">${p.id}</div></td>
-      <td><div class="proj-meta" style="color:var(--text-muted);font-size:12px;">${p.pkg}</div></td>
+      <td><div class="pkg-badge" style="font-size:9px;">${p.pkg}</div></td>
       <td>
         <div class="mini-bar" style="width:80px;"><div class="mini-fill" style="width:${p.pct}%"></div></div>
         <div style="font-size:11px;color:var(--text-muted);margin-top:2px;">${p.pct}%</div>
@@ -1328,10 +1410,52 @@ function loadProjectIntoEditor() {
   document.getElementById('editorProgressVal').textContent = p.pct + '%';
   const done = p.stages.filter(s => s.status === 'done').length;
   document.getElementById('editorStagesDone').textContent = `${done}/${p.stages.length}`;
-  document.getElementById('editorTrackerLink').textContent = `erthdot.com/track/${p.id}`;
+  document.getElementById('editorTrackerLink').textContent = `erthdot.com/client-preview.html?id=${p.id}`;
+  document.getElementById('editorNewId').value = '';
+  document.getElementById('editorNewId').placeholder = p.id;
+  document.getElementById('editorTotal').value = p.amountTotal || '';
+  document.getElementById('editorPaid').value  = p.amountPaid  || '';
+  document.getElementById('editorClientNote').value = p.note || '';
+  setEditorPkgField(p.pkg || '');
+  onPaymentEditorChange();
 
   renderEditorStages(p.stages);
   updateNotifPreview(p.pct, p.client, p.id);
+}
+
+function setEditorPkgField(pkgValue) {
+  const sel = document.getElementById('editorPkgSelect');
+  const custom = document.getElementById('editorPkgCustom');
+  const presetOptions = Array.from(sel.options).map(o => o.value).filter(v => v !== '__custom__');
+  if (presetOptions.includes(pkgValue)) {
+    sel.value = pkgValue;
+    custom.style.display = 'none';
+    custom.value = '';
+  } else {
+    sel.value = '__custom__';
+    custom.style.display = '';
+    custom.value = pkgValue;
+  }
+}
+function onEditorPkgSelectChange() {
+  const sel = document.getElementById('editorPkgSelect');
+  const custom = document.getElementById('editorPkgCustom');
+  custom.style.display = sel.value === '__custom__' ? '' : 'none';
+  if (sel.value === '__custom__') { custom.focus(); if (activeEditorProject) activeEditorProject.pkg = custom.value.trim(); }
+  else if (activeEditorProject) activeEditorProject.pkg = sel.value;
+}
+function onEditorPkgCustomInput() {
+  if (activeEditorProject) activeEditorProject.pkg = document.getElementById('editorPkgCustom').value.trim();
+}
+
+function onPaymentEditorChange() {
+  if (!activeEditorProject) return;
+  const total = parseFloat(document.getElementById('editorTotal').value) || 0;
+  const paid  = parseFloat(document.getElementById('editorPaid').value)  || 0;
+  activeEditorProject.amountTotal = total;
+  activeEditorProject.amountPaid  = paid;
+  const balance = Math.max(0, total - paid);
+  document.getElementById('editorBalanceOut').textContent = 'K' + balance.toLocaleString();
 }
 
 function renderEditorStages(stages) {
@@ -1406,10 +1530,12 @@ function collectEditorStages() {
   });
 }
 
-function pushProjectUpdate() {
+async function pushProjectUpdate() {
   if (!activeEditorProject) { showToast('⚠', 'Select a project first.'); return; }
   const pct = document.getElementById('editorSlider').value;
   activeEditorProject.pct = parseInt(pct);
+  activeEditorProject.note = document.getElementById('editorClientNote').value.trim();
+  onPaymentEditorChange(); // captures editorTotal/editorPaid into activeEditorProject
   collectEditorStages(); // read stage edits from DOM
   // Write back into the projects array so the in-memory copy is updated
   const idx = projects.findIndex(p => p.id === activeEditorProject.id);
@@ -1417,6 +1543,7 @@ function pushProjectUpdate() {
   persistProjects(); // sync to shared localStorage
   renderOverviewTable();
   renderAllProjectsTable();
+  await syncProjectToPreview(activeEditorProject); // push live so the client's link reflects this instantly
   showToast('📲', `Project saved and client notified! Updated to ${pct}%.`);
 }
 
@@ -1432,15 +1559,33 @@ function markProjectComplete() {
 function openNewProjectModal() { document.getElementById('newProjectModal').classList.add('open'); }
 function closeModal(id) { document.getElementById(id).classList.remove('open'); }
 
-function createNewProject() {
+function onNpServiceChange() {
+  const sel = document.getElementById('npService');
+  const custom = document.getElementById('npServiceCustom');
+  custom.style.display = sel.value === '__custom__' ? '' : 'none';
+  if (sel.value === '__custom__') custom.focus();
+}
+function currentNpServiceValue() {
+  const sel = document.getElementById('npService');
+  if (sel.value === '__custom__') return document.getElementById('npServiceCustom').value.trim();
+  return sel.value;
+}
+
+async function createNewProject() {
   const name = document.getElementById('npName').value.trim();
   const phone = document.getElementById('npPhone').value.trim();
-  const service = document.getElementById('npService').value;
+  const service = currentNpServiceValue();
+  const total = parseFloat(document.getElementById('npTotal').value) || 0;
+  const paid  = parseFloat(document.getElementById('npPaid').value)  || 0;
+  const notes = document.getElementById('npNotes').value.trim();
   if (!name || !phone) { showToast('⚠', 'Name and phone required.'); return; }
+  if (!service) { showToast('⚠', 'Enter a package name.'); return; }
   const code = 'ERT-' + Date.now().toString().slice(-7);
   const newProj = {
     id: code, client: name, pkg: service, pct: 0, status: 'active',
     started: new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short'}),
+    createdAt: Date.now(),
+    amountTotal: total, amountPaid: paid, note: notes,
     stages: [
       {name:'Requirements Gathering', pct:10, status:'active'},
       {name:'Concept Development', pct:40, status:'pending'},
@@ -1459,19 +1604,27 @@ function createNewProject() {
   showToast('✓', `Project created! Code: ${code}`);
   document.getElementById('npName').value = '';
   document.getElementById('npPhone').value = '';
+  document.getElementById('npServiceCustom').value = '';
+  document.getElementById('npServiceCustom').style.display = 'none';
+  document.getElementById('npService').selectedIndex = 0;
+  document.getElementById('npTotal').value = '';
+  document.getElementById('npPaid').value = '';
+  document.getElementById('npNotes').value = '';
+  await syncProjectToPreview(newProj); // pushes it live — this is what makes it appear on the homepage & client link right away
 }
 
 // ─── LINK TOOLS ──────────────────────────────────────────
-function copyLink(id) { navigator.clipboard.writeText(`https://erthdot.com/track/${id}`).then(() => showToast('📋', `Link copied for ${id}`)); }
+function clientLinkFor(id) { return `https://erthdot.com/client-preview.html?id=${encodeURIComponent(id)}`; }
+function copyLink(id) { navigator.clipboard.writeText(clientLinkFor(id)).then(() => showToast('📋', `Link copied for ${id}`)); }
 function copyEditorLink() { if (!activeEditorProject) return; copyLink(activeEditorProject.id); }
 function sendLinkWhatsApp() {
   if (!activeEditorProject) return;
-  const link = `https://erthdot.com/track/${activeEditorProject.id}`;
-  window.open(`https://wa.me/?text=Hi! Track your Erthdot project here: ${link}`, '_blank');
+  const link = clientLinkFor(activeEditorProject.id);
+  window.open(`https://wa.me/?text=Hi! Track your Erthdot project here: ${link} — open it and tap "Add to Home Screen" to install it as an app.`, '_blank');
 }
 function sendLinkForProject(id, client) {
-  const link = `https://erthdot.com/track/${id}`;
-  window.open(`https://wa.me/?text=Hi ${client}! Track your Erthdot project here: ${link}`, '_blank');
+  const link = clientLinkFor(id);
+  window.open(`https://wa.me/?text=Hi ${client}! Track your Erthdot project here: ${link} — open it and tap "Add to Home Screen" to install it as an app.`, '_blank');
 }
 function generateQR() { showToast('📷', 'QR code generation — connect a QR library in production.'); }
 function deactivateLink() {
@@ -1487,6 +1640,7 @@ function archiveProject(id) {
     if (idx >= 0) {
       projects.splice(idx, 1);
       saveProjects(projects); // persist deletion — won't come back on reload
+      deleteProjectPreview(id); // also remove the live client-facing doc
       renderOverviewTable();
       renderAllProjectsTable(); // also repopulates editor select
       renderLinksTable();
@@ -1640,7 +1794,102 @@ const PREVIEW_BASE_URL = 'https://erthdot.com/client-preview.html?id=';
 // so the regular (non-module) script functions can call it.
 // The module script at the bottom of this file sets window._db.
 
+// ── One-time / on-demand backfill: push every local Project live ──
+// Projects created before this update (or created while offline) may
+// exist only in this browser's storage. This walks the whole list and
+// syncs each one, so they all appear on the homepage and get working
+// client links without having to open and re-save each one by hand.
+async function syncAllProjectsToLive() {
+  if (!projects.length) { showToast('⚠', 'No projects to sync.'); return; }
+  if (!_db()) { showToast('⚠', 'Firebase not ready — try again in a moment.'); return; }
+  showToast('↻', `Syncing ${projects.length} project(s)…`);
+  let ok = 0;
+  for (const p of projects) {
+    try { await syncProjectToPreview(p); ok++; } catch(e) { console.error(e); }
+  }
+  showToast('✓', `Synced ${ok}/${projects.length} project(s) to the live site.`);
+}
+
 function _db() { return window.__firestoreDb; }
+
+// ── Keep a Project's client-facing preview doc in sync with Firestore ──
+// This is what makes a Project actually show up on the homepage tracker
+// and on the client's link — Projects alone only live in this browser's
+// localStorage, so without this sync a "new project" never appears live.
+// IMPORTANT: this merges with whatever's already in Firestore rather than
+// blindly overwriting — otherwise saving a Project's progress/payment would
+// silently wipe out any files/images added via the Client Previews panel,
+// and would undo a manual "Unpublish". That was the source of the preview
+// panel feeling glitchy — two flows fighting over the same document.
+async function syncProjectToPreview(p) {
+  if (!_db()) { showToast('⚠', 'Firebase not ready — link will work once it reconnects.'); return; }
+  try {
+    const { doc, setDoc, getDoc } = window.__firestoreAPI;
+    const ref = doc(_db(), 'previews', p.id);
+    let existing = {};
+    try { const snap = await getDoc(ref); if (snap.exists()) existing = snap.data(); } catch(e) {}
+
+    const total = p.amountTotal || 0;
+    const paid  = p.amountPaid  || 0;
+    const data = {
+      ...existing, // preserve items/files and anything else Client Previews manages
+      clientName:   p.client,
+      projectTitle: p.pkg || existing.projectTitle || 'Design Project',
+      package:      p.pkg || '',
+      started:      p.started || existing.started || '',
+      createdAt:    p.createdAt || existing.createdAt || Date.now(),
+      progress:     p.pct || 0,
+      status:       p.status || 'active',
+      published:    (typeof existing.published === 'boolean') ? existing.published : true,
+      note:         p.note || '',
+      items:        existing.items || [],
+      linkedProjectId: p.id,
+      amountTotal:  total,
+      amountPaid:   paid,
+      balanceDue:   Math.max(0, total - paid),
+      stages:       p.stages || existing.stages || []
+    };
+    await setDoc(ref, data, { merge: true });
+  } catch (e) { console.error('syncProjectToPreview', e); showToast('⚠', 'Could not push to client link — check connection.'); }
+}
+
+async function deleteProjectPreview(id) {
+  if (!_db()) return;
+  try {
+    const { doc, deleteDoc } = window.__firestoreAPI;
+    await deleteDoc(doc(_db(), 'previews', id));
+  } catch (e) { console.error('deleteProjectPreview', e); }
+}
+
+// ── Rename a project's ID / client link ──
+// Firestore doc IDs can't be edited in place, so this copies the preview
+// to a new doc under the new ID, deletes the old one, and updates the
+// project everywhere it's referenced locally.
+async function renameProjectId() {
+  if (!activeEditorProject) { showToast('⚠', 'Select a project first.'); return; }
+  const raw = document.getElementById('editorNewId').value.trim();
+  if (!raw) { showToast('⚠', 'Enter a new ID first.'); return; }
+  const newId = raw.toUpperCase().replace(/[^A-Z0-9-]/g, '-').replace(/-+/g,'-').replace(/^-|-$/g,'');
+  if (!newId) { showToast('⚠', 'Use letters, numbers and dashes only.'); return; }
+  const oldId = activeEditorProject.id;
+  if (newId === oldId) { showToast('⚠', 'That is already the current ID.'); return; }
+  if (projects.some(p => p.id === newId)) { showToast('⚠', `${newId} is already in use.`); return; }
+
+  activeEditorProject.id = newId;
+  const idx = projects.findIndex(p => p.id === oldId || p === activeEditorProject);
+  if (idx >= 0) projects[idx] = activeEditorProject;
+
+  await syncProjectToPreview(activeEditorProject); // create new doc under newId
+  await deleteProjectPreview(oldId);                // remove old doc so it 404s cleanly
+
+  persistProjects();
+  renderOverviewTable();
+  renderAllProjectsTable();
+  renderLinksTable();
+  loadProjectIntoEditor(); // refreshes editorTrackerLink, editorNewId, etc. for the renamed project
+  showToast('✓', `Renamed to ${newId} — send the client the new link.`);
+  copyLink(newId);
+}
 
 async function loadPreviews() {
   if (!_db()) return [];
@@ -1657,7 +1906,7 @@ async function savePreview(preview) {
   try {
     const { doc, setDoc } = window.__firestoreAPI;
     const { id, ...data } = preview;
-    await setDoc(doc(_db(), 'previews', id), data);
+    await setDoc(doc(_db(), 'previews', id), data, { merge: true });
   } catch(e) { console.error('savePreview', e); showToast('⚠','Save failed — check connection'); }
 }
 
@@ -1737,9 +1986,12 @@ async function createPreview() {
   const projectTitle = document.getElementById('pvNewTitle').value.trim();
   if (!clientName) { showToast('⚠', 'Client name is required.'); return; }
 
-  const id    = 'PV-' + Date.now().toString(36).toUpperCase();
   const code  = document.getElementById('pvNewCode').value.trim();
   const matchedProj = code ? projects.find(p => p.id === code) : null;
+  // If this links to a real Project, reuse the Project's own doc ID so we
+  // don't end up with two separate cards (one auto-synced, one manual) for
+  // the same client — that duplication was making the panel feel broken.
+  const id = matchedProj ? matchedProj.id : ('PV-' + Date.now().toString(36).toUpperCase());
 
   const newPreview = {
     clientName,
@@ -2221,6 +2473,12 @@ function recalcQuoteTotals() {
   document.getElementById('qBalanceOut').textContent    = 'K' + balance.toLocaleString();
 }
 
+function onAddressToggle() {
+  const on = document.getElementById('qAddressEnabled').checked;
+  document.getElementById('qAddress').disabled = !on;
+  localStorage.setItem('erthdot_address_enabled', on ? '1' : '0');
+}
+
 function buildQuoteObject() {
   const subtotal = getQuoteSubtotal();
   const discVal  = Number(document.getElementById('qDiscountVal').value) || 0;
@@ -2237,6 +2495,8 @@ function buildQuoteObject() {
     items:       JSON.parse(JSON.stringify(quoteItems)),
     subtotal, discount, total, depositPct: depPct, deposit, balance,
     notes:       document.getElementById('qNotes').value.trim(),
+    paymentDetails: document.getElementById('qPaymentDetails').value.trim(),
+    address:     document.getElementById('qAddressEnabled').checked ? document.getElementById('qAddress').value.trim() : '',
     createdAt:   Date.now()
   };
 }
@@ -2281,24 +2541,46 @@ function sendQuoteWhatsApp() {
 function printQuote() {
   const q = buildQuoteObject();
   const rows = q.items.map(it => `<tr><td>${esc(it.desc)||'Item'}</td><td style="text-align:center;">${it.qty}</td><td style="text-align:right;">K${it.price.toLocaleString()}</td><td style="text-align:right;">K${(it.qty*it.price).toLocaleString()}</td></tr>`).join('');
-  const win = window.open('', '_blank');
-  win.document.write(`
-    <html><head><title>Quotation — ${esc(q.clientName)}</title>
+  const docTitle = `Quotation — ${q.clientName || 'Client'} — Erthdot`;
+  const html = `<!DOCTYPE html>
+    <html><head><meta charset="UTF-8"><title>${esc(docTitle)}</title>
     <style>
-      body{font-family:Arial,sans-serif;color:#111;padding:40px;max-width:700px;margin:0 auto;}
-      h1{font-size:20px;letter-spacing:2px;margin-bottom:2px;}
-      .sub{color:#666;font-size:12px;margin-bottom:24px;}
+      @page{ size:A4; margin:14mm 16mm; }
+      *{box-sizing:border-box;}
+      body{font-family:Arial,Helvetica,sans-serif;color:#171717;padding:0;max-width:700px;margin:0 auto;}
+      .letterhead{display:flex;align-items:center;gap:14px;border-bottom:3px solid #1a7a4a;padding-bottom:16px;margin-bottom:22px;}
+      .letterhead img{width:54px;height:54px;border-radius:50%;flex-shrink:0;}
+      .letterhead h1{font-size:21px;letter-spacing:2px;margin:0 0 3px 0;color:#0e4a2e;}
+      .sub{color:#5a5a5a;font-size:12px;}
+      .quote-tag{margin-left:auto;background:#1a7a4a;color:#fff;font-size:11px;font-weight:700;letter-spacing:2px;padding:6px 14px;border-radius:4px;text-transform:uppercase;white-space:nowrap;align-self:flex-start;}
       table{width:100%;border-collapse:collapse;margin:20px 0;}
-      th,td{padding:8px 6px;border-bottom:1px solid #ddd;font-size:13px;text-align:left;}
-      th{font-size:11px;text-transform:uppercase;color:#666;}
+      th,td{padding:9px 6px;border-bottom:1px solid #e0e0e0;font-size:13px;text-align:left;}
+      th{font-size:11px;text-transform:uppercase;color:#fff;background:#1a7a4a;letter-spacing:.5px;}
+      th:first-child{border-radius:4px 0 0 4px;} th:last-child{border-radius:0 4px 4px 0;}
       .totals{margin-top:14px;width:100%;}
-      .totals td{border:none;padding:4px 0;font-size:13px;}
-      .totals .grand td{font-weight:700;font-size:16px;border-top:1px solid #111;padding-top:10px;}
-      .notes{margin-top:20px;font-size:12px;color:#444;}
-      @media print{ button{display:none;} }
+      .totals td{border:none;padding:5px 0;font-size:13px;}
+      .totals .grand td{font-weight:700;font-size:17px;border-top:2px solid #0e4a2e;padding-top:12px;color:#0e4a2e;}
+      .totals .deposit-row td{background:#eef7f1;font-weight:600;}
+      .notes{margin-top:20px;font-size:12px;color:#444;background:#f4f9f6;border-left:3px solid #1a7a4a;padding:10px 14px;border-radius:0 4px 4px 0;}
+      .pay-details{margin-top:16px;border:1.5px solid #1a7a4a;border-radius:6px;overflow:hidden;}
+      .pay-details-title{background:#1a7a4a;color:#fff;font-size:12px;font-weight:700;letter-spacing:.5px;padding:8px 14px;}
+      .pay-details-body{padding:12px 14px;font-size:13px;color:#1a2a20;line-height:1.6;background:#f4f9f6;}
+      .footer{margin-top:36px;padding-top:14px;border-top:1px solid #e0e0e0;font-size:11px;color:#777;display:flex;justify-content:space-between;align-items:center;}
+      .footer strong{color:#1a7a4a;}
+      .no-print{margin-top:24px;}
+      .no-print button{padding:10px 20px;background:#1a7a4a;color:#fff;border:none;border-radius:4px;font-size:13px;cursor:pointer;}
+      .no-print .hint{font-size:11px;color:#888;margin-top:8px;}
+      @media print{ .no-print{display:none;} body{padding:0;} }
     </style></head><body>
-      <h1>ERTHDOT DESIGN STUDIO</h1>
-      <div class="sub">Lusaka, Zambia · +260 971 009 632 · QUOTATION</div>
+      <div class="letterhead">
+        <img src="https://erthdot.com/apple-touch-icon.png" alt="Erthdot">
+        <div>
+          <h1>ERTHDOT DESIGN STUDIO</h1>
+          <div class="sub">Lusaka, Zambia · +260 971 009 632 · erthdot.com</div>
+          ${q.address ? `<div class="sub" style="margin-top:2px;">📍 ${esc(q.address)}</div>` : ''}
+        </div>
+        <div class="quote-tag">Quotation</div>
+      </div>
       <p><strong>Client:</strong> ${esc(q.clientName)}${q.clientPhone ? ' · ' + esc(q.clientPhone) : ''}${q.clientEmail ? ' · ' + esc(q.clientEmail) : ''}</p>
       <p><strong>Date:</strong> ${new Date(q.createdAt).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'})}</p>
       <table>
@@ -2309,13 +2591,21 @@ function printQuote() {
         <tr><td>Subtotal</td><td style="text-align:right;">K${q.subtotal.toLocaleString()}</td></tr>
         <tr><td>Discount</td><td style="text-align:right;">-K${q.discount.toLocaleString()}</td></tr>
         <tr class="grand"><td>Total</td><td style="text-align:right;">K${q.total.toLocaleString()}</td></tr>
-        <tr><td>Deposit due now (${q.depositPct}%)</td><td style="text-align:right;">K${q.deposit.toLocaleString()}</td></tr>
+        <tr class="deposit-row"><td>Deposit due now (${q.depositPct}%)</td><td style="text-align:right;">K${q.deposit.toLocaleString()}</td></tr>
         <tr><td>Balance on completion</td><td style="text-align:right;">K${q.balance.toLocaleString()}</td></tr>
       </table>
       ${q.notes ? `<div class="notes"><strong>Notes:</strong> ${esc(q.notes)}</div>` : ''}
-      <button onclick="window.print()" style="margin-top:24px;padding:10px 20px;">Print / Save as PDF</button>
-    </body></html>`);
-  win.document.close();
+      ${q.paymentDetails ? `<div class="pay-details"><div class="pay-details-title">💳 Payment Details</div><div class="pay-details-body">${esc(q.paymentDetails).replace(/\n/g,'<br>')}</div></div>` : ''}
+      <div class="footer"><span><strong>Erthdot Design Studio</strong> — For the love of design.</span><span>erthdot.com</span></div>
+      <div class="no-print">
+        <button onclick="window.print()">Print / Save as PDF</button>
+        <div class="hint">Tip: in the print dialog, turn off "Headers and footers" for a clean PDF with no browser page info at the bottom.</div>
+      </div>
+    </body></html>`;
+  const blob = new Blob([html], { type: 'text/html' });
+  const url  = URL.createObjectURL(blob);
+  const win  = window.open(url, '_blank');
+  if (win) { win.addEventListener('load', () => URL.revokeObjectURL(url)); }
 }
 
 async function saveQuotation() {
@@ -2363,6 +2653,10 @@ function loadQuoteIntoForm(q) {
   document.getElementById('qClientPhone').value = q.clientPhone || '';
   document.getElementById('qClientEmail').value = q.clientEmail || '';
   document.getElementById('qNotes').value       = q.notes || '';
+  document.getElementById('qPaymentDetails').value = q.paymentDetails || localStorage.getItem('erthdot_payment_details') || '';
+  document.getElementById('qAddressEnabled').checked = !!q.address;
+  document.getElementById('qAddress').disabled = !q.address;
+  document.getElementById('qAddress').value = q.address || localStorage.getItem('erthdot_address') || '';
   document.getElementById('qDepositPct').value  = q.depositPct != null ? q.depositPct : 50;
   quoteItems = JSON.parse(JSON.stringify(q.items || []));
   renderQuoteItems();

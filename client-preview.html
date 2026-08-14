@@ -75,7 +75,9 @@
   .preview-meta-row{display:flex;flex-wrap:wrap;gap:24px;}
   .preview-meta-item{display:flex;flex-direction:column;gap:3px;}
   .preview-meta-label{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;color:var(--text-dim);text-transform:uppercase;}
-  .preview-meta-val{font-size:13px;color:var(--text);font-weight:500;}
+  .preview-meta-val{font-size:13px;color:#f3f3f3;font-weight:600;}
+  .pkg-badge{display:inline-flex;align-items:center;gap:5px;background:#ffffff;color:#12120f;font-family:'Space Mono',monospace;font-weight:700;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px 5px 10px;border-radius:18px;border:1px solid var(--green-light);box-shadow:0 2px 12px rgba(255,255,255,.12);white-space:nowrap;width:fit-content;}
+  .pkg-badge::before{content:'◆';font-size:7px;color:var(--green-light);}
   .preview-progress-wrap{display:flex;align-items:center;gap:20px;margin-left:auto;flex-shrink:0;}
   @media(max-width:600px){.preview-progress-wrap{margin-left:0;margin-top:20px;}}
   .progress-ring{position:relative;width:72px;height:72px;}
@@ -226,9 +228,10 @@
         <div class="preview-client-name" id="heroClientName"></div>
         <div class="preview-project-name" id="heroProjectName"></div>
         <div class="preview-meta-row">
-          <div class="preview-meta-item"><div class="preview-meta-label">Package</div><div class="preview-meta-val" id="metaPkg">—</div></div>
+          <div class="preview-meta-item"><div class="preview-meta-label">Package</div><div class="preview-meta-val" id="metaPkg" style="margin-top:2px;">—</div></div>
           <div class="preview-meta-item"><div class="preview-meta-label">Started</div><div class="preview-meta-val" id="metaStarted">—</div></div>
           <div class="preview-meta-item"><div class="preview-meta-label">Stage</div><div class="preview-meta-val" id="metaStage">—</div></div>
+          <div class="preview-meta-item" id="metaBalanceWrap" style="display:none;"><div class="preview-meta-label">Balance Due</div><div class="preview-meta-val" id="metaBalance" style="color:var(--gold);font-weight:700;">—</div></div>
         </div>
       </div>
       <div class="preview-progress-wrap">
@@ -400,8 +403,16 @@ function renderPreview(p) {
   document.title = p.clientName + ' — Erthdot Preview';
   document.getElementById('heroClientName').textContent = p.clientName;
   document.getElementById('heroProjectName').textContent = p.projectTitle || 'Design Project';
-  document.getElementById('metaPkg').textContent      = p.package || '—';
+  document.getElementById('metaPkg').innerHTML  = p.package ? `<span class="pkg-badge">${esc(p.package)}</span>` : '—';
   document.getElementById('metaStarted').textContent  = p.started || '—';
+
+  const balance = (typeof p.balanceDue === 'number') ? p.balanceDue
+                : (typeof p.amountTotal === 'number' ? Math.max(0,(p.amountTotal||0)-(p.amountPaid||0)) : null);
+  if (balance !== null && balance !== undefined && (p.amountTotal || p.balanceDue)) {
+    document.getElementById('metaBalance').textContent = balance > 0 ? ('K' + balance.toLocaleString() + ' due') : 'Paid in full ✓';
+    document.getElementById('metaBalance').style.color = balance > 0 ? 'var(--gold)' : 'var(--green-light)';
+    document.getElementById('metaBalanceWrap').style.display = '';
+  }
 
   const badge = document.getElementById('statusBadge');
   if (p.status === 'review') {
