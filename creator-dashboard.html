@@ -286,13 +286,23 @@
 
   @media (max-width: 1100px) { .stats-row { grid-template-columns: 1fr 1fr; } }
   @media (max-width: 860px) {
-    .sidebar { transform: translateX(-100%); transition: 0.3s; }
-    .sidebar.open { transform: translateX(0); }
+    .sidebar { transform: translateX(-100%); transition: 0.3s; z-index: 10000; }
+    .sidebar.open { transform: translateX(0); box-shadow: 0 0 40px rgba(0,0,0,.5); }
     .main { margin-left: 0; }
     .editor-grid, .two-col { grid-template-columns: 1fr; }
     .topbar { padding: 14px 20px; }
     .content { padding: 20px; }
+    #menuToggle { display: flex !important; align-items:center; justify-content:center; }
+    .stats-row { grid-template-columns: 1fr 1fr !important; }
+    table { display: block; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
+    .quote-grid { grid-template-columns: 1fr !important; }
   }
+  @media (max-width: 860px) {
+    /* dim backdrop behind the open sidebar so it reads as an overlay, not a layout shift */
+    .sidebar.open::after { content:''; }
+  }
+  #sidebarBackdrop { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:9999; }
+  #sidebarBackdrop.show { display:block; }
 </style>
 </head>
 <body>
@@ -346,6 +356,7 @@
     <button class="logout-btn" onclick="logout()" title="Sign out">⏻</button>
   </div>
 </aside>
+<div id="sidebarBackdrop" onclick="toggleSidebar()"></div>
 
 <!-- MAIN -->
 <div class="main" id="mainContent">
@@ -1040,6 +1051,15 @@
         <label class="form-label" id="addItemUrlLabel">URL</label>
         <input type="url" class="form-input" id="addItemUrl" placeholder="https://...">
       </div>
+      <!-- Direct upload from device — previously the only way to add a file
+           was to paste a URL, meaning files had to already be hosted
+           somewhere else first. This uploads straight to Firebase Storage
+           and fills the URL field automatically once done. -->
+      <div class="form-group" style="margin-bottom:10px;">
+        <label class="form-label">Or upload a file from this device</label>
+        <input type="file" class="form-input" id="addItemFile" onchange="uploadPreviewFile()" accept="image/*,video/*,application/pdf">
+        <div id="addItemUploadStatus" style="font-size:11px;color:var(--text-muted);margin-top:6px;"></div>
+      </div>
       <button class="btn-sm" style="background:var(--border-light); color:var(--text); border:none;" onclick="addPreviewItem()">+ Add to Preview</button>
     </div>
 
@@ -1094,6 +1114,17 @@ window.addEventListener('beforeinstallprompt', (e) => {
   if (item) item.style.display = '';
 });
 
+// iOS Safari never fires beforeinstallprompt, so the nav item stayed hidden
+// forever on iPhone and there was no way to discover "Add to Home Screen".
+// Show the item on iOS too (and skip it if already installed/standalone).
+const _isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) && !window.MSStream;
+const _isStandalone = window.navigator.standalone === true ||
+                      window.matchMedia('(display-mode: standalone)').matches;
+if (_isIOS && !_isStandalone) {
+  const item = document.getElementById('installAppNavItem');
+  if (item) item.style.display = '';
+}
+
 async function installDashboardApp() {
   if (_deferredInstallPrompt) {
     _deferredInstallPrompt.prompt();
@@ -1103,7 +1134,7 @@ async function installDashboardApp() {
     return;
   }
   // iOS Safari has no install prompt API — guide manually
-  showToast('📲', 'On iPhone: tap Share → Add to Home Screen to install.');
+  showToast('📲', 'On iPhone: tap the Share icon, then "Add to Home Screen".');
 }
 
 window.addEventListener('appinstalled', () => {
@@ -1673,7 +1704,7 @@ function convertBookingToProject(name, pkg) {
 // ═══════════════════════════════════════
 function exportDashReport(){
   const projs = projects || [];
-  const bookings = (() => { try{ return JSON.parse(localStorage.getItem('erthdot_bookings')||'[]'); }catch(e){ return []; } })();
+  const bookings = _bookingsCache || []; // live Firestore bookings (loaded whenever the Bookings page was last viewed)
   const now = new Date();
   const dateStr = now.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric',hour:'2-digit',minute:'2-digit'});
   const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
@@ -1715,15 +1746,53 @@ function exportDashReport(){
   showToast('📄','Report downloaded ✓');
 }
 
-// ─── BOOKINGS — render from localStorage ────────────────
-const BOOKING_KEY = 'erthdot_bookings';
-function getBookings(){ try{ return JSON.parse(localStorage.getItem(BOOKING_KEY)||'[]'); }catch(e){ return []; } }
-function saveBookings(arr){ localStorage.setItem(BOOKING_KEY, JSON.stringify(arr)); }
+// ─── BOOKINGS — read/write Firestore's `bookings` collection ─────
+// Previously this read/wrote localStorage only, which is per-device —
+// a visitor booking on their own phone never reached the dashboard on
+// the designer's separate device. Now both sides read/write the same
+// Firestore collection, same pattern as `previews`.
+let _bookingsCache = []; // last-loaded bookings, indexed same as rendered rows
 
-function renderBookings(){
+async function getBookings(){
+  if (!window.__firestoreDb || !window.__firestoreAPI) return _bookingsCache;
+  try {
+    const { collection, getDocs, query, orderBy } = window.__firestoreAPI;
+    const q = query(collection(window.__firestoreDb, 'bookings'), orderBy('submittedAt','desc'));
+    const snap = await getDocs(q);
+    _bookingsCache = snap.docs.map(d => ({ ...d.data(), _docId: d.id }));
+    return _bookingsCache;
+  } catch(e) {
+    console.warn('Could not load bookings from Firestore:', e);
+    return _bookingsCache;
+  }
+}
+
+async function saveBookingStatus(idx, status){
+  const b = _bookingsCache[idx];
+  if (!b) return;
+  b.status = status;
+  if (!window.__firestoreDb || !window.__firestoreAPI) return;
+  try {
+    const { doc, setDoc } = window.__firestoreAPI;
+    await setDoc(doc(window.__firestoreDb, 'bookings', b._docId || b.id), b, { merge: true });
+  } catch(e) { showToast('⚠','Could not update booking — check connection.'); }
+}
+
+async function removeBooking(idx){
+  const b = _bookingsCache[idx];
+  if (!b) return;
+  _bookingsCache.splice(idx, 1);
+  if (!window.__firestoreDb || !window.__firestoreAPI) return;
+  try {
+    const { doc, deleteDoc } = window.__firestoreAPI;
+    await deleteDoc(doc(window.__firestoreDb, 'bookings', b._docId || b.id));
+  } catch(e) { showToast('⚠','Could not delete booking — check connection.'); }
+}
+
+async function renderBookings(){
   const container = document.getElementById('bookings-list');
   if(!container) return;
-  const bookings = getBookings();
+  const bookings = await getBookings();
 
   // Update nav badge
   const badge = document.getElementById('badge-bookings');
@@ -1755,22 +1824,24 @@ function renderBookings(){
     </div>`).join('');
 }
 
-function convertBookingFromData(idx){
-  const b = getBookings()[idx];
+async function convertBookingFromData(idx){
+  const b = _bookingsCache[idx];
   if(!b) return;
   document.getElementById('npName').value = b.name;
   document.getElementById('npService').value = b.service;
   openNewProjectModal();
-  // Mark booking as confirmed
-  const arr = getBookings(); arr[idx].status='Confirmed'; saveBookings(arr); renderBookings();
+  await saveBookingStatus(idx, 'Confirmed');
+  renderBookings();
 }
-function markBookingConfirmed(idx){
-  const arr=getBookings(); arr[idx].status='Confirmed'; saveBookings(arr); renderBookings();
+async function markBookingConfirmed(idx){
+  await saveBookingStatus(idx, 'Confirmed');
+  renderBookings();
   showToast('✓','Booking marked as Confirmed.');
 }
-function deleteBooking(idx){
+async function deleteBooking(idx){
   if(!confirm('Remove this booking?')) return;
-  const arr=getBookings(); arr.splice(idx,1); saveBookings(arr); renderBookings();
+  await removeBooking(idx);
+  renderBookings();
 }
 
 function markAllRead() { showToast('✓', 'All notifications marked as read.'); }
@@ -2121,6 +2192,44 @@ function onAddTypeChange() {
   input.placeholder = placeholders[type] || 'https://...';
 }
 
+// Uploads a file straight from the device to Firebase Storage, then fills
+// the URL field with the resulting download link so "+ Add to Preview"
+// works exactly as before — this just replaces "go host it somewhere and
+// paste the link" with a direct upload.
+async function uploadPreviewFile() {
+  const input  = document.getElementById('addItemFile');
+  const status = document.getElementById('addItemUploadStatus');
+  const file   = input.files && input.files[0];
+  if (!file) return;
+  if (!_editingPreviewData) { showToast('⚠','Open a preview to edit first.'); input.value=''; return; }
+  if (!window.__storageAPI) { status.textContent = 'Upload not available — Storage failed to load.'; input.value=''; return; }
+
+  status.textContent = `Uploading ${file.name}…`;
+  try {
+    const { storage, ref, uploadBytes, getDownloadURL } = window.__storageAPI;
+    const path = `previews/${_editingPreviewData.id}/${Date.now()}_${file.name}`;
+    const fileRef = ref(storage, path);
+    await uploadBytes(fileRef, file);
+    const url = await getDownloadURL(fileRef);
+    document.getElementById('addItemUrl').value = url;
+    // Best-guess the type from the file so the dropdown doesn't need manual fixing
+    const typeSel = document.getElementById('addItemType');
+    if (file.type.startsWith('image/')) typeSel.value = 'image';
+    else if (file.type.startsWith('video/')) typeSel.value = 'video';
+    else if (file.type === 'application/pdf') typeSel.value = 'pdf';
+    onAddTypeChange();
+    if (!document.getElementById('addItemCaption').value) {
+      document.getElementById('addItemCaption').value = file.name.replace(/\.[^.]+$/, '');
+    }
+    status.textContent = `✓ Uploaded — click "+ Add to Preview" to attach it.`;
+  } catch (e) {
+    console.error(e);
+    status.textContent = 'Upload failed: ' + e.message;
+  } finally {
+    input.value = '';
+  }
+}
+
 async function addPreviewItem() {
   const url     = document.getElementById('addItemUrl').value.trim();
   const caption = document.getElementById('addItemCaption').value.trim();
@@ -2272,7 +2381,17 @@ function esc(s) {
 // bookings rendered on page nav and after initDashboard
 
 // ─── MOBILE SIDEBAR ──────────────────────────────────────
-function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarBackdrop').classList.toggle('show');
+}
+// Close the mobile sidebar automatically after picking a page, so the nav
+// doesn't stay open covering the screen once the user has navigated.
+document.addEventListener('click', (e) => {
+  if (window.innerWidth > 860) return;
+  const link = e.target.closest('.sidebar-nav a');
+  if (link) toggleSidebar();
+});
 
 document.querySelectorAll('.modal-overlay').forEach(m => {
   m.addEventListener('click', e => { if (e.target === m) m.classList.remove('open'); });
@@ -2697,6 +2816,7 @@ renderQuoteItems();
   import { getFirestore, collection, doc,
            getDocs, getDoc, setDoc,
            deleteDoc, query, orderBy } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+  import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js';
 
   const app = initializeApp({
     apiKey:            "AIzaSyCyuxzP6OcMNi7MW9cua9ZspvJzAcW-Pjc",
@@ -2709,6 +2829,7 @@ renderQuoteItems();
 
   window.__firestoreDb  = getFirestore(app);
   window.__firestoreAPI = { collection, doc, getDocs, getDoc, setDoc, deleteDoc, query, orderBy };
+  window.__storageAPI   = { storage: getStorage(app), ref, uploadBytes, getDownloadURL };
   console.log('✅ Firestore ready');
 </script>
 </body>

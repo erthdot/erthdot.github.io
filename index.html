@@ -2491,19 +2491,35 @@ function submitBooking(){
   if(!selectedDate){showToast('Please select a date from the calendar.');return;}
   const dateStr=monthNames[currentDate.getMonth()]+' '+selectedDate+', '+currentDate.getFullYear();
 
-  // ── Save booking to localStorage so Creator Dashboard can see it ──
+  // ── Save booking to Firestore so the Creator Dashboard sees it on ANY
+  //    device — localStorage only persisted on the visitor's own phone/
+  //    browser, which the designer's dashboard (a different device) never
+  //    reads, so bookings never actually reached the dashboard before. ──
+  const bookingId = 'BK-'+Date.now();
   const booking = {
-    id: 'BK-'+Date.now(),
+    id: bookingId,
     name, phone, service, brief,
     date: dateStr,
     submittedAt: new Date().toISOString(),
     status: 'Pending'
   };
-  try {
-    const existing = JSON.parse(localStorage.getItem('erthdot_bookings')||'[]');
-    existing.unshift(booking);
-    localStorage.setItem('erthdot_bookings', JSON.stringify(existing));
-  } catch(e){ console.warn('Could not save booking locally:', e); }
+  (async () => {
+    try {
+      if (!window.__firestoreDb || !window.__firestoreAPI) throw new Error('Firestore not ready');
+      const { doc, setDoc } = window.__firestoreAPI;
+      await setDoc(doc(window.__firestoreDb, 'bookings', bookingId), booking);
+    } catch(e) {
+      console.warn('Could not save booking to Firestore, falling back to local only:', e);
+      // Fallback so the visitor's own submission isn't silently lost if
+      // Firestore is briefly unreachable — the designer can still recover
+      // it by asking the client, and it avoids a false "success" then loss.
+      try {
+        const existing = JSON.parse(localStorage.getItem('erthdot_bookings')||'[]');
+        existing.unshift(booking);
+        localStorage.setItem('erthdot_bookings', JSON.stringify(existing));
+      } catch(e2){ console.warn('Could not save booking locally either:', e2); }
+    }
+  })();
 
   // Clear form fields
   document.getElementById('bookingName').value='';
@@ -2527,13 +2543,17 @@ let demoProjects = []; // populated by loadLiveProjects(); kept name for min. di
 
 const STATUS_LABELS = {
   progress: 'In Progress',
+  active:   'In Progress',   // dashboard writes 'active' — same meaning as 'progress'
   review:   'Final Review',
-  done:     'Completed'
+  done:     'Completed',
+  complete: 'Completed'      // dashboard writes 'complete' — same meaning as 'done'
 };
 const STATUS_COLORS = {
   progress: 'var(--green-light)',
+  active:   'var(--green-light)',
   review:   'var(--gold)',
-  done:     'var(--green-light)'
+  done:     'var(--green-light)',
+  complete: 'var(--green-light)'
 };
 
 function mapPreviewToSlide(p) {
@@ -2834,7 +2854,7 @@ document.querySelectorAll('.modal-overlay').forEach(m=>{
      above reads real, live projects instead of demo data -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-  import { getFirestore, collection, doc, getDocs, getDoc, query, orderBy }
+  import { getFirestore, collection, doc, getDocs, getDoc, setDoc, addDoc, query, orderBy }
     from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
   const app = initializeApp({
@@ -2847,7 +2867,7 @@ document.querySelectorAll('.modal-overlay').forEach(m=>{
   });
 
   window.__firestoreDb  = getFirestore(app);
-  window.__firestoreAPI = { collection, doc, getDocs, getDoc, query, orderBy };
+  window.__firestoreAPI = { collection, doc, getDocs, getDoc, setDoc, addDoc, query, orderBy };
   window.dispatchEvent(new Event("firestoreReady"));
 </script>
 </body>
