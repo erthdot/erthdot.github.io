@@ -42,7 +42,15 @@
 <link rel="icon" type="image/png" sizes="32x32" href="https://erthdot.com/favicon-32.png">
 <link rel="icon" type="image/png" sizes="16x16" href="https://erthdot.com/favicon-16.png">
 <link rel="apple-touch-icon" sizes="180x180" href="https://erthdot.com/apple-touch-icon.png">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Montserrat';font-style:normal;font-weight:300;font-display:swap;src:url('/fonts/montserrat-latin-300-normal.woff2') format('woff2');}
+@font-face{font-family:'Montserrat';font-style:italic;font-weight:300;font-display:swap;src:url('/fonts/montserrat-latin-300-italic.woff2') format('woff2');}
+@font-face{font-family:'Montserrat';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/montserrat-latin-400-normal.woff2') format('woff2');}
+@font-face{font-family:'Montserrat';font-style:normal;font-weight:500;font-display:swap;src:url('/fonts/montserrat-latin-500-normal.woff2') format('woff2');}
+@font-face{font-family:'Montserrat';font-style:normal;font-weight:600;font-display:swap;src:url('/fonts/montserrat-latin-600-normal.woff2') format('woff2');}
+@font-face{font-family:'Montserrat';font-style:normal;font-weight:700;font-display:swap;src:url('/fonts/montserrat-latin-700-normal.woff2') format('woff2');}
+@font-face{font-family:'Bebas Neue';font-style:normal;font-weight:400;font-display:swap;src:url('/fonts/bebas-neue-latin-400-normal.woff2') format('woff2');}
+</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <style>
 :root{
@@ -92,7 +100,7 @@ html[data-theme="light"] #themeToggle .icon-moon{opacity:0;transform:rotate(90de
 .pkg-badge{
   display:inline-flex;align-items:center;gap:6px;
   background:var(--pkg-bg);
-  color:var(--pkg-text);font-family:'Space Mono',monospace;font-weight:700;
+  color:var(--pkg-text);font-family:'Montserrat',sans-serif;font-weight:700;
   font-size:11px;letter-spacing:1.5px;text-transform:uppercase;
   padding:5px 12px 5px 10px;border-radius:20px;
   border:1px solid var(--green-light);
@@ -102,7 +110,7 @@ html[data-theme="light"] #themeToggle .icon-moon{opacity:0;transform:rotate(90de
 .pkg-badge::before{content:'◆';font-size:8px;color:var(--green-light);}
 *{margin:0;padding:0;box-sizing:border-box;}
 html{scroll-behavior:smooth;}
-body{font-family:'DM Sans',sans-serif;background:var(--black);color:var(--text);overflow-x:hidden;}
+body{font-family:'Montserrat',sans-serif;background:var(--black);color:var(--text);overflow-x:hidden;line-height:1.6;}
 ::-webkit-scrollbar{width:3px;}
 ::-webkit-scrollbar-track{background:var(--black);}
 ::-webkit-scrollbar-thumb{background:var(--green);border-radius:2px;}
@@ -156,19 +164,21 @@ nav.nav-hidden{opacity:0;top:-80px;pointer-events:none;}
 }
 .nav-links a:hover{color:var(--green-light);}
 .nav-links a:hover::after{width:100%;}
+.nav-links a.active{color:var(--green-light);}
+.nav-links a.active::after{width:100%;}
 .nav-right{display:flex;align-items:center;gap:10px;}
 .nav-cta{
   background:var(--green);color:#fff;padding:9px 22px;
   border-radius:4px;font-size:13px;font-weight:500;cursor:pointer;
   border:none;letter-spacing:.5px;transition:all .25s;
-  font-family:'DM Sans',sans-serif;
+  font-family:'Montserrat',sans-serif;
 }
 .nav-cta:hover{background:var(--green-light);transform:translateY(-1px);}
 .nav-creator-btn{
   background:transparent;color:var(--text-muted);padding:9px 16px;
   border-radius:4px;font-size:12px;cursor:pointer;
   border:1px solid var(--border);letter-spacing:.5px;transition:all .25s;
-  font-family:'DM Sans',sans-serif;
+  font-family:'Montserrat',sans-serif;
 }
 .nav-creator-btn:hover{border-color:var(--green);color:var(--green-light);}
 .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px;}
@@ -208,7 +218,7 @@ nav.nav-hidden{opacity:0;top:-80px;pointer-events:none;}
 }
 .hero-inner{max-width:1100px;width:100%;position:relative;z-index:1;}
 .hero-eyebrow{
-  font-family:'Space Mono',monospace;font-size:12px;color:var(--green-light);
+  font-family:'Montserrat',sans-serif;font-size:12px;color:var(--green-light);
   letter-spacing:5px;text-transform:uppercase;margin-bottom:22px;
   display:flex;align-items:center;gap:14px;
   animation:eyebrowIn .8s .1s ease both;
@@ -241,7 +251,7 @@ nav.nav-hidden{opacity:0;top:-80px;pointer-events:none;}
   padding:14px 34px;border-radius:4px;font-size:13px;font-weight:600;
   cursor:pointer;border:none;letter-spacing:.5px;
   transition:all .25s;text-decoration:none;display:inline-block;
-  font-family:'DM Sans',sans-serif;
+  font-family:'Montserrat',sans-serif;
   position:relative;overflow:hidden;
 }
 .btn-primary::after{
@@ -256,7 +266,7 @@ nav.nav-hidden{opacity:0;top:-80px;pointer-events:none;}
   padding:14px 34px;border-radius:4px;font-size:13px;font-weight:500;
   cursor:pointer;border:1px solid var(--border);letter-spacing:.5px;
   transition:all .25s;text-decoration:none;display:inline-block;
-  font-family:'DM Sans',sans-serif;
+  font-family:'Montserrat',sans-serif;
 }
 .btn-secondary:hover{border-color:var(--green);color:var(--green-light);transform:translateY(-2px);}
 .hero-stats{
@@ -284,12 +294,12 @@ nav.nav-hidden{opacity:0;top:-80px;pointer-events:none;}
 .cal-await{animation:calAwait 2.6s ease;border-color:var(--green) !important;}
 @keyframes calLabelBounce{0%,100%{transform:translateY(0);}25%{transform:translateY(-4px);}50%{transform:translateY(0);}75%{transform:translateY(-2px);}}
 .cal-await .cal-month{animation:calLabelBounce .6s ease .5s 2;color:var(--green-light);transition:color .3s;}
-.scroll-text{font-family:'Space Mono',monospace;font-size:9px;color:var(--text-muted);letter-spacing:3px;text-transform:uppercase;}
+.scroll-text{font-family:'Montserrat',sans-serif;font-size:12px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;}
 
 /* SECTIONS */
-section{padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);}
+section{padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);scroll-margin-top:84px;}
 .section-inner{max-width:1100px;margin:0 auto;width:100%;}
-.section-label{font-family:'Space Mono',monospace;font-size:10px;color:var(--green);letter-spacing:5px;text-transform:uppercase;margin-bottom:14px;}
+.section-label{font-family:'Montserrat',sans-serif;font-size:13px;color:var(--green);letter-spacing:2px;text-transform:uppercase;margin-bottom:14px;}
 .section-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(34px,4.5vw,64px);color:var(--white);letter-spacing:1px;margin-bottom:16px;}
 .section-sub{font-size:clamp(14px,1.2vw,16px);color:var(--text-muted);max-width:540px;line-height:1.75;margin-bottom:clamp(32px,4vw,56px);}
 
@@ -298,7 +308,7 @@ section{padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);}
 .tab{
   padding:12px 26px;background:none;border:none;border-bottom:2px solid transparent;
   color:var(--text-muted);font-size:12px;cursor:pointer;
-  font-family:'DM Sans',sans-serif;letter-spacing:.5px;margin-bottom:-1px;
+  font-family:'Montserrat',sans-serif;letter-spacing:.5px;margin-bottom:-1px;
   transition:all .25s;white-space:nowrap;
 }
 .tab.active{color:var(--green-light);border-bottom-color:var(--green);}
@@ -327,7 +337,7 @@ section{padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);}
   }
   .tab{
     scroll-snap-align:start;
-    font-size:11px;
+    font-size:13px;
     padding:10px 18px;
     /* subtle separator between tabs on mobile */
     border-right:1px solid var(--w05);
@@ -390,13 +400,17 @@ section{padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);}
 /* SVG icons inside svc-icon */
 .svc-icon svg{width:20px;height:20px;stroke:var(--green-light);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
 .svc-name{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;color:var(--white);margin-bottom:8px;}
-.svc-desc{font-size:13px;color:var(--text-muted);line-height:1.65;margin-bottom:20px;}
-.svc-price{font-family:'Space Mono',monospace;font-size:20px;color:var(--green-light);font-weight:700;}
-.svc-price small{font-size:12px;color:var(--text-muted);font-family:'DM Sans',sans-serif;display:block;margin-top:2px;}
+.svc-desc{font-size:14.5px;color:var(--text-muted);line-height:1.65;margin-bottom:20px;}
+.svc-list{list-style:none;padding:0;margin:0 0 8px;display:flex;flex-direction:column;gap:6px;}
+.svc-list li{font-size:14px;color:var(--text-muted);line-height:1.5;padding-left:15px;position:relative;}
+.svc-list li::before{content:'—';position:absolute;left:0;color:var(--green-light);}
+.svc-tagline{display:block;font-size:13px;color:var(--text-dim,var(--text-muted));font-style:italic;}
+.svc-price{font-family:'Montserrat',sans-serif;font-size:20px;color:var(--green-light);font-weight:700;}
+.svc-price small{font-size:12px;color:var(--text-muted);font-family:'Montserrat',sans-serif;display:block;margin-top:2px;}
 .svc-btn{
   margin-top:20px;width:100%;padding:10px;background:var(--green);
   color:#fff;border:none;border-radius:4px;font-size:13px;
-  cursor:pointer;transition:background .2s;font-family:'DM Sans',sans-serif;letter-spacing:.3px;
+  cursor:pointer;transition:background .2s;font-family:'Montserrat',sans-serif;letter-spacing:.3px;
 }
 .svc-btn:hover{background:var(--green-light);}
 .bestseller{
@@ -419,7 +433,7 @@ section{padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);}
 }
 .cal-nav button:hover{border-color:var(--green);color:var(--green-light);}
 .cal-days-header{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;margin-bottom:8px;}
-.cal-days-header span{font-size:10px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;padding:8px 0;}
+.cal-days-header span{font-size:11px;color:var(--text-muted);letter-spacing:1px;text-transform:uppercase;padding:8px 0;}
 .cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
 .cal-day{
   aspect-ratio:1;display:flex;flex-direction:column;align-items:center;
@@ -431,7 +445,7 @@ section{padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);}
 .cal-day.booked{background:var(--w02);color:#3a3a3a;cursor:not-allowed;}
 .cal-day.selected{background:var(--green);color:#fff;}
 .slot-dot{width:4px;height:4px;border-radius:50%;margin-top:2px;}
-.booking-legend{display:flex;gap:16px;margin-top:16px;font-size:13px;color:var(--text-muted);flex-wrap:wrap;}
+.booking-legend{display:flex;gap:16px;margin-top:16px;font-size:14px;color:var(--text-muted);flex-wrap:wrap;}
 .legend-item{display:flex;align-items:center;gap:6px;}
 .legend-dot{width:7px;height:7px;border-radius:50%;}
 .form-group{margin-bottom:18px;}
@@ -439,7 +453,7 @@ section{padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);}
 .form-input,.form-select,.form-textarea{
   width:100%;padding:12px 16px;background:var(--w04);
   border:1px solid var(--border);border-radius:5px;color:var(--text);
-  font-family:'DM Sans',sans-serif;font-size:14px;transition:border-color .2s,background .2s;
+  font-family:'Montserrat',sans-serif;font-size:14px;transition:border-color .2s,background .2s;
 }
 .form-input:focus,.form-select:focus,.form-textarea:focus{
   outline:none;border-color:var(--green);background:rgba(26,122,74,.04);
@@ -449,7 +463,7 @@ section{padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);}
 .date-selected{
   padding:11px 14px;background:rgba(26,122,74,.1);
   border:1px solid var(--green-dark);border-radius:5px;font-size:13px;
-  color:var(--green-light);margin-bottom:16px;font-family:'Space Mono',monospace;
+  color:var(--green-light);margin-bottom:16px;font-family:'Montserrat',sans-serif;
   display:none;
 }
 
@@ -462,7 +476,7 @@ section{padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);}
   display:flex;align-items:center;justify-content:space-between;
   gap:12px;overflow:hidden;
 }
-.tracker-id{font-family:'Space Mono',monospace;font-size:12px;color:var(--green-light);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px;}
+.tracker-id{font-family:'Montserrat',sans-serif;font-size:12px;color:var(--green-light);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px;}
 .tracker-status{font-size:12px;padding:4px 12px;background:rgba(26,122,74,.3);border:1px solid var(--green);border-radius:20px;color:var(--green-light);}
 .tracker-body{padding:28px;}
 .progress-label{display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px;}
@@ -486,13 +500,13 @@ section{padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);}
 .stage-icon.done svg{stroke:white;}
 .stage-icon.pending{background:var(--w04);border:1px solid var(--border);}
 .stage-name{font-size:13px;font-weight:500;}
-.stage-date{margin-left:auto;font-size:11px;color:var(--text-muted);font-family:'Space Mono',monospace;}
+.stage-date{margin-left:auto;font-size:12px;color:var(--text-muted);font-family:'Montserrat',sans-serif;}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(26,122,74,.4)}50%{box-shadow:0 0 0 8px rgba(26,122,74,0)}}
 .tracker-actions{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap;}
 .tracker-btn{
   padding:9px 16px;background:rgba(26,122,74,.1);border:1px solid rgba(26,122,74,.35);
   border-radius:4px;color:var(--green-light);font-size:13px;cursor:pointer;
-  display:flex;align-items:center;gap:7px;transition:.2s;font-family:'DM Sans',sans-serif;
+  display:flex;align-items:center;gap:7px;transition:.2s;font-family:'Montserrat',sans-serif;
 }
 .tracker-btn:hover{background:rgba(26,122,74,.2);}
 .tracker-btn svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
@@ -501,10 +515,10 @@ section{padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);}
   background:var(--w02);border:1px solid var(--border);
   border-radius:5px;margin-top:12px;
 }
-.link-url{font-family:'Space Mono',monospace;font-size:12px;color:var(--text-muted);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.copy-btn{background:var(--green);color:#fff;border:none;padding:7px 14px;border-radius:4px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;transition:background .2s;}
+.link-url{font-family:'Montserrat',sans-serif;font-size:12px;color:var(--text-muted);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.copy-btn{background:var(--green);color:#fff;border:none;padding:7px 14px;border-radius:4px;font-size:12px;cursor:pointer;white-space:nowrap;font-family:'Montserrat',sans-serif;transition:background .2s;}
 .copy-btn:hover{background:var(--green-light);}
-.expiry{margin-top:10px;font-size:11px;color:var(--text-muted);font-family:'Space Mono',monospace;padding:7px 12px;background:var(--w02);border-radius:4px;}
+.expiry{margin-top:10px;font-size:12px;color:var(--text-muted);font-family:'Montserrat',sans-serif;padding:7px 12px;background:var(--w02);border-radius:4px;}
 .tracker-lookup{
   background:var(--dark-card);border:1px solid var(--border);
   border-radius:8px;padding:36px;
@@ -514,7 +528,7 @@ section{padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);}
   border-radius:6px;border:1px solid rgba(26,122,74,.2);margin-top:24px;
 }
 .pwa-note-title{font-size:13px;color:var(--green-light);margin-bottom:7px;font-weight:600;}
-.pwa-note p{font-size:13px;color:var(--text-muted);line-height:1.65;}
+.pwa-note p{font-size:14px;color:var(--text-muted);line-height:1.65;}
 
 /* PROJECT SLIDER */
 .proj-slider-wrap{position:relative;min-width:0;overflow:hidden;}
@@ -523,7 +537,7 @@ section{padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);}
   margin-bottom:16px;
 }
 .proj-counter{
-  font-family:'Space Mono',monospace;font-size:12px;color:var(--text-muted);letter-spacing:2px;
+  font-family:'Montserrat',sans-serif;font-size:12px;color:var(--text-muted);letter-spacing:2px;
 }
 .proj-nav{display:flex;gap:8px;}
 .proj-nav-btn{
@@ -574,7 +588,7 @@ section{padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);}
 .step-num{font-family:'Bebas Neue',sans-serif;font-size:48px;color:rgba(26,122,74,.18);line-height:1;margin-bottom:12px;transition:color .25s;}
 .process-step:hover .step-num{color:rgba(26,122,74,.4);}
 .step-title{font-size:13px;font-weight:700;margin-bottom:7px;color:var(--white);}
-.step-desc{font-size:13px;color:var(--text-muted);line-height:1.6;}
+.step-desc{font-size:14.5px;color:var(--text-muted);line-height:1.6;}
 
 /* ── MODALS ── */
 .modal-overlay{
@@ -623,22 +637,22 @@ section{padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);}
 }
 .pkg-option:hover,.pkg-option.selected{background:rgba(26,122,74,.1);border-color:var(--green);}
 .pkg-name{font-weight:500;font-size:14px;}
-.pkg-price{margin-left:auto;font-family:'Space Mono',monospace;font-size:13px;color:var(--green-light);}
+.pkg-price{margin-left:auto;font-family:'Montserrat',sans-serif;font-size:13px;color:var(--green-light);}
 .quote-total{
   background:rgba(26,122,74,.08);border:1px solid var(--green-dark);
   border-radius:6px;padding:20px;margin:20px 0;text-align:center;
 }
 .quote-amt{font-family:'Bebas Neue',sans-serif;font-size:52px;color:var(--green-light);letter-spacing:1px;}
-.quote-sub{font-size:13px;color:var(--text-muted);}
+.quote-sub{font-size:14px;color:var(--text-muted);}
 
 /* FOOTER */
 footer{background:var(--off-black);border-top:1px solid var(--border);padding:60px 44px 32px;}
 .footer-inner{max-width:1100px;margin:0 auto;}
 .footer-top{display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:48px;margin-bottom:48px;}
 .footer-brand span{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:3px;color:var(--white);display:block;margin-bottom:12px;}
-.footer-brand p{font-size:13px;color:var(--text-muted);line-height:1.75;max-width:230px;}
-.footer-col h4{font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--green-light);margin-bottom:18px;}
-.footer-col a{display:block;font-size:13px;color:var(--text-muted);text-decoration:none;margin-bottom:10px;transition:color .2s;}
+.footer-brand p{font-size:14px;color:var(--text-muted);line-height:1.75;max-width:230px;}
+.footer-col h4{font-size:13px;letter-spacing:2px;text-transform:uppercase;color:var(--green-light);margin-bottom:18px;}
+.footer-col a{display:block;font-size:14px;color:var(--text-muted);text-decoration:none;margin-bottom:10px;transition:color .2s;}
 .footer-col a:hover{color:var(--white);}
 .footer-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:24px;border-top:1px solid var(--border);font-size:13px;color:var(--text-muted);flex-wrap:wrap;gap:12px;}
 .tag{display:inline-block;padding:3px 10px;background:rgba(26,122,74,.14);border:1px solid rgba(26,122,74,.3);border-radius:20px;font-size:12px;color:var(--green-light);margin-right:5px;margin-bottom:5px;}
@@ -662,8 +676,8 @@ footer{background:var(--off-black);border-top:1px solid var(--border);padding:60
 }
 .ala-card:hover{border-color:var(--green-dark);}
 .ala-name{font-weight:600;font-size:14px;margin-bottom:4px;}
-.ala-desc{font-size:13px;color:var(--text-muted);margin-bottom:8px;}
-.ala-price{font-family:'Space Mono',monospace;font-size:15px;color:var(--green-light);}
+.ala-desc{font-size:14px;color:var(--text-muted);margin-bottom:8px;}
+.ala-price{font-family:'Montserrat',sans-serif;font-size:15px;color:var(--green-light);}
 
 /* RESPONSIVE */
 @media(max-width:1200px){
@@ -721,6 +735,7 @@ function toggleTheme(){
     <span class="nav-brand">ERTHDOT</span>
   </a>
   <ul class="nav-links">
+    <li><a href="#gallery">Work</a></li>
     <li><a href="#services">Services</a></li>
     <li><a href="#book">Book</a></li>
     <li><a href="#tracker">Track Project</a></li>
@@ -740,6 +755,7 @@ function toggleTheme(){
 <!-- MOBILE MENU -->
 <div class="mobile-menu" id="mobileMenu">
   <button class="mobile-menu-close" onclick="toggleMobileMenu()">&#10005;</button>
+  <a href="#gallery" onclick="toggleMobileMenu()">Work</a>
   <a href="#services" onclick="toggleMobileMenu()">Services</a>
   <a href="#book" onclick="toggleMobileMenu()">Book</a>
   <a href="#tracker" onclick="toggleMobileMenu()">Track Project</a>
@@ -760,299 +776,6 @@ function toggleTheme(){
       <button class="btn-secondary" onclick="openQuoteModal()">Build My Quote &rarr;</button>
     </div>
     <div class="hero-stats"><div><div class="stat-num">150+</div><div class="stat-label">Brands Created</div></div><div><div class="stat-num">48hr</div><div class="stat-label">Avg Turnaround</div></div><div><div class="stat-num">4</div><div class="stat-label">Service Tiers</div></div><div><div class="stat-num">K800</div><div class="stat-label">Starting From</div></div></div>
-</section>
-
-<!-- SERVICES -->
-<section id="services" style="background:var(--off-black);">
-  <div class="section-inner">
-    <div class="section-label reveal">What We Offer</div>
-    <h2 class="section-title reveal">Pick Your Package</h2>
-    <p class="section-sub reveal">Choose a service below to instantly get a quote and book your slot.</p>
-    <div class="tabs-wrap">
-    <div class="tabs">
-      <button class="tab active" onclick="switchTab('logos',this)">Logo Design</button>
-      <button class="tab" onclick="switchTab('brandkits',this)">Company Brand Kits</button>
-      <button class="tab" onclick="switchTab('social',this)">Social Media Mgmt</button>
-    </div>
-    </div>
-
-    <!-- LOGOS -->
-    <div id="tab-logos" class="tab-content active">
-      <div class="services-grid">
-        <div class="svc-card" onclick="selectPackage('logo','Identity Lite','K1,500',1500)" onmousemove="cardGlow(event,this)">
-          <div class="svc-icon">
-            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          </div>
-          <div class="svc-name">Identity Lite</div>
-          <div class="svc-desc">2 primary logo concepts, high-res PNG/JPG, basic color palette, 2 revisions. Perfect for individuals and side projects.</div>
-          <div class="svc-price">K1,500 <small>USD $76 &middot; Feb 2026</small></div>
-          <button class="svc-btn">Select &amp; Book &rarr;</button>
-        </div>
-        <div class="svc-card" onclick="selectPackage('logo','Startup Foundation','K4,000',4000)" onmousemove="cardGlow(event,this)">
-          <div class="bestseller">&#9733; Best Seller</div>
-          <div class="svc-icon">
-            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-          </div>
-          <div class="svc-name">Startup Foundation</div>
-          <div class="svc-desc">3 logo concepts + variations, vector files (AI/SVG/PDF), company profile, social media starter pack, 4 revisions.</div>
-          <div class="svc-price">K4,000 <small>USD $200 &middot; Feb 2026</small></div>
-          <button class="svc-btn">Select &amp; Book &rarr;</button>
-        </div>
-        <div class="svc-card" onclick="selectPackage('logo','Corporate Growth Suite','K9,500',9500)" onmousemove="cardGlow(event,this)">
-          <div class="svc-icon">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-          </div>
-          <div class="svc-name">Corporate Growth Suite</div>
-          <div class="svc-desc">Multiple premium concepts, full communication set, letterhead, email signature, biz card, social media brand kit, mini style guide, 6 revisions.</div>
-          <div class="svc-price">K9,500 <small>USD $486 &middot; Feb 2026</small></div>
-          <button class="svc-btn">Select &amp; Book &rarr;</button>
-        </div>
-        <div class="svc-card" onclick="selectPackage('logo','Elite Executive','K17,500',17500)" onmousemove="cardGlow(event,this)">
-          <div class="svc-icon">
-            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
-          </div>
-          <div class="svc-name">Elite Executive</div>
-          <div class="svc-desc">Everything pack — all logo variants, full corporate stationery, comprehensive brand bible (15+ pages), 30 days social media management, basic website.</div>
-          <div class="svc-price">K17,500+ <small>USD $895+ &middot; Feb 2026</small></div>
-          <button class="svc-btn">Select &amp; Book &rarr;</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- BRAND KITS -->
-    <div id="tab-brandkits" class="tab-content">
-      <div class="services-grid">
-        <div class="svc-card" onclick="selectPackage('brandkit','Foundation Kit','K800',800)" onmousemove="cardGlow(event,this)">
-          <div class="svc-icon">
-            <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-          </div>
-          <div class="svc-name">Foundation Kit</div>
-          <div class="svc-desc">Professional logo design + business card design (front &amp; back). The essential starter.</div>
-          <div class="svc-price">K800 <small>Local price</small></div>
-          <button class="svc-btn">Select &amp; Book &rarr;</button>
-        </div>
-        <div class="svc-card" onclick="selectPackage('brandkit','Professional Kit','K1,600',1600)" onmousemove="cardGlow(event,this)">
-          <div class="svc-icon">
-            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          </div>
-          <div class="svc-name">Professional Kit</div>
-          <div class="svc-desc">Company profile design (up to 4 pages) + letterhead design (digital-ready).</div>
-          <div class="svc-price">K1,600 <small>Local price</small></div>
-          <button class="svc-btn">Select &amp; Book &rarr;</button>
-        </div>
-        <div class="svc-card" onclick="selectPackage('brandkit','Identity Kit','K2,300',2300)" onmousemove="cardGlow(event,this)">
-          <div class="bestseller">Popular</div>
-          <div class="svc-icon">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
-          </div>
-          <div class="svc-name">Identity Kit</div>
-          <div class="svc-desc">Professional logo design + company profile design (up to 4 pages).</div>
-          <div class="svc-price">K2,300 <small>Local price</small></div>
-          <button class="svc-btn">Select &amp; Book &rarr;</button>
-        </div>
-        <div class="svc-card" onclick="selectPackage('brandkit','Full Suite Kit','K3,500',3500)" onmousemove="cardGlow(event,this)">
-          <div class="svc-icon">
-            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          </div>
-          <div class="svc-name">Full Suite Kit</div>
-          <div class="svc-desc">Professional logo + company profile (4 pages) + complete stationery documentation set.</div>
-          <div class="svc-price">K3,500 <small>Local price</small></div>
-          <button class="svc-btn">Select &amp; Book &rarr;</button>
-        </div>
-      </div>
-      <div style="margin-top:20px;padding:20px;background:var(--dark-card);border:1px solid var(--border);border-radius:8px;">
-        <h4 style="font-size:14px;color:var(--white);margin-bottom:14px;">Stationery &Agrave; La Carte</h4>
-        <div class="ala-grid">
-          <div class="ala-card"><div class="ala-name">Stationery Quick-Pack</div><div class="ala-desc">Biz Card + Letterhead + Receipt + Invoice + Quotation + 1 Extra</div><div class="ala-price">K350</div></div>
-          <div class="ala-card"><div class="ala-name">Business Card Design</div><div class="ala-desc">Front &amp; back, print-ready files</div><div class="ala-price">K150</div></div>
-          <div class="ala-card"><div class="ala-name">Letterhead / Invoice / Quote</div><div class="ala-desc">Per item, price varies</div><div class="ala-price">Enquire</div></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- SOCIAL -->
-    <div id="tab-social" class="tab-content">
-      <div class="services-grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr));">
-        <div class="svc-card" onclick="selectPackage('social','Starter Sprint','K5,000',5000)" onmousemove="cardGlow(event,this)">
-          <div class="svc-icon">
-            <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
-          </div>
-          <div class="svc-name">Starter Sprint</div>
-          <div class="svc-desc">1 month &middot; 12 Posts + 2 Reels &middot; Up to 2 platforms &middot; Audit &amp; content calendar &middot; Scheduling &amp; posting &middot; Monthly analytics.</div>
-          <div class="svc-price">K5,000 <small>1 month &middot; April 2026</small></div>
-          <button class="svc-btn">Select &amp; Book &rarr;</button>
-        </div>
-        <div class="svc-card" onclick="selectPackage('social','Growth Momentum','K9,400',9400)" onmousemove="cardGlow(event,this)">
-          <div class="bestseller">Save K600</div>
-          <div class="svc-icon">
-            <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
-          </div>
-          <div class="svc-name">Growth Momentum</div>
-          <div class="svc-desc">2 months &middot; 16 Posts + 4 Reels + 10 Stories &middot; Up to 3 platforms &middot; Action plan &amp; brand theme &middot; Community engagement.</div>
-          <div class="svc-price">K9,400 <small>2 months &mdash; save K600</small></div>
-          <button class="svc-btn">Select &amp; Book &rarr;</button>
-        </div>
-        <div class="svc-card" onclick="selectPackage('social','Market Authority','K17,000',17000)" onmousemove="cardGlow(event,this)">
-          <div class="bestseller">Save K3,000</div>
-          <div class="svc-icon">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          </div>
-          <div class="svc-name">Market Authority</div>
-          <div class="svc-desc">4 months &middot; 22 Posts + 8 Reels + 15 Stories &middot; Up to 4 platforms &middot; Full multi-channel strategy &middot; Priority design &amp; revisions.</div>
-          <div class="svc-price">K17,000 <small>4 months &mdash; save K3,000</small></div>
-          <button class="svc-btn">Select &amp; Book &rarr;</button>
-        </div>
-      </div>
-      <div style="margin-top:16px;padding:16px 20px;background:var(--dark-card);border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text-muted);">
-        <strong style="color:var(--green-light);">Ad Boosting:</strong> Standard (you pay Meta directly) or Managed Budget (K2,000 advance, we handle distribution). Contact <strong style="color:var(--white);">+260971009632</strong>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- BOOKING -->
-<section id="book">
-  <div class="section-inner">
-    <div class="section-label reveal">Book A Slot</div>
-    <h2 class="section-title reveal">Reserve Your Spot</h2>
-    <p class="section-sub reveal">50% deposit secures your booking. Pick a date, choose your service, and we&rsquo;ll get started immediately.</p>
-    <div class="booking-grid">
-      <div class="booking-cal reveal-left">
-        <div class="cal-header">
-          <span class="cal-month" id="calMonthLabel">April 2026</span>
-          <div class="cal-nav">
-            <button onclick="prevMonth()">&#8249;</button>
-            <button onclick="nextMonth()">&#8250;</button>
-          </div>
-        </div>
-        <div class="cal-days-header">
-          <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
-        </div>
-        <div class="cal-days" id="calDays"></div>
-        <div class="booking-legend">
-          <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Available</div>
-          <div class="legend-item"><div class="legend-dot" style="background:#2a2a2a"></div>Booked</div>
-          <div class="legend-item"><div class="legend-dot" style="border:1px solid var(--green);background:none;"></div>Today</div>
-        </div>
-      </div>
-      <div class="booking-form reveal-right">
-        <h3 style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;margin-bottom:22px;">Your Details</h3>
-        <div id="selectedDateDisplay" class="date-selected"></div>
-        <div class="form-group">
-          <label class="form-label">Full Name</label>
-          <input type="text" class="form-input" placeholder="e.g. Chanda Mwale" id="bookingName">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Phone / WhatsApp</label>
-          <input type="tel" class="form-input" placeholder="+260 9XX XXX XXX" id="bookingPhone">
-        </div>
-        <div class="form-group">
-          <label class="form-label">Service</label>
-          <select class="form-select" id="bookingService">
-            <option value="">&#8212; Select a Service &#8212;</option>
-            <option>Logo: Identity Lite &mdash; K1,500</option>
-            <option>Logo: Startup Foundation &mdash; K4,000</option>
-            <option>Logo: Corporate Growth Suite &mdash; K9,500</option>
-            <option>Logo: Elite Executive &mdash; K17,500</option>
-            <option>Brand Kit: Foundation Kit &mdash; K800</option>
-            <option>Brand Kit: Professional Kit &mdash; K1,600</option>
-            <option>Brand Kit: Identity Kit &mdash; K2,300</option>
-            <option>Brand Kit: Full Suite Kit &mdash; K3,500</option>
-            <option>Social: Starter Sprint &mdash; K5,000</option>
-            <option>Social: Growth Momentum &mdash; K9,400</option>
-            <option>Social: Market Authority &mdash; K17,000</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label class="form-label">Brief / Notes (optional)</label>
-          <textarea class="form-textarea" placeholder="Tell us about your brand, industry, style preferences..." id="bookingBrief"></textarea>
-        </div>
-        <button class="btn-primary" style="width:100%;" onclick="submitBooking()">Confirm Booking &rarr;</button>
-        <p style="font-size:13px;color:var(--text-muted);margin-top:12px;text-align:center;">WhatsApp confirmation &amp; payment details within 30 min.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- TRACKER -->
-<section id="tracker" style="background:var(--off-black);">
-  <div class="section-inner">
-    <div class="section-label reveal">Client Portal</div>
-    <h2 class="section-title reveal">Track Your Project</h2>
-    <p class="section-sub reveal">Each project gets its own live link. Switch between active projects using the slider below, or enter your code to jump straight to yours.</p>
-
-    <div class="tracker-section">
-      <!-- LEFT: Multi-project slider -->
-      <div class="reveal-left">
-        <div class="proj-slider-wrap">
-          <!-- Thumbnail strip — quick-jump between projects -->
-          <div class="proj-thumb-strip" id="projThumbStrip"></div>
-
-          <!-- Slider header: counter + arrows -->
-          <div class="proj-slider-header">
-            <span class="proj-counter" id="projCounter">1 / 3</span>
-            <div style="display:flex;align-items:center;gap:12px;">
-              <div class="proj-dots" id="projDots"></div>
-              <div class="proj-nav">
-                <button class="proj-nav-btn" id="projPrev" onclick="slideProject(-1)" title="Previous project">
-                  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
-                </button>
-                <button class="proj-nav-btn" id="projNext" onclick="slideProject(1)" title="Next project">
-                  <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Slider viewport -->
-          <div class="proj-slider-viewport">
-            <div class="proj-slider-track" id="projSliderTrack">
-              <!-- Slides injected by JS -->
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- RIGHT: Lookup -->
-      <div class="reveal-right" style="position:sticky;top:88px;">
-        <p style="font-size:11px;color:var(--text-muted);letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;">Access Your Project</p>
-        <div class="tracker-lookup">
-          <h3 style="font-family:'Bebas Neue',sans-serif;font-size:28px;margin-bottom:8px;">Find Your Project</h3>
-          <p style="font-size:14px;color:var(--text-muted);margin-bottom:26px;">Enter the code from your booking confirmation, or the phone number you used to book.</p>
-          <div class="form-group">
-            <label class="form-label">Project Code</label>
-            <input type="text" class="form-input" placeholder="e.g. ERT-2604-007" id="projectCodeInput">
-          </div>
-          <button class="btn-primary" style="width:100%;margin-bottom:14px;" onclick="lookupProject()">View My Project &rarr;</button>
-          <div style="text-align:center;color:var(--text-muted);font-size:13px;margin-bottom:14px;">&mdash; or &mdash;</div>
-          <div class="form-group">
-            <label class="form-label">Phone Number Used to Book</label>
-            <input type="tel" class="form-input" placeholder="+260 9XX XXX XXX" id="trackPhone">
-          </div>
-          <button class="btn-secondary" style="width:100%;margin-bottom:24px;" onclick="sendOTP()">Send My Link via WhatsApp</button>
-          <div class="pwa-note">
-            <div class="pwa-note-title">Add Project to Your Phone</div>
-            <p>Your tracker link works as an app. On mobile, open the link then tap <strong style="color:var(--white);">Share &rarr; Add to Home Screen</strong>. No app store needed. The shortcut removes itself when your project is confirmed complete.</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- PROCESS -->
-<section id="process">
-  <div class="section-inner">
-    <div class="section-label reveal">How It Works</div>
-    <h2 class="section-title reveal">Simple. Fast. Professional.</h2>
-    <div class="process-steps reveal">
-      <div class="process-step"><div class="step-num">01</div><div class="step-title">Pick &amp; Quote</div><div class="step-desc">Choose your package and get an instant quote breakdown.</div></div>
-      <div class="process-step"><div class="step-num">02</div><div class="step-title">Book &amp; Deposit</div><div class="step-desc">Select a slot. 50% deposit secures your spot immediately.</div></div>
-      <div class="process-step"><div class="step-num">03</div><div class="step-title">Track Live</div><div class="step-desc">Get your personal project link. Monitor real-time progress.</div></div>
-      <div class="process-step"><div class="step-num">04</div><div class="step-title">Review &amp; Revise</div><div class="step-desc">Revisions included. Approve each stage before we proceed.</div></div>
-      <div class="process-step"><div class="step-num">05</div><div class="step-title">Delivered</div><div class="step-desc">Final files emailed. Balance paid. Tracker link archived.</div></div>
-    </div>
-  </div>
 </section>
 
 <!-- ══════════ PROJECTS GALLERY ══════════ -->
@@ -1111,7 +834,7 @@ function toggleTheme(){
 }
 .gal-ticker{
   display:inline-flex;gap:28px;align-items:center;
-  font-family:'Space Mono',monospace;font-size:10px;
+  font-family:'Montserrat',sans-serif;font-size:12px;
   letter-spacing:3px;color:var(--text-muted);
   animation:galTick 22s linear infinite;
 }
@@ -1181,7 +904,7 @@ function toggleTheme(){
   width:100%;padding:22px 24px;
 }
 .gal-tag{
-  font-family:'Space Mono',monospace;font-size:11px;
+  font-family:'Montserrat',sans-serif;font-size:12px;
   letter-spacing:2px;text-transform:uppercase;
   color:var(--green-light);
   transform:translateY(10px);opacity:0;
@@ -1257,7 +980,7 @@ function toggleTheme(){
 #galLbClose:hover{color:#fff;transform:scale(1.2);}
 #galLbTag{
   position:fixed;bottom:32px;left:50%;transform:translateX(-50%);
-  font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;
+  font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:2px;
   text-transform:uppercase;color:var(--green-light);
   opacity:0;transition:opacity .4s ease .2s;
   white-space:nowrap;
@@ -1288,7 +1011,7 @@ function toggleTheme(){
   border-radius:50%;
   background:var(--green);
   color:var(--white);
-  font-family:'Space Mono',monospace;
+  font-family:'Montserrat',sans-serif;
   font-size:10px;letter-spacing:2px;
   display:flex;align-items:center;justify-content:center;
   pointer-events:none;
@@ -1303,7 +1026,7 @@ function toggleTheme(){
 /* Idle hint pulse — shows when no interaction for 3s */
 .gal-hint{
   position:absolute;bottom:18px;left:50%;transform:translateX(-50%);
-  font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;
+  font-family:'Montserrat',sans-serif;font-size:12px;letter-spacing:2px;
   color:var(--text-muted);text-transform:uppercase;
   display:flex;align-items:center;gap:10px;
   opacity:0;transition:opacity .6s ease;pointer-events:none;z-index:5;
@@ -1327,7 +1050,7 @@ function toggleTheme(){
   width:0%;border-radius:1px;
 }
 .gal-progress-label{
-  font-family:'Space Mono',monospace;font-size:10px;
+  font-family:'Montserrat',sans-serif;font-size:12px;
   letter-spacing:2px;color:var(--text-muted);
   min-width:52px;text-align:right;
 }
@@ -1729,6 +1452,300 @@ function toggleTheme(){
   <div id="galLbTag"></div>
 </div>
 
+<!-- SERVICES -->
+<section id="services" style="background:var(--off-black);">
+  <div class="section-inner">
+    <div class="section-label reveal">What We Offer</div>
+    <h2 class="section-title reveal">Pick Your Package</h2>
+    <p class="section-sub reveal">Choose a service below to instantly get a quote and book your slot.</p>
+    <div class="tabs-wrap">
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('logos',this)">Logo Design</button>
+      <button class="tab" onclick="switchTab('brandkits',this)">Company Brand Kits</button>
+      <button class="tab" onclick="switchTab('social',this)">Social Media Mgmt</button>
+    </div>
+    </div>
+
+    <!-- LOGOS -->
+    <div id="tab-logos" class="tab-content active">
+      <div class="services-grid">
+        <div class="svc-card" onclick="selectPackage('logo','Identity Lite','K1,500',1500)" onmousemove="cardGlow(event,this)">
+          <div class="svc-icon">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <div class="svc-name">Identity Lite</div>
+          <div class="svc-desc"><ul class="svc-list"><li>2 primary logo concepts</li><li>High-res PNG/JPG + basic color palette</li><li>2 revisions included</li></ul><span class="svc-tagline">Perfect for individuals and side projects.</span></div>
+          <div class="svc-price">K1,500 <small>USD $76 &middot; Feb 2026</small></div>
+          <button class="svc-btn">Select &amp; Book &rarr;</button>
+        </div>
+        <div class="svc-card" onclick="selectPackage('logo','Startup Foundation','K4,000',4000)" onmousemove="cardGlow(event,this)">
+          <div class="bestseller">&#9733; Best Seller</div>
+          <div class="svc-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          </div>
+          <div class="svc-name">Startup Foundation</div>
+          <div class="svc-desc"><ul class="svc-list"><li>3 logo concepts + variations</li><li>Vector files (AI/SVG/PDF)</li><li>Company profile + social starter pack</li><li>4 revisions included</li></ul></div>
+          <div class="svc-price">K4,000 <small>USD $200 &middot; Feb 2026</small></div>
+          <button class="svc-btn">Select &amp; Book &rarr;</button>
+        </div>
+        <div class="svc-card" onclick="selectPackage('logo','Corporate Growth Suite','K9,500',9500)" onmousemove="cardGlow(event,this)">
+          <div class="svc-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          </div>
+          <div class="svc-name">Corporate Growth Suite</div>
+          <div class="svc-desc"><ul class="svc-list"><li>Multiple premium concepts</li><li>Full stationery: letterhead, email signature, biz card</li><li>Social brand kit + mini style guide</li><li>6 revisions included</li></ul></div>
+          <div class="svc-price">K9,500 <small>USD $486 &middot; Feb 2026</small></div>
+          <button class="svc-btn">Select &amp; Book &rarr;</button>
+        </div>
+        <div class="svc-card" onclick="selectPackage('logo','Elite Executive','K17,500',17500)" onmousemove="cardGlow(event,this)">
+          <div class="svc-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          </div>
+          <div class="svc-name">Elite Executive</div>
+          <div class="svc-desc"><ul class="svc-list"><li>Everything pack — all logo variants</li><li>Full corporate stationery</li><li>Brand bible (15+ pages)</li><li>30 days social media management + basic website</li></ul></div>
+          <div class="svc-price">K17,500+ <small>USD $895+ &middot; Feb 2026</small></div>
+          <button class="svc-btn">Select &amp; Book &rarr;</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- BRAND KITS -->
+    <div id="tab-brandkits" class="tab-content">
+      <div class="services-grid">
+        <div class="svc-card" onclick="selectPackage('brandkit','Foundation Kit','K800',800)" onmousemove="cardGlow(event,this)">
+          <div class="svc-icon">
+            <svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+          </div>
+          <div class="svc-name">Foundation Kit</div>
+          <div class="svc-desc">Professional logo design + business card design (front &amp; back). The essential starter.</div>
+          <div class="svc-price">K800 <small>Local price</small></div>
+          <button class="svc-btn">Select &amp; Book &rarr;</button>
+        </div>
+        <div class="svc-card" onclick="selectPackage('brandkit','Professional Kit','K1,600',1600)" onmousemove="cardGlow(event,this)">
+          <div class="svc-icon">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          </div>
+          <div class="svc-name">Professional Kit</div>
+          <div class="svc-desc">Company profile design (up to 4 pages) + letterhead design (digital-ready).</div>
+          <div class="svc-price">K1,600 <small>Local price</small></div>
+          <button class="svc-btn">Select &amp; Book &rarr;</button>
+        </div>
+        <div class="svc-card" onclick="selectPackage('brandkit','Identity Kit','K2,300',2300)" onmousemove="cardGlow(event,this)">
+          <div class="bestseller">Popular</div>
+          <div class="svc-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+          </div>
+          <div class="svc-name">Identity Kit</div>
+          <div class="svc-desc">Professional logo design + company profile design (up to 4 pages).</div>
+          <div class="svc-price">K2,300 <small>Local price</small></div>
+          <button class="svc-btn">Select &amp; Book &rarr;</button>
+        </div>
+        <div class="svc-card" onclick="selectPackage('brandkit','Full Suite Kit','K3,500',3500)" onmousemove="cardGlow(event,this)">
+          <div class="svc-icon">
+            <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div class="svc-name">Full Suite Kit</div>
+          <div class="svc-desc">Professional logo + company profile (4 pages) + complete stationery documentation set.</div>
+          <div class="svc-price">K3,500 <small>Local price</small></div>
+          <button class="svc-btn">Select &amp; Book &rarr;</button>
+        </div>
+      </div>
+      <div style="margin-top:20px;padding:20px;background:var(--dark-card);border:1px solid var(--border);border-radius:8px;">
+        <h4 style="font-size:14px;color:var(--white);margin-bottom:14px;">Stationery &Agrave; La Carte</h4>
+        <div class="ala-grid">
+          <div class="ala-card"><div class="ala-name">Stationery Quick-Pack</div><div class="ala-desc">Biz Card + Letterhead + Receipt + Invoice + Quotation + 1 Extra</div><div class="ala-price">K350</div></div>
+          <div class="ala-card"><div class="ala-name">Business Card Design</div><div class="ala-desc">Front &amp; back, print-ready files</div><div class="ala-price">K150</div></div>
+          <div class="ala-card"><div class="ala-name">Letterhead / Invoice / Quote</div><div class="ala-desc">Per item, price varies</div><div class="ala-price">Enquire</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SOCIAL -->
+    <div id="tab-social" class="tab-content">
+      <div class="services-grid" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr));">
+        <div class="svc-card" onclick="selectPackage('social','Starter Sprint','K5,000',5000)" onmousemove="cardGlow(event,this)">
+          <div class="svc-icon">
+            <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+          </div>
+          <div class="svc-name">Starter Sprint</div>
+          <div class="svc-desc"><ul class="svc-list"><li>1 month · 12 posts + 2 reels</li><li>Up to 2 platforms</li><li>Audit, content calendar &amp; scheduling</li><li>Monthly analytics</li></ul></div>
+          <div class="svc-price">K5,000 <small>1 month &middot; April 2026</small></div>
+          <button class="svc-btn">Select &amp; Book &rarr;</button>
+        </div>
+        <div class="svc-card" onclick="selectPackage('social','Growth Momentum','K9,400',9400)" onmousemove="cardGlow(event,this)">
+          <div class="bestseller">Save K600</div>
+          <div class="svc-icon">
+            <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+          <div class="svc-name">Growth Momentum</div>
+          <div class="svc-desc"><ul class="svc-list"><li>2 months · 16 posts + 4 reels + 10 stories</li><li>Up to 3 platforms</li><li>Action plan &amp; brand theme</li><li>Community engagement</li></ul></div>
+          <div class="svc-price">K9,400 <small>2 months &mdash; save K600</small></div>
+          <button class="svc-btn">Select &amp; Book &rarr;</button>
+        </div>
+        <div class="svc-card" onclick="selectPackage('social','Market Authority','K17,000',17000)" onmousemove="cardGlow(event,this)">
+          <div class="bestseller">Save K3,000</div>
+          <div class="svc-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div class="svc-name">Market Authority</div>
+          <div class="svc-desc"><ul class="svc-list"><li>4 months · 22 posts + 8 reels + 15 stories</li><li>Up to 4 platforms</li><li>Full multi-channel strategy</li><li>Priority design &amp; revisions</li></ul></div>
+          <div class="svc-price">K17,000 <small>4 months &mdash; save K3,000</small></div>
+          <button class="svc-btn">Select &amp; Book &rarr;</button>
+        </div>
+      </div>
+      <div style="margin-top:16px;padding:16px 20px;background:var(--dark-card);border:1px solid var(--border);border-radius:8px;font-size:13px;color:var(--text-muted);">
+        <strong style="color:var(--green-light);">Ad Boosting:</strong> Standard (you pay Meta directly) or Managed Budget (K2,000 advance, we handle distribution). Contact <strong style="color:var(--white);">+260971009632</strong>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOOKING -->
+<section id="book">
+  <div class="section-inner">
+    <div class="section-label reveal">Book A Slot</div>
+    <h2 class="section-title reveal">Reserve Your Spot</h2>
+    <p class="section-sub reveal">50% deposit secures your booking. Pick a date, choose your service, and we&rsquo;ll get started immediately.</p>
+    <div class="booking-grid">
+      <div class="booking-cal reveal-left">
+        <div class="cal-header">
+          <span class="cal-month" id="calMonthLabel">April 2026</span>
+          <div class="cal-nav">
+            <button onclick="prevMonth()">&#8249;</button>
+            <button onclick="nextMonth()">&#8250;</button>
+          </div>
+        </div>
+        <div class="cal-days-header">
+          <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+        </div>
+        <div class="cal-days" id="calDays"></div>
+        <div class="booking-legend">
+          <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Available</div>
+          <div class="legend-item"><div class="legend-dot" style="background:#2a2a2a"></div>Booked</div>
+          <div class="legend-item"><div class="legend-dot" style="border:1px solid var(--green);background:none;"></div>Today</div>
+        </div>
+      </div>
+      <div class="booking-form reveal-right">
+        <h3 style="font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1px;margin-bottom:22px;">Your Details</h3>
+        <div id="selectedDateDisplay" class="date-selected"></div>
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" class="form-input" placeholder="e.g. Chanda Mwale" id="bookingName">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Phone / WhatsApp</label>
+          <input type="tel" class="form-input" placeholder="+260 9XX XXX XXX" id="bookingPhone">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Service</label>
+          <select class="form-select" id="bookingService">
+            <option value="">&#8212; Select a Service &#8212;</option>
+            <option>Logo: Identity Lite &mdash; K1,500</option>
+            <option>Logo: Startup Foundation &mdash; K4,000</option>
+            <option>Logo: Corporate Growth Suite &mdash; K9,500</option>
+            <option>Logo: Elite Executive &mdash; K17,500</option>
+            <option>Brand Kit: Foundation Kit &mdash; K800</option>
+            <option>Brand Kit: Professional Kit &mdash; K1,600</option>
+            <option>Brand Kit: Identity Kit &mdash; K2,300</option>
+            <option>Brand Kit: Full Suite Kit &mdash; K3,500</option>
+            <option>Social: Starter Sprint &mdash; K5,000</option>
+            <option>Social: Growth Momentum &mdash; K9,400</option>
+            <option>Social: Market Authority &mdash; K17,000</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Brief / Notes (optional)</label>
+          <textarea class="form-textarea" placeholder="Tell us about your brand, industry, style preferences..." id="bookingBrief"></textarea>
+        </div>
+        <button class="btn-primary" style="width:100%;" onclick="submitBooking()">Confirm Booking &rarr;</button>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:12px;text-align:center;">WhatsApp confirmation &amp; payment details within 30 min.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRACKER -->
+<section id="tracker" style="background:var(--off-black);">
+  <div class="section-inner">
+    <div class="section-label reveal">Client Portal</div>
+    <h2 class="section-title reveal">Track Your Project</h2>
+    <p class="section-sub reveal">Each project gets its own live link. Switch between active projects using the slider below, or enter your code to jump straight to yours.</p>
+
+    <div class="tracker-section">
+      <!-- LEFT: Multi-project slider -->
+      <div class="reveal-left">
+        <div class="proj-slider-wrap">
+          <!-- Thumbnail strip — quick-jump between projects -->
+          <div class="proj-thumb-strip" id="projThumbStrip"></div>
+
+          <!-- Slider header: counter + arrows -->
+          <div class="proj-slider-header">
+            <span class="proj-counter" id="projCounter">1 / 3</span>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <div class="proj-dots" id="projDots"></div>
+              <div class="proj-nav">
+                <button class="proj-nav-btn" id="projPrev" onclick="slideProject(-1)" title="Previous project">
+                  <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+                </button>
+                <button class="proj-nav-btn" id="projNext" onclick="slideProject(1)" title="Next project">
+                  <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slider viewport -->
+          <div class="proj-slider-viewport">
+            <div class="proj-slider-track" id="projSliderTrack">
+              <!-- Slides injected by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: Lookup -->
+      <div class="reveal-right" style="position:sticky;top:88px;">
+        <p style="font-size:13px;color:var(--text-muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:12px;">Access Your Project</p>
+        <div class="tracker-lookup">
+          <h3 style="font-family:'Bebas Neue',sans-serif;font-size:28px;margin-bottom:8px;">Find Your Project</h3>
+          <p style="font-size:14px;color:var(--text-muted);margin-bottom:26px;">Enter the code from your booking confirmation, or the phone number you used to book.</p>
+          <div class="form-group">
+            <label class="form-label">Project Code</label>
+            <input type="text" class="form-input" placeholder="e.g. ERT-2604-007" id="projectCodeInput">
+          </div>
+          <button class="btn-primary" style="width:100%;margin-bottom:14px;" onclick="lookupProject()">View My Project &rarr;</button>
+          <div style="text-align:center;color:var(--text-muted);font-size:13px;margin-bottom:14px;">&mdash; or &mdash;</div>
+          <div class="form-group">
+            <label class="form-label">Phone Number Used to Book</label>
+            <input type="tel" class="form-input" placeholder="+260 9XX XXX XXX" id="trackPhone">
+          </div>
+          <button class="btn-secondary" style="width:100%;margin-bottom:24px;" onclick="sendOTP()">Send My Link via WhatsApp</button>
+          <div class="pwa-note">
+            <div class="pwa-note-title">Add Project to Your Phone</div>
+            <p>Your tracker link works as an app. On mobile, open the link then tap <strong style="color:var(--white);">Share &rarr; Add to Home Screen</strong>. No app store needed. The shortcut removes itself when your project is confirmed complete.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section id="process">
+  <div class="section-inner">
+    <div class="section-label reveal">How It Works</div>
+    <h2 class="section-title reveal">Simple. Fast. Professional.</h2>
+    <div class="process-steps reveal">
+      <div class="process-step"><div class="step-num">01</div><div class="step-title">Pick &amp; Quote</div><div class="step-desc">Choose your package and get an instant quote breakdown.</div></div>
+      <div class="process-step"><div class="step-num">02</div><div class="step-title">Book &amp; Deposit</div><div class="step-desc">Select a slot. 50% deposit secures your spot immediately.</div></div>
+      <div class="process-step"><div class="step-num">03</div><div class="step-title">Track Live</div><div class="step-desc">Get your personal project link. Monitor real-time progress.</div></div>
+      <div class="process-step"><div class="step-num">04</div><div class="step-title">Review &amp; Revise</div><div class="step-desc">Revisions included. Approve each stage before we proceed.</div></div>
+      <div class="process-step"><div class="step-num">05</div><div class="step-title">Delivered</div><div class="step-desc">Final files emailed. Balance paid. Tracker link archived.</div></div>
+    </div>
+  </div>
+</section>
+
+
 <!-- ══════════ PROMO STRIP ══════════ -->
 <section id="promo" style="background:var(--promo-bg);border-top:1px solid var(--promo-border);border-bottom:1px solid var(--promo-border);padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);">
 <style>
@@ -1767,7 +1784,7 @@ function toggleTheme(){
 }
 .promo-card:hover::before{transform:scaleX(1);}
 .promo-eyebrow{
-  font-family:'Space Mono',monospace;font-size:10px;
+  font-family:'Montserrat',sans-serif;font-size:12px;
   letter-spacing:3px;text-transform:uppercase;
   color:var(--cyan);margin-bottom:14px;
   display:flex;align-items:center;gap:10px;
@@ -1802,8 +1819,8 @@ function toggleTheme(){
   background:var(--cyan-muted);
   border:1px solid rgba(14,165,176,0.25);
   border-radius:30px;
-  font-family:'Space Mono',monospace;
-  font-size:11px;letter-spacing:1px;
+  font-family:'Montserrat',sans-serif;
+  font-size:12.5px;letter-spacing:0.5px;
   color:var(--cyan-light);
   transition:background .2s,border-color .2s;
 }
@@ -1816,7 +1833,7 @@ function toggleTheme(){
   background:var(--cyan-muted);
   border:1px solid var(--cyan);
   border-radius:30px;
-  font-family:'Space Mono',monospace;
+  font-family:'Montserrat',sans-serif;
   font-size:10px;letter-spacing:2px;
   color:var(--cyan-light);
   margin-bottom:14px;
@@ -1834,7 +1851,7 @@ function toggleTheme(){
   background:rgba(200,168,75,0.1);
   border:1px solid rgba(200,168,75,0.35);
   border-radius:20px;
-  font-family:'Space Mono',monospace;font-size:10px;
+  font-family:'Montserrat',sans-serif;font-size:12px;
   letter-spacing:2px;color:var(--gold);
   margin-bottom:16px;
 }
@@ -1883,7 +1900,7 @@ function toggleTheme(){
   border-radius:5px;
   padding:13px 16px;
   color:var(--white);
-  font-family:'DM Sans',sans-serif;font-size:14px;
+  font-family:'Montserrat',sans-serif;font-size:14px;
   transition:border-color .2s,background .2s;
   outline:none;
 }
@@ -1896,14 +1913,14 @@ function toggleTheme(){
   background:var(--cyan);color:var(--black);
   border:none;border-radius:5px;
   padding:13px 26px;
-  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:700;
+  font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;
   cursor:pointer;white-space:nowrap;
   transition:background .2s,transform .15s;
   letter-spacing:.3px;
 }
 .btn-cyan:hover{background:var(--cyan-light);transform:translateY(-1px);}
 .subscribe-note{
-  font-family:'Space Mono',monospace;font-size:10px;
+  font-family:'Montserrat',sans-serif;font-size:12px;
   letter-spacing:1px;color:var(--text-muted);
 }
 .subscribe-perks{
@@ -1963,7 +1980,7 @@ function toggleTheme(){
           <div class="promo-free-badge">100% FREE</div>
           <br>
           <a href="erthdot-tools.html" class="btn-cyan" style="display:inline-block;text-decoration:none;">Open Tools &rarr;</a>
-          <p style="font-size:11px;color:var(--text-muted);margin-top:12px;font-family:'Space Mono',monospace;letter-spacing:1px;">No account needed</p>
+          <p style="font-size:12px;color:var(--text-muted);margin-top:12px;font-family:'Montserrat',sans-serif;letter-spacing:1px;">No account needed</p>
         </div>
       </div>
 
@@ -1973,30 +1990,29 @@ function toggleTheme(){
           <div>
             <div class="coming-soon-badge">Coming Soon</div>
             <div class="promo-title">WhatsApp <span style="color:var(--gold);">AI Secretary</span></div>
-            <p class="promo-body">Your business, always on. Our AI-powered WhatsApp agent answers customer questions, generates accurate quotations, and handles enquiries 24/7 — even when you're out of network, in a meeting, or simply offline.</p>
-            <p class="promo-body" style="margin-top:-10px;">Built for Zambian businesses that want to stay connected to their customers without being chained to their phones. The AI knows your pricing, your services, and your brand voice — so every reply sounds like you.</p>
+            <p class="promo-body">Answers customer questions, sends quotes, and handles enquiries on WhatsApp 24/7 — even when you're offline.</p>
           </div>
           <div>
             <div class="ai-features">
               <div class="ai-feature">
                 <div class="ai-feature-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
-                <div><strong style="color:var(--white);display:block;margin-bottom:2px;">Instant FAQ Replies</strong>Automatically answers your most common customer questions — pricing, turnaround times, what you offer — in seconds.</div>
+                <div><strong style="color:var(--white);display:block;margin-bottom:2px;">Instant FAQ Replies</strong>Pricing and turnaround, answered in seconds.</div>
               </div>
               <div class="ai-feature">
                 <div class="ai-feature-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
-                <div><strong style="color:var(--white);display:block;margin-bottom:2px;">Live Quotation Engine</strong>Customers describe what they need; the AI pulls your real pricing and sends a professional quote — no back-and-forth needed.</div>
+                <div><strong style="color:var(--white);display:block;margin-bottom:2px;">Live Quotation Engine</strong>Real pricing, sent automatically — no back-and-forth.</div>
               </div>
               <div class="ai-feature">
                 <div class="ai-feature-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-                <div><strong style="color:var(--white);display:block;margin-bottom:2px;">24 / 7 Availability</strong>Never miss a lead. When you're out of coverage or after hours, the secretary keeps working — every enquiry gets a response.</div>
+                <div><strong style="color:var(--white);display:block;margin-bottom:2px;">24 / 7 Availability</strong>Every enquiry gets a reply, day or night.</div>
               </div>
               <div class="ai-feature">
                 <div class="ai-feature-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-                <div><strong style="color:var(--white);display:block;margin-bottom:2px;">Your Brand Voice</strong>Trained on your business — your tone, your prices, your services. Customers won't know it's AI unless you tell them.</div>
+                <div><strong style="color:var(--white);display:block;margin-bottom:2px;">Your Brand Voice</strong>Trained on your tone, prices and services.</div>
               </div>
             </div>
             <div style="margin-top:24px;padding:16px 20px;background:rgba(200,168,75,0.06);border:1px solid rgba(200,168,75,0.2);border-radius:8px;">
-              <p style="font-size:13px;color:var(--text-muted);line-height:1.65;">Be first in line when we launch — subscribe below to get early access pricing and launch updates.</p>
+              <p style="font-size:14px;color:var(--text-muted);line-height:1.65;">Subscribe below for early access and launch pricing.</p>
             </div>
           </div>
         </div>
@@ -2009,7 +2025,7 @@ function toggleTheme(){
       <div class="subscribe-text">
         <div class="promo-eyebrow">Stay in the Loop</div>
         <div class="promo-title">Join the <span style="color:var(--cyan-light);">Promo Wishlist</span></div>
-        <p>Get early access to the AI Secretary, exclusive launch discounts, free design tips, and Erthdot promotions — straight to your inbox. No spam, ever.</p>
+        <p>Early access, launch discounts, and free design tips — no spam.</p>
         <div class="subscribe-perks" style="margin-top:16px;">
           <span class="subscribe-perk">Early access pricing</span>
           <span class="subscribe-perk">Launch-day discounts</span>
@@ -2351,6 +2367,27 @@ const io = new IntersectionObserver(entries=>{
   });
 },{threshold:.12});
 reveals.forEach(r=>io.observe(r));
+
+// ─── NAV SCROLL-SPY ────────────────────────────────────
+// Highlights the nav link for whichever section is currently in view, so
+// it's always clear where you are on the page.
+(function(){
+  const navAnchors = Array.from(document.querySelectorAll('.nav-links a[href^="#"]'));
+  if (!navAnchors.length) return;
+  const sections = navAnchors
+    .map(a => document.getElementById(a.getAttribute('href').slice(1)))
+    .filter(Boolean);
+  if (!sections.length) return;
+  const spyIO = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      navAnchors.forEach(a => a.classList.remove('active'));
+      const match = navAnchors.find(a => a.getAttribute('href') === '#' + entry.target.id);
+      if (match) match.classList.add('active');
+    });
+  }, { rootMargin: '-45% 0px -50% 0px', threshold: 0 });
+  sections.forEach(s => spyIO.observe(s));
+})();
 
 // ─── CARD GLOW ─────────────────────────────────────────
 function cardGlow(e,el){
@@ -2838,15 +2875,15 @@ document.querySelectorAll('.modal-overlay').forEach(m=>{
     <div class="modal-title">View Your Project</div>
     <div class="modal-sub" style="margin-bottom:22px;">Enter the preview link or ID sent to you by your designer.</div>
     <input type="text" id="clientPreviewInput"
-      style="width:100%; background:var(--input-bg); border:1px solid var(--input-border); color:var(--text); padding:12px 16px; border-radius:6px; font-family:'Space Mono',monospace; font-size:12px; letter-spacing:1px; outline:none; margin-bottom:14px;"
+      style="width:100%; background:var(--input-bg); border:1px solid var(--input-border); color:var(--text); padding:12px 16px; border-radius:6px; font-family:'Montserrat',sans-serif; font-size:12px; letter-spacing:1px; outline:none; margin-bottom:14px;"
       placeholder="Paste your link or ID here..."
       onkeydown="if(event.key==='Enter') goToClientPreview()">
     <button onclick="goToClientPreview()"
-      style="width:100%; padding:13px; background:var(--green); color:#fff; border:none; border-radius:6px; font-family:'DM Sans',sans-serif; font-weight:600; font-size:14px; cursor:pointer; transition:background .2s;"
+      style="width:100%; padding:13px; background:var(--green); color:#fff; border:none; border-radius:6px; font-family:'Montserrat',sans-serif; font-weight:600; font-size:14px; cursor:pointer; transition:background .2s;"
       onmouseover="this.style.background='var(--green-light)'" onmouseout="this.style.background='var(--green)'">
       Open Preview →
     </button>
-    <div style="font-family:'Space Mono',monospace; font-size:9px; letter-spacing:2px; color:var(--text-muted); text-transform:uppercase; margin-top:16px;">Your link looks like: erthdot.com/client-preview.html?id=PV-XXXXX</div>
+    <div style="font-family:'Montserrat',sans-serif; font-size:12px; letter-spacing:2px; color:var(--text-muted); text-transform:uppercase; margin-top:16px;">Your link looks like: erthdot.com/client-preview.html?id=PV-XXXXX</div>
   </div>
 </div>
 
