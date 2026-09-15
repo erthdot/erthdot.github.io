@@ -66,11 +66,13 @@
   --cat-logo:#EF761B;--cat-logo-soft:rgba(239,118,27,.22);
   --cat-brandkit:#0B876E;--cat-brandkit-soft:rgba(11,135,110,.24);
   --cat-social:#389FA4;--cat-social-soft:rgba(56,159,164,.24);
+  --cat-web:#D0EBF4;--cat-web-soft:rgba(208,235,244,.22);
   --cat-pale:#D0EBF4;
 }
 .cat-logo{--accent:var(--cat-logo);--accent-soft:var(--cat-logo-soft);}
 .cat-brandkit{--accent:var(--cat-brandkit);--accent-soft:var(--cat-brandkit-soft);}
 .cat-social{--accent:var(--cat-social);--accent-soft:var(--cat-social-soft);}
+.cat-web{--accent:var(--cat-web);--accent-soft:var(--cat-web-soft);}
 /* Small color-coded category chip for at-a-glance identification */
 .cat-chip{display:inline-flex;align-items:center;gap:7px;font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--accent,var(--text-muted));margin-bottom:12px;}
 .cat-chip .cat-dot{width:9px;height:9px;border-radius:50%;background:var(--accent,var(--text-muted));box-shadow:0 0 0 3px var(--accent-soft,transparent);flex-shrink:0;}
@@ -316,12 +318,12 @@ nav.nav-hidden{opacity:0;top:-80px;pointer-events:none;}
   animation:fadeIn .9s .9s ease both;
 }
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
-.scroll-line{width:3px;height:56px;background:linear-gradient(to bottom,var(--green-light),transparent);border-radius:2px;animation:scrollDrop 1.8s ease infinite;box-shadow:0 0 8px var(--green-light);}
+.scroll-line{width:3px;height:56px;background:var(--green-light);border-radius:2px;animation:scrollDrop 1.8s ease infinite;box-shadow:0 0 8px var(--green-light);}
 @keyframes scrollDrop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
 @keyframes reservePulse{0%,100%{color:var(--white);text-shadow:none;}30%{color:var(--green-light);text-shadow:0 0 24px rgba(74,222,128,.6),0 0 48px rgba(74,222,128,.3);}60%{color:var(--white);text-shadow:none;}80%{color:var(--green-light);text-shadow:0 0 16px rgba(74,222,128,.4);}}
 @keyframes reserveUnderline{0%{width:0;opacity:0;}60%{width:100%;opacity:1;}100%{width:100%;opacity:1;}}
 .reserve-title-animate{animation:reservePulse 2.2s ease forwards;}
-.reserve-title-animate::after{content:'';display:block;height:2px;background:linear-gradient(90deg,var(--green-light),transparent);border-radius:1px;animation:reserveUnderline 1.4s ease .3s forwards;width:0;opacity:0;}
+.reserve-title-animate::after{content:'';display:block;height:2px;background:var(--green-light);border-radius:1px;animation:reserveUnderline 1.4s ease .3s forwards;width:0;opacity:0;}
 @keyframes calAwait{0%{box-shadow:0 0 0 0 rgba(74,222,128,0);}20%{box-shadow:0 0 0 4px rgba(74,222,128,.35);}60%{box-shadow:0 0 0 8px rgba(74,222,128,.15);}100%{box-shadow:0 0 0 0 rgba(74,222,128,0);}}
 .cal-await{animation:calAwait 2.6s ease;border-color:var(--green) !important;}
 @keyframes calLabelBounce{0%,100%{transform:translateY(0);}25%{transform:translateY(-4px);}50%{transform:translateY(0);}75%{transform:translateY(-2px);}}
@@ -399,46 +401,71 @@ section{padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);scroll-margin-top:84p
   }
 }
 
-/* SERVICES HUB — big buttons leading to the shop page */
-.svc-hub-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:2px;background:var(--border);border-radius:8px;overflow:hidden;}
+/* SERVICES HUB — banner-style panels, each split into a copy half and an
+   image half, laid out edge-to-edge like a product-ad grid. Two per row,
+   alternating which side carries the image so the grid reads with rhythm
+   instead of four identical boxes. */
+.svc-hub-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:2px;
+  background:var(--border);border-radius:10px;overflow:hidden;
+}
 .svc-hub-card{
-  background:linear-gradient(155deg, var(--accent-soft, var(--w05)) 0%, var(--dark-card) 60%);
-  padding:44px 32px;text-decoration:none;
-  display:flex;flex-direction:column;align-items:flex-start;position:relative;overflow:hidden;
-  transition:background .2s,transform .2s;
+  --panel-fg:#fff;--panel-fg-soft:rgba(255,255,255,.72);--panel-line:rgba(255,255,255,.22);
+  display:grid;grid-template-columns:1fr 1fr;align-items:stretch;
+  min-height:300px;text-decoration:none;position:relative;overflow:hidden;
+  background:var(--panel-bg,#111);
 }
-.svc-hub-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:3px;pointer-events:none;
-  background:var(--accent,linear-gradient(90deg,var(--green-dark),var(--green-light)));
-  transform:scaleX(0);transform-origin:left;transition:transform .35s ease;
+/* alternate which column the copy sits in, image-right vs image-left,
+   to match the asymmetric rhythm of the reference grid */
+.svc-hub-card .svc-hub-copy{order:1;padding:38px 34px;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;position:relative;z-index:2;}
+.svc-hub-card .svc-hub-visual{order:2;position:relative;overflow:hidden;background:#0a0a0a;}
+.svc-hub-card.img-left .svc-hub-copy{order:2;}
+.svc-hub-card.img-left .svc-hub-visual{order:1;}
+.svc-hub-visual img{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+  transition:transform .5s cubic-bezier(.22,1,.36,1);
 }
-.svc-hub-card::after{
-  content:'';position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),var(--accent-soft,rgba(26,122,74,.08)) 0%,transparent 60%);
-  opacity:0;transition:opacity .3s;
+.svc-hub-card:hover .svc-hub-visual img{transform:scale(1.05);}
+/* soft fade where the visual meets the copy panel, so the photo feels
+   anchored to the panel rather than pasted on top of it */
+.svc-hub-card:not(.img-left) .svc-hub-visual::before{
+  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(90deg,var(--panel-bg,#111) 0%,transparent 22%);
 }
-.svc-hub-card:hover{background:linear-gradient(155deg, var(--accent-soft, var(--w05)) 0%, #1b1b1b 60%);transform:translateY(-3px);}
-.svc-hub-card:hover::before{transform:scaleX(1);}
-.svc-hub-card:hover::after{opacity:1;}
-.svc-hub-icon{
-  width:52px;height:52px;border:1px solid var(--border);border-radius:10px;
-  display:flex;align-items:center;justify-content:center;margin-bottom:22px;
-  transition:border-color .2s,background .2s;
+.svc-hub-card.img-left .svc-hub-visual::before{
+  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(270deg,var(--panel-bg,#111) 0%,transparent 22%);
 }
-.svc-hub-card:hover .svc-hub-icon{border-color:var(--accent,var(--green));background:var(--accent-soft,rgba(26,122,74,.1));}
-.svc-hub-icon svg{width:24px;height:24px;stroke:var(--accent,var(--green-light));fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;}
-.svc-hub-name{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;color:var(--white);margin-bottom:8px;}
-.svc-hub-desc{font-size:14px;color:var(--text-muted);line-height:1.55;margin-bottom:22px;}
-.svc-hub-from{font-family:'Montserrat',sans-serif;font-size:13px;color:var(--accent,var(--green-light));font-weight:700;letter-spacing:.5px;margin-bottom:18px;}
+.svc-hub-eyebrow{font-family:'Montserrat',sans-serif;font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--panel-fg-soft);margin-bottom:14px;}
+.svc-hub-name{font-family:'Bebas Neue',sans-serif;font-size:34px;line-height:1.05;letter-spacing:.5px;color:var(--panel-fg);margin-bottom:10px;}
+.svc-hub-desc{font-size:14px;color:var(--panel-fg-soft);line-height:1.55;margin-bottom:20px;max-width:26ch;}
+.svc-hub-from{font-family:'Montserrat',sans-serif;font-size:12.5px;color:var(--panel-fg-soft);font-weight:600;letter-spacing:.3px;margin-bottom:20px;}
+.svc-hub-from b{color:var(--panel-fg);font-weight:700;}
 .svc-hub-cta{
-  margin-top:auto;font-family:'Montserrat',sans-serif;font-size:13px;font-weight:600;
-  color:var(--white);letter-spacing:.3px;padding-top:14px;border-top:1px solid var(--w06);width:100%;
-  transition:color .2s;
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'Montserrat',sans-serif;font-size:12.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+  color:var(--panel-bg,#111);background:var(--panel-fg);
+  padding:11px 20px;border-radius:30px;transition:transform .2s,box-shadow .2s;
 }
-.svc-hub-card:hover .svc-hub-cta{color:var(--accent,var(--green-light));}
+.svc-hub-card:hover .svc-hub-cta{transform:translateX(3px);box-shadow:0 6px 20px rgba(0,0,0,.25);}
+.svc-hub-card:focus-visible{outline:3px solid var(--green-light);outline-offset:-3px;}
+@media (prefers-reduced-motion:reduce){
+  .svc-hub-visual img,.svc-hub-cta{transition:none;}
+  .svc-hub-card:hover .svc-hub-visual img{transform:none;}
+  .svc-hub-card:hover .svc-hub-cta{transform:none;}
+}
 .svc-hub-footnote{margin-top:26px;font-size:13px;color:var(--text-muted);}
 .svc-hub-footnote a{color:var(--green-light);text-decoration:none;font-weight:600;}
 .svc-hub-footnote a:hover{text-decoration:underline;}
+@media (max-width:760px){
+  .svc-hub-grid{grid-template-columns:1fr;}
+  .svc-hub-card,.svc-hub-card.img-left{grid-template-columns:1fr;min-height:auto;}
+  .svc-hub-card .svc-hub-visual,.svc-hub-card.img-left .svc-hub-visual{order:1;height:auto;aspect-ratio:4/3;}
+  .svc-hub-card .svc-hub-copy,.svc-hub-card.img-left .svc-hub-copy{order:2;}
+  .svc-hub-card:not(.img-left) .svc-hub-visual::before,.svc-hub-card.img-left .svc-hub-visual::before{
+    background:linear-gradient(0deg,var(--panel-bg,#111) 0%,transparent 26%);
+  }
+}
 
 /* SERVICE CARDS */
 .services-grid{
@@ -452,12 +479,12 @@ section{padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);scroll-margin-top:84p
 }
 .svc-card::before{
   content:'';position:absolute;top:0;left:0;right:0;height:2px;pointer-events:none;
-  background:linear-gradient(90deg,var(--green-dark),var(--green-light));
+  background:var(--green-light);
   transform:scaleX(0);transform-origin:left;transition:transform .35s ease;
 }
 .svc-card::after{
   content:'';position:absolute;inset:0;pointer-events:none;
-  background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(26,122,74,.06) 0%,transparent 60%);
+  background:rgba(26,122,74,.05);
   opacity:0;transition:opacity .3s;
 }
 .svc-card:hover{background:#1b1b1b;}
@@ -555,7 +582,7 @@ section{padding:clamp(60px,8vw,110px) clamp(20px,5vw,72px);scroll-margin-top:84p
 .progress-label{display:flex;justify-content:space-between;margin-bottom:8px;font-size:13px;}
 .progress-label span:last-child{color:var(--green-light);font-weight:700;}
 .progress-bar{height:6px;background:var(--w05);border-radius:3px;overflow:hidden;}
-.progress-fill{height:100%;background:linear-gradient(90deg,var(--green-dark),var(--green-light));border-radius:3px;}
+.progress-fill{height:100%;background:var(--green-light);border-radius:3px;}
 .stages-list{display:flex;flex-direction:column;gap:8px;margin-top:20px;}
 .stage-item{
   display:flex;align-items:center;gap:12px;padding:11px 14px;
@@ -1046,7 +1073,7 @@ function toggleTheme(){
 .gal-img-wrap::after{
   content:'';
   position:absolute;inset:0;
-  background:linear-gradient(105deg,transparent 40%,rgba(34,160,96,0.07) 50%,transparent 60%);
+  background:var(--w04);
   opacity:0;
   transform:translateX(-100%);
   border-radius:8px;
@@ -1577,32 +1604,56 @@ function toggleTheme(){
     <h2 class="section-title reveal">Pick Your Package</h2>
     <p class="section-sub reveal">Every service, every rate card, all in one place — browse the shop and book straight from there.</p>
     <div class="svc-hub-grid reveal">
-      <a class="svc-hub-card cat-logo" href="services.html#logos" onmousemove="cardGlow(event,this)">
-        <div class="svc-hub-icon">
-          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      <a class="svc-hub-card" style="--panel-bg:#EF761B;--panel-fg:#0f0800;--panel-fg-soft:rgba(15,8,0,.62);" href="services.html#logos">
+        <div class="svc-hub-copy">
+          <div class="svc-hub-eyebrow">Identity</div>
+          <div class="svc-hub-name">Logo Design</div>
+          <div class="svc-hub-desc">Concepts, revisions &amp; full brand marks built to hold up anywhere.</div>
+          <div class="svc-hub-from">Packages from <b>K1,500</b></div>
+          <span class="svc-hub-cta">Browse Packages &rarr;</span>
         </div>
-        <div class="svc-hub-name">Logo Design</div>
-        <div class="svc-hub-desc">Identity concepts &amp; full brand marks</div>
-        <div class="svc-hub-from">From K1,500</div>
-        <div class="svc-hub-cta">Browse Packages &rarr;</div>
+        <div class="svc-hub-visual">
+          <img src="src/logo-design.avif" alt="Logo design concept — geometric mark on a construction grid" loading="lazy">
+        </div>
       </a>
-      <a class="svc-hub-card cat-brandkit" href="services.html#brandkits" onmousemove="cardGlow(event,this)">
-        <div class="svc-hub-icon">
-          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="13" y2="17"/></svg>
+
+      <a class="svc-hub-card" style="--panel-bg:#f4f1ea;--panel-fg:#141410;--panel-fg-soft:rgba(20,20,16,.6);" href="services.html#brandkits">
+        <div class="svc-hub-copy">
+          <div class="svc-hub-eyebrow">Brand Systems</div>
+          <div class="svc-hub-name">Company Brand Kits</div>
+          <div class="svc-hub-desc">Profiles, stationery &amp; identity bundles that travel together.</div>
+          <div class="svc-hub-from">Packages from <b>K950</b></div>
+          <span class="svc-hub-cta">Browse Packages &rarr;</span>
         </div>
-        <div class="svc-hub-name">Company Brand Kits</div>
-        <div class="svc-hub-desc">Profiles, stationery &amp; identity bundles</div>
-        <div class="svc-hub-from">From K950</div>
-        <div class="svc-hub-cta">Browse Packages &rarr;</div>
+        <div class="svc-hub-visual">
+          <img src="src/brand-kits.avif" alt="Brand kit flat-lay — business card, letterhead and guideline booklet" loading="lazy">
+        </div>
       </a>
-      <a class="svc-hub-card cat-social" href="services.html#social" onmousemove="cardGlow(event,this)">
-        <div class="svc-hub-icon">
-          <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+
+      <a class="svc-hub-card" style="--panel-bg:#0c2426;--panel-fg:#ffffff;--panel-fg-soft:rgba(255,255,255,.65);" href="services.html#social">
+        <div class="svc-hub-copy">
+          <div class="svc-hub-eyebrow">Content &amp; Growth</div>
+          <div class="svc-hub-name">Social Media Mgmt</div>
+          <div class="svc-hub-desc">Content, scheduling &amp; growth plans run for you, week to week.</div>
+          <div class="svc-hub-from">Packages from <b>K5,000</b></div>
+          <span class="svc-hub-cta">Browse Packages &rarr;</span>
         </div>
-        <div class="svc-hub-name">Social Media Mgmt</div>
-        <div class="svc-hub-desc">Content, scheduling &amp; growth plans</div>
-        <div class="svc-hub-from">From K5,000</div>
-        <div class="svc-hub-cta">Browse Packages &rarr;</div>
+        <div class="svc-hub-visual">
+          <img src="src/social-media.avif" alt="Social media feed mockup on a phone with scheduled posts" loading="lazy">
+        </div>
+      </a>
+
+      <a class="svc-hub-card" style="--panel-bg:#dcefe9;--panel-fg:#0f2b22;--panel-fg-soft:rgba(15,43,34,.62);" href="services.html#websites">
+        <div class="svc-hub-copy">
+          <div class="svc-hub-eyebrow">Web</div>
+          <div class="svc-hub-name">Web Building</div>
+          <div class="svc-hub-desc">Websites, domain &amp; hosting sorted — live and ready to sell.</div>
+          <div class="svc-hub-from">Packages from <b>K7,500</b></div>
+          <span class="svc-hub-cta">Browse Packages &rarr;</span>
+        </div>
+        <div class="svc-hub-visual">
+          <img src="src/web-building.avif" alt="Website preview mockup shown in a browser window" loading="lazy">
+        </div>
       </a>
     </div>
     <div class="svc-hub-footnote reveal">Or skip straight to a quote — <a href="#" onclick="openQuoteModal();return false;">build one here &rarr;</a></div>
@@ -1788,7 +1839,7 @@ function toggleTheme(){
 .promo-card:hover{background:#071213;}
 .promo-card::before{
   content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:linear-gradient(90deg,var(--cyan-dark),var(--cyan-light));
+  background:var(--cyan-light);
   transform:scaleX(0);transform-origin:left;
   transition:transform .4s ease;
 }
@@ -2064,6 +2115,7 @@ async function handleSubscribe(){
         <a href="services.html#logos">Logo Design</a>
         <a href="services.html#brandkits">Company Brand Kits</a>
         <a href="services.html#social">Social Media Mgmt</a>
+        <a href="services.html#websites">Web Building</a>
         <a href="services.html#brandkits">Stationery</a>
       </div>
       <div class="footer-col">
@@ -2100,6 +2152,7 @@ async function handleSubscribe(){
         <option value="logo">Logo Design</option>
         <option value="brandkit">Company Brand Kits</option>
         <option value="social">Social Media Management</option>
+        <option value="website">Web Building</option>
         <option value="ala">A La Carte Stationery</option>
       </select>
     </div>
@@ -2148,7 +2201,32 @@ async function handleSubscribe(){
   const geo = new THREE.BufferGeometry();
   geo.setAttribute('position', new THREE.BufferAttribute(positions,3));
   geo.setAttribute('color', new THREE.BufferAttribute(colors,3));
-  const mat = new THREE.PointsMaterial({size:.18, vertexColors:true, transparent:true, opacity:.7});
+  // Point sprites render as hard-edged squares by default, and the renderer's
+  // antialias flag doesn't apply to them. Drawing a soft radial falloff into a
+  // small canvas and using it as the sprite map gives round, feathered points.
+  function makeParticleSprite(){
+    const c = document.createElement('canvas');
+    c.width = c.height = 64;
+    const g = c.getContext('2d');
+    const grd = g.createRadialGradient(32,32,0,32,32,32);
+    grd.addColorStop(0,   'rgba(255,255,255,1)');
+    grd.addColorStop(0.35,'rgba(255,255,255,0.85)');
+    grd.addColorStop(0.7, 'rgba(255,255,255,0.25)');
+    grd.addColorStop(1,   'rgba(255,255,255,0)');
+    g.fillStyle = grd;
+    g.fillRect(0,0,64,64);
+    const tex = new THREE.CanvasTexture(c);
+    tex.minFilter = THREE.LinearMipMapLinearFilter;
+    tex.magFilter = THREE.LinearFilter;
+    tex.generateMipmaps = true;
+    return tex;
+  }
+  const mat = new THREE.PointsMaterial({
+    size:.38, vertexColors:true, transparent:true, opacity:.65,
+    map: makeParticleSprite(),
+    depthWrite:false,
+    blending: THREE.AdditiveBlending
+  });
   const particles = new THREE.Points(geo, mat);
   scene.add(particles);
 
@@ -2409,6 +2487,7 @@ const packages={
   logo:[{name:'Identity Lite',price:'K1,500',num:1500},{name:'Startup Foundation',price:'K4,000',num:4000},{name:'Corporate Growth Suite',price:'K9,500',num:9500},{name:'Elite Executive',price:'K17,500+',num:17500}],
   brandkit:[{name:'Foundation Kit',price:'K950',num:950},{name:'Company Profile',price:'K1,500',num:1500},{name:'Professional Kit',price:'K1,900',num:1900},{name:'Identity Kit',price:'K2,300',num:2300},{name:'Full Suite Kit',price:'K3,500',num:3500}],
   social:[{name:'Starter Sprint — 1 month',price:'K5,000',num:5000},{name:'Growth Momentum — 2 months',price:'K9,400',num:9400},{name:'Market Authority — 4 months',price:'K17,000',num:17000}],
+  website:[{name:'Website Basic',price:'K7,500',num:7500}],
   ala:[{name:'Stationery Quick-Pack',price:'K350',num:350},{name:'Business Card Design',price:'K150',num:150},{name:'Letterhead / Invoice / Quote',price:'Enquire',num:0}]
 };
 function openQuoteModal(){
@@ -2610,7 +2689,7 @@ function buildSlide(p) {
         </div>
         <div class="progress-label"><span>Overall Progress</span><span style="color:${p.statusColor};">${p.pct}%</span></div>
         <div class="progress-bar">
-          <div class="progress-fill" style="width:${p.pct}%;background:linear-gradient(90deg,var(--green-dark),${p.statusColor});"></div>
+          <div class="progress-fill" style="width:${p.pct}%;background:${p.statusColor};"></div>
         </div>
         <div class="stages-list">
           ${p.stages.map(s => `
